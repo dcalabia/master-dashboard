@@ -558,6 +558,21 @@ input,select{font-family:inherit;color:var(--t1)}
 .game-entry:hover .game-del{opacity:1}
 .game-empty{padding:1.25rem;text-align:center;font-size:13px;color:var(--t3)}
 
+
+/* -- Streaks ------------------------------------------------- */
+.streak-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.65rem .4rem;text-align:center;position:relative;overflow:hidden;transition:border-color .2s}
+.streak-card.alive{border-color:rgba(251,146,60,.35)}
+.streak-card.alive .streak-num{color:#fb923c}
+.streak-card.long{border-color:rgba(250,204,21,.4)}
+.streak-card.long .streak-num{color:#facc15}
+.streak-emoji{font-size:17px;line-height:1;display:block;margin-bottom:2px}
+.streak-num{font-size:24px;font-weight:800;font-family:var(--mono);color:var(--t3);line-height:1;transition:color .3s}
+.streak-label{font-size:9px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);margin-top:3px}
+.streak-best{font-size:9px;color:var(--t3);margin-top:2px;opacity:.65}
+.streak-fire{position:absolute;top:3px;right:4px;font-size:10px;opacity:0;transition:opacity .3s}
+.streak-card.alive .streak-fire,.streak-card.long .streak-fire{opacity:1}
+@media(max-width:600px){.streak-num{font-size:20px}}
+
 /* ── Workout Tracker ─────────────────────────────── */
 .wkt-day-btn{padding:6px 14px;border-radius:20px;border:1px solid var(--border2);background:transparent;color:var(--t2);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;font-family:inherit}
 .wkt-day-btn:hover{border-color:var(--acc);color:var(--acc)}
@@ -757,6 +772,9 @@ create policy "allow all" on dashboard_data
       <div id="progress-bar" style="height:100%;width:0%;border-radius:3px;background:linear-gradient(90deg,#3b82f6,#22c55e);transition:width .4s ease"></div>
     </div>
   </div>
+
+  <!-- Streaks -->
+  <div id="streak-row" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:1.25rem"></div>
 
 </div>
 <div class="tsec" data-tab="home">
@@ -1134,6 +1152,21 @@ create policy "allow all" on dashboard_data
       <button class="nutr-sm-btn" onclick="toggleMealDB()" id="meal-db-toggle-btn">+ Log food</button>
     </div>
   </div>
+
+  <!-- AI meal parser -->
+  <div class="ai-meal-wrap">
+    <div class="ai-meal-header">
+      <span class="ai-meal-title">🎙️ Describe what you ate</span>
+      <span class="ai-meal-hint">Works with Whisper Flow</span>
+    </div>
+    <textarea id="ai-meal-input" class="ai-meal-textarea" placeholder="e.g. 4 scrambled eggs, a banana, 2 tbsp peanut butter and a bowl of oatmeal..."></textarea>
+    <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
+      <button class="ai-meal-btn" onclick="parseMealWithAI()" id="ai-meal-btn">✨ Parse &amp; add to log</button>
+      <span id="ai-meal-status" style="font-size:12px;color:var(--t3)"></span>
+    </div>
+    <div id="ai-meal-preview" style="display:none;margin-top:10px"></div>
+  </div>
+
   <div class="meal-db-panel" id="meal-db-panel" style="display:none">
     <div style="padding:8px 1rem 6px;border-bottom:1px solid var(--border)">
       <input class="gf-inp" id="meal-search" placeholder="Search foods..." oninput="renderMealDB()" style="width:100%;font-size:13px">
@@ -2943,7 +2976,7 @@ function showBackupMsg(msg){
   el.style.animation='none';
   setTimeout(()=>{el.style.animation='fadeOut 3s forwards';},50);
 }
-function renderAll(){renderDateNav();renderHealth();renderEnergy();renderHabits();renderGameLog();renderDTodos();renderMTodos();renderVO2();renderGymGoals();renderTrading();renderStats();renderExpenses();renderNet();renderBills();renderShop();renderGroceries();renderMacros();renderMealLog();renderSupplements();renderFitnessProtein();renderEntries();renderTimeline();pStatsRender();pLogRender();loadCalendar();renderCalendar();loadJournal();renderProgress();renderLTG();renderBodyIssues();renderDates();renderPhilos();renderMistakes();loadWorkout();renderWorkout();renderFitnessProtein();}
+function renderAll(){renderDateNav();renderHealth();renderEnergy();renderHabits();renderGameLog();renderDTodos();renderMTodos();renderVO2();renderGymGoals();renderTrading();renderStats();renderExpenses();renderNet();renderBills();renderShop();renderGroceries();renderMacros();renderMealLog();renderSupplements();renderFitnessProtein();renderEntries();renderTimeline();pStatsRender();pLogRender();loadCalendar();renderCalendar();loadJournal();renderProgress();renderLTG();renderBodyIssues();renderDates();renderPhilos();renderMistakes();loadWorkout();renderWorkout();renderFitnessProtein();renderStreaks();}
 // ─── Groceries ────────────────────────────────────────────────
 const GROC_CATS={protein:{lbl:'Protein',col:'#f97316'},produce:{lbl:'Produce',col:'#22c55e'},dairy:{lbl:'Dairy',col:'#60a5fa'},carbs:{lbl:'Carbs',col:'#f59e0b'},fats:{lbl:'Fats',col:'#a78bfa'},snacks:{lbl:'Snacks',col:'#f87171'},other:{lbl:'Other',col:'#6b7280'}};
 let grocItems=[];
@@ -3149,7 +3182,7 @@ function pComplete(){
   if(pSess.length>=POMO_MAX){pomoReset();return;}
   const n=new Date(),task=document.getElementById('pomo-task').value.trim()||'Focus session',ts=`${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`;
   pSess.unshift({time:ts,task,mins:pMode==='focus'?25:pMode==='short'?5:15});pAll++;pMins+=25;
-  savePomo();pLogRender();pStatsRender();renderStats();
+  savePomo();pLogRender();pStatsRender();renderStats();renderStreaks();
   document.getElementById('pomo-start-lbl').textContent='Start';document.getElementById('pomo-play-icon').className='ti ti-player-play';
 }
 function pAutoNext(){if(pMode==='focus'){if(pSess.length>0&&pSess.length%4===0)setPomoMode('long',15);else setPomoMode('short',5);}else setPomoMode('focus',25);}
@@ -3551,7 +3584,7 @@ function init(){
   renderDateNav();renderHealth();renderEnergy();renderHabits();renderGameLog();renderDTodos();renderMTodos();renderVO2();renderGymGoals();renderTrading();renderStats();renderExpenses();renderNet();renderBills();renderShop();renderGroceries();
   renderMacros();renderMealLog();renderSupplements();renderFitnessProtein();
   setDefaultTime();renderEntries();renderTimeline();
-  pDisp();pRing();pStatsRender();pLogRender();renderRM();renderProgress();initJournal();renderLTG();renderCalendar();renderBodyIssues();renderDates();renderPhilos();renderMistakes();renderWorkout();renderFitnessProtein();
+  pDisp();pRing();pStatsRender();pLogRender();renderRM();renderProgress();initJournal();renderLTG();renderCalendar();renderBodyIssues();renderDates();renderPhilos();renderMistakes();renderWorkout();renderFitnessProtein();renderStreaks();
 }
 
 // ─── Tab switching ────────────────────────────────────────────
@@ -3570,6 +3603,140 @@ function initTabs(){
   switchTab(saved);
 }
 
+
+
+
+// --- AI Meal Parser -------------------------------------------
+async function parseMealWithAI(){
+  const input = document.getElementById('ai-meal-input');
+  const btn = document.getElementById('ai-meal-btn');
+  const status = document.getElementById('ai-meal-status');
+  const preview = document.getElementById('ai-meal-preview');
+  const text = input.value.trim();
+  if(!text){status.textContent='Type or dictate what you ate first.';return;}
+  if(!isToday()){status.textContent='Can only log meals for today.';return;}
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Parsing...';
+  status.textContent = '';
+  preview.style.display = 'none';
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: 'You are a nutrition assistant. Parse meal descriptions and return ONLY a JSON array. No markdown, no explanation, just valid JSON. Each item must have: name (string), qty (number), unit (string, e.g. "egg", "cup", "tbsp", "piece"), p (protein grams, number), c (carbs grams, number), f (fat grams, number), cal (calories, number). Estimate macros accurately based on the quantity described. Total macros should reflect the full amount described, not per-unit.',
+        messages: [{
+          role: 'user',
+          content: 'Parse this into food items with macros: ' + text
+        }]
+      })
+    });
+    const data = await response.json();
+    const raw = data.content && data.content[0] && data.content[0].text;
+    if(!raw){throw new Error('No response');}
+    const clean = raw.replace(/```json|```/g,'').trim();
+    const items = JSON.parse(clean);
+    if(!Array.isArray(items)||!items.length){throw new Error('Empty result');}
+
+    // Show preview
+    preview.style.display = 'block';
+    preview.innerHTML = '<div style="font-size:11px;color:var(--t3);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em">Tap to add each item</div>'
+      + items.map((item,i) => `
+        <div class="ai-parsed-item" id="ai-item-${i}">
+          <div>
+            <div class="ai-parsed-name">${item.qty} ${item.unit} ${item.name}</div>
+            <div class="ai-parsed-macros">P:<b>${Math.round(item.p)}g</b> · C:${Math.round(item.c)}g · F:${Math.round(item.f)}g · ${Math.round(item.cal)}cal</div>
+          </div>
+          <button class="ai-parsed-add" onclick="addAIParsedItem(${i},${JSON.stringify(item).replace(/"/g,'&quot;')})">+ Add</button>
+        </div>`).join('')
+      + '<button onclick="addAllAIParsedItems('+JSON.stringify(items).replace(/"/g,'&quot;')+')" style="width:100%;margin-top:6px;padding:8px;background:var(--acc);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">+ Add all to log</button>';
+
+    status.textContent = items.length + ' items found';
+    btn.textContent = '✨ Parse & add to log';
+  } catch(e) {
+    status.textContent = 'Could not parse — try being more specific.';
+    btn.textContent = '✨ Parse & add to log';
+    console.error(e);
+  }
+  btn.disabled = false;
+}
+
+function addAIParsedItem(i, item){
+  if(!isToday())return;
+  const p=Math.round(item.p), c=Math.round(item.c), f=Math.round(item.f), cal=Math.round(item.cal);
+  const name = item.qty + ' ' + item.unit + ' ' + item.name;
+  mealLog.push({id:Date.now(), name, p, c, f, cal});
+  saveMealLog(); renderMealLog(); renderMacros(); renderHealth(); renderFitnessProtein();
+  const btn = document.querySelector('#ai-item-'+i+' .ai-parsed-add');
+  if(btn){btn.textContent='✓ Added';btn.classList.add('added');btn.disabled=true;}
+}
+
+function addAllAIParsedItems(items){
+  if(!isToday())return;
+  items.forEach((item,i)=>{
+    const p=Math.round(item.p), c=Math.round(item.c), f=Math.round(item.f), cal=Math.round(item.cal);
+    const name = item.qty + ' ' + item.unit + ' ' + item.name;
+    mealLog.push({id:Date.now()+i, name, p, c, f, cal});
+    const btn = document.querySelector('#ai-item-'+i+' .ai-parsed-add');
+    if(btn){btn.textContent='✓ Added';btn.classList.add('added');btn.disabled=true;}
+  });
+  saveMealLog(); renderMealLog(); renderMacros(); renderHealth(); renderFitnessProtein();
+  const status = document.getElementById('ai-meal-status');
+  if(status) status.textContent = 'All items added!';
+  document.getElementById('ai-meal-input').value = '';
+  setTimeout(()=>{
+    const preview = document.getElementById('ai-meal-preview');
+    if(preview) preview.style.display='none';
+    if(status) status.textContent='';
+  }, 2000);
+}
+
+// --- Streaks --------------------------------------------------
+var STREAK_DEFS=[
+  {id:'workout', emoji:'&#x1F3CB;', label:'Workout',
+   check:function(d){var s=ls('workout-session:'+d);return !!(s&&s.completedAt);}},
+  {id:'pomodoro',emoji:'&#x1F345;', label:'Pomodoros',
+   check:function(d){var s=ls('pomo:'+d);return !!(s&&s.sessions&&s.sessions.length>=4);}},
+  {id:'sleep',   emoji:'&#x1F634;', label:'Sleep 7h+',
+   check:function(d){var m=ls('metrics:'+d);return !!(m&&parseFloat(m.sleep)>=7);}},
+  {id:'steps',   emoji:'&#x1F45F;', label:'Steps 8K+',
+   check:function(d){var m=ls('metrics:'+d);return !!(m&&parseInt(m.steps)>=8000);}},
+];
+function calcStreak(checkFn){
+  var d=new Date(),streak=0;
+  if(checkFn(d.toISOString().slice(0,10))){streak++;d.setDate(d.getDate()-1);}
+  else{d.setDate(d.getDate()-1);}
+  for(var i=0;i<365;i++){
+    if(checkFn(d.toISOString().slice(0,10))){streak++;d.setDate(d.getDate()-1);}
+    else{break;}
+  }
+  return streak;
+}
+function getBestStreak(id,cur){
+  var saved=ls('streak-best:'+id)||0;
+  var best=Math.max(saved,cur);
+  if(best>saved){lss('streak-best:'+id,best);}
+  return best;
+}
+function renderStreaks(){
+  var el=document.getElementById('streak-row');if(!el){return;}
+  el.innerHTML=STREAK_DEFS.map(function(def){
+    var n=calcStreak(def.check);
+    var best=getBestStreak(def.id,n);
+    var cls=n>=7?'long':n>0?'alive':'';
+    return '<div class="streak-card '+cls+'">'
+      +'<span class="streak-fire">&#x1F525;</span>'
+      +'<span class="streak-emoji">'+def.emoji+'</span>'
+      +'<div class="streak-num">'+n+'</div>'
+      +'<div class="streak-label">'+def.label+'</div>'
+      +(best>1?'<div class="streak-best">best '+best+'</div>':'')
+      +'</div>';
+  }).join('');
+}
 
 // ─── Fitness protein bar ──────────────────────────────────────
 function renderFitnessProtein(){
