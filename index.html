@@ -517,6 +517,47 @@ input,select{font-family:inherit;color:var(--t1)}
 .tab-btn .tbl{font-size:10px;letter-spacing:.02em}
 .tsec{display:none}.tsec.active{display:block}
 .phil-card:hover .phil-del{opacity:1}
+
+/* ── Meal food picker ───────────────────────────── */
+.meal-foods-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;padding:.75rem 1rem}
+.meal-food-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:.6rem .75rem;display:flex;flex-direction:column;gap:4px}
+.meal-food-top{display:flex;justify-content:space-between;align-items:flex-start}
+.meal-food-name{font-size:13px;font-weight:600;color:var(--t1);line-height:1.3}
+.meal-food-del{background:transparent;border:none;color:var(--t3);cursor:pointer;font-size:11px;opacity:0;transition:opacity .15s;padding:0 2px;flex-shrink:0}
+.meal-food-card:hover .meal-food-del{opacity:1}
+.meal-food-per{font-size:10px;color:var(--t3);line-height:1.4}
+.meal-food-footer{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:2px}
+.meal-food-stepper{display:flex;align-items:center;gap:4px}
+.meal-food-qty{font-size:13px;font-weight:700;font-family:var(--mono);min-width:18px;text-align:center;color:var(--t1)}
+.meal-food-unit{font-size:10px;color:var(--t3);min-width:24px}
+.meal-food-preview{font-size:11px;color:var(--t2);flex:1;white-space:nowrap}
+.meal-food-preview b{color:var(--acc)}
+.meal-food-log-btn{background:var(--acc);color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:600;padding:4px 10px;cursor:pointer;transition:all .15s;font-family:inherit;margin-left:auto}
+.meal-food-log-btn:hover{opacity:.85}
+.meal-log-left{display:flex;flex-direction:column;gap:2px;flex:1}
+.meal-log-macros-row{font-size:11px;color:var(--t3)}
+.meal-log-macros-row b{color:var(--acc)}
+@media(max-width:600px){.meal-foods-grid{grid-template-columns:1fr}}
+
+
+/* ── Approach Log ─────────────────────────────────── */
+.gl-cat-pill{padding:5px 11px;border-radius:16px;border:1px solid var(--border2);background:transparent;color:var(--t3);font-size:11px;font-weight:500;cursor:pointer;transition:all .15s;font-family:inherit;white-space:nowrap}
+.gl-cat-pill:hover{border-color:var(--acc);color:var(--acc)}
+.gl-cat-pill.active{background:var(--acc);border-color:var(--acc);color:#fff}
+.game-entry{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--border2);border-radius:var(--r);padding:.7rem .9rem;margin-bottom:7px;display:flex;flex-direction:column;gap:5px;transition:border-color .15s}
+.game-entry:hover{border-color:var(--border2)}
+.game-entry-top{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.game-entry-mid{display:flex;align-items:baseline;gap:5px}
+.game-cat-badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;white-space:nowrap}
+.game-name{font-size:14px;font-weight:600;color:var(--t1)}
+.game-badge{font-size:11px;padding:2px 7px;border-radius:8px;white-space:nowrap}
+.game-close-badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:8px;white-space:nowrap}
+.game-contact{font-size:12px;color:#60a5fa;font-family:var(--mono)}
+.game-opener{font-size:12px;color:var(--t3);font-style:italic}
+.game-del{background:transparent;border:none;color:var(--t3);cursor:pointer;font-size:12px;margin-left:auto;opacity:0;transition:opacity .15s;padding:2px 4px}
+.game-entry:hover .game-del{opacity:1}
+.game-empty{padding:1.25rem;text-align:center;font-size:13px;color:var(--t3)}
+
 /* ── Workout Tracker ─────────────────────────────── */
 .wkt-day-btn{padding:6px 14px;border-radius:20px;border:1px solid var(--border2);background:transparent;color:var(--t2);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;font-family:inherit}
 .wkt-day-btn:hover{border-color:var(--acc);color:var(--acc)}
@@ -736,49 +777,67 @@ create policy "allow all" on dashboard_data
   <div id="habits-grid"></div>
 
 </div>
-<div class="tsec" data-tab="home">
+<div class="tsec" data-tab="journal">
   <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
-    <span>🎯 Game log</span>
-    <button class="nutr-sm-btn" id="game-add-btn" onclick="toggleGameForm()">+ Log approach</button>
+    <span>🎯 Approach log</span>
+    <div style="display:flex;gap:6px;align-items:center">
+      <span id="game-log-count" style="font-size:11px;color:var(--t3)"></span>
+      <button class="nutr-sm-btn" id="game-add-btn" onclick="toggleGameForm()">+ Log approach</button>
+    </div>
   </div>
-  <div id="game-form" style="display:none;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.85rem 1rem;margin-bottom:8px">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-      <div><label class="gf-lbl">Name</label><input class="gf-inp" id="gf-name" placeholder="Her name"></div>
-      <div><label class="gf-lbl">Age</label><input class="gf-inp" id="gf-age" type="number" placeholder="Age" min="18" max="60"></div>
-      <div><label class="gf-lbl">Race</label>
-        <select class="gf-inp" id="gf-race">
-          <option value="">Select...</option>
-          <option value="white">White / Caucasian</option>
+
+  <div id="game-form" style="display:none;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.85rem 1rem;margin-bottom:10px">
+
+    <!-- Category pills -->
+    <div style="margin-bottom:10px">
+      <label class="gf-lbl">Category</label>
+      <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px" id="gf-cat-pills">
+        <button class="gl-cat-pill active" onclick="setGLCat('nightlife')" id="glcat-nightlife">🌙 Nightlife</button>
+        <button class="gl-cat-pill" onclick="setGLCat('daytime')" id="glcat-daytime">☀️ Daytime</button>
+        <button class="gl-cat-pill" onclick="setGLCat('work')" id="glcat-work">💼 Work</button>
+        <button class="gl-cat-pill" onclick="setGLCat('social')" id="glcat-social">🎉 Social</button>
+        <button class="gl-cat-pill" onclick="setGLCat('app')" id="glcat-app">📱 App</button>
+        <button class="gl-cat-pill" onclick="setGLCat('transit')" id="glcat-transit">🚇 Transit</button>
+        <button class="gl-cat-pill" onclick="setGLCat('other')" id="glcat-other">✦ Other</button>
+      </div>
+    </div>
+
+    <!-- Dynamic venue row -->
+    <div id="gf-venue-row" style="margin-bottom:8px">
+      <label class="gf-lbl" id="gf-venue-lbl">Venue</label>
+      <select class="gf-inp" id="gf-venue" style="margin-top:3px"></select>
+    </div>
+    <div id="gf-venue-other-row" style="display:none;margin-bottom:8px">
+      <label class="gf-lbl">Specify venue / location</label>
+      <input class="gf-inp" id="gf-venue-other" placeholder="Enter venue name..." style="margin-top:3px">
+    </div>
+
+    <!-- Name + Age + Race -->
+    <div style="display:grid;grid-template-columns:1fr 70px 1fr;gap:8px;margin-bottom:8px">
+      <div><label class="gf-lbl">Name</label><input class="gf-inp" id="gf-name" placeholder="Her name" style="margin-top:3px"></div>
+      <div><label class="gf-lbl">Age</label><input class="gf-inp" id="gf-age" type="number" placeholder="—" min="18" max="60" style="margin-top:3px"></div>
+      <div><label class="gf-lbl">Race / Ethnicity</label>
+        <select class="gf-inp" id="gf-race" style="margin-top:3px">
+          <option value="">—</option>
+          <option value="white">White</option>
           <option value="east_asian">East Asian</option>
           <option value="south_asian">South Asian</option>
-          <option value="southeast_asian">Southeast Asian</option>
-          <option value="latina">Latina / Hispanic</option>
-          <option value="black">Black / African</option>
+          <option value="southeast_asian">SE Asian</option>
+          <option value="latina">Latina</option>
+          <option value="black">Black</option>
           <option value="middle_eastern">Middle Eastern</option>
           <option value="mixed">Mixed</option>
           <option value="other">Other</option>
         </select>
       </div>
-      <div><label class="gf-lbl">Location</label>
-        <select class="gf-inp" id="gf-location">
-          <option value="">Select...</option>
-          <option value="street">Street / Outdoors</option>
-          <option value="mall">Mall / Shopping</option>
-          <option value="bar_club">Bar / Club</option>
-          <option value="coffee">Coffee Shop / Café</option>
-          <option value="gym">Gym</option>
-          <option value="transit">Transit / TTC</option>
-          <option value="event">Event / Party</option>
-          <option value="other">Other</option>
-        </select>
-      </div>
     </div>
-    <div style="margin-bottom:8px"><label class="gf-lbl">Opener</label><input class="gf-inp" id="gf-opener" placeholder="What you said to open..."></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+
+    <!-- Close + Contact -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
       <div><label class="gf-lbl">Close</label>
-        <select class="gf-inp" id="gf-close">
-          <option value="">Select...</option>
-          <option value="phone">📱 Phone Number</option>
+        <select class="gf-inp" id="gf-close" style="margin-top:3px">
+          <option value="">— Select —</option>
+          <option value="phone">📱 Phone</option>
           <option value="ig">📸 Instagram</option>
           <option value="both">🔥 Both</option>
           <option value="soft_no">🤷 Soft No</option>
@@ -786,13 +845,21 @@ create policy "allow all" on dashboard_data
           <option value="open">💬 Still Talking</option>
         </select>
       </div>
-      <div><label class="gf-lbl">Contact / Handle</label><input class="gf-inp" id="gf-contact" placeholder="@handle or number"></div>
+      <div><label class="gf-lbl">Contact / Handle</label><input class="gf-inp" id="gf-contact" placeholder="@handle or number" style="margin-top:3px"></div>
     </div>
+
+    <!-- Notes -->
+    <div style="margin-bottom:10px">
+      <label class="gf-lbl">Notes</label>
+      <input class="gf-inp" id="gf-notes" placeholder="Anything worth remembering..." style="margin-top:3px">
+    </div>
+
     <div style="display:flex;gap:6px">
       <button class="idate-cancel" onclick="toggleGameForm()">Cancel</button>
       <button class="idate-save" onclick="saveGameEntry()">Log it</button>
     </div>
   </div>
+
   <div id="game-log-list" style="margin-bottom:1.5rem"></div>
 </div>
 <div class="tsec" data-tab="daily">
@@ -1061,25 +1128,33 @@ create policy "allow all" on dashboard_data
 </div>
 <div class="tsec" data-tab="daily">
   <div class="slbl" style="display:flex;justify-content:space-between;align-items:center;margin-top:.75rem">
-    <span>Meal log</span>
-    <div style="display:flex;gap:6px">
-      <button class="nutr-sm-btn" onclick="toggleMealDB()">📋 Meals</button>
-      <button class="nutr-sm-btn" onclick="openCustomMeal()">+ Custom</button>
+    <span>🍽️ Meal log</span>
+    <div style="display:flex;gap:6px;align-items:center">
+      <span id="meal-log-cal-lbl" style="font-size:11px;color:var(--t3)"></span>
+      <button class="nutr-sm-btn" onclick="toggleMealDB()" id="meal-db-toggle-btn">+ Log food</button>
     </div>
   </div>
   <div class="meal-db-panel" id="meal-db-panel" style="display:none">
-    <div id="meal-db-list"></div>
-    <div class="meal-db-add" id="meal-db-add-form" style="display:none">
-      <input class="nutr-inp" id="mdb-name" placeholder="Meal name">
-      <div style="display:flex;gap:6px;margin-top:6px">
-        <input class="nutr-inp nutr-inp-sm" id="mdb-p" type="number" placeholder="P(g)" min="0">
-        <input class="nutr-inp nutr-inp-sm" id="mdb-c" type="number" placeholder="C(g)" min="0">
-        <input class="nutr-inp nutr-inp-sm" id="mdb-f" type="number" placeholder="F(g)" min="0">
-        <input class="nutr-inp nutr-inp-sm" id="mdb-cal" type="number" placeholder="cal" min="0">
-        <button class="nutr-save-btn" onclick="saveMealToDB()">Save</button>
+    <div style="padding:8px 1rem 6px;border-bottom:1px solid var(--border)">
+      <input class="gf-inp" id="meal-search" placeholder="Search foods..." oninput="renderMealDB()" style="width:100%;font-size:13px">
+    </div>
+    <div class="meal-foods-grid" id="meal-db-list"></div>
+    <div style="padding:.5rem 1rem .75rem;border-top:1px solid var(--border)">
+      <button class="nutr-sm-btn" onclick="toggleAddMealForm()">+ Add custom food</button>
+      <div class="meal-db-add" id="meal-db-add-form" style="display:none;margin-top:8px">
+        <div style="display:grid;grid-template-columns:1fr 80px;gap:6px;margin-bottom:6px">
+          <input class="nutr-inp" id="mdb-name" placeholder="Food name">
+          <input class="nutr-inp" id="mdb-unit" placeholder="unit (egg, cup…)">
+        </div>
+        <div style="display:flex;gap:6px">
+          <input class="nutr-inp nutr-inp-sm" id="mdb-p" type="number" placeholder="P/unit" min="0">
+          <input class="nutr-inp nutr-inp-sm" id="mdb-c" type="number" placeholder="C/unit" min="0">
+          <input class="nutr-inp nutr-inp-sm" id="mdb-f" type="number" placeholder="F/unit" min="0">
+          <input class="nutr-inp nutr-inp-sm" id="mdb-cal" type="number" placeholder="cal/unit" min="0">
+          <button class="nutr-save-btn" onclick="saveMealToDB()">Save</button>
+        </div>
       </div>
     </div>
-    <button class="nutr-sm-btn" style="margin:.5rem 1rem .75rem" onclick="toggleAddMealForm()">+ Add meal to list</button>
   </div>
   <div class="meal-log-wrap" id="meal-log-wrap">
     <div id="meal-log-list"></div>
@@ -2284,16 +2359,23 @@ function renderLTG(){
 const MACRO_TARGETS={cal:2150,protein:160,carbs:225,fat:68};
 const MACRO_COLORS={protein:'#3b82f6',carbs:'#f59e0b',fat:'#a78bfa',cal:'#22c55e'};
 const DEFAULT_MEAL_DB=[
-  {id:'md1',name:'Chicken Breast (150g)',p:45,c:0,f:3,cal:207},
-  {id:'md2',name:'Greek Yogurt (200g)',p:20,c:8,f:5,cal:157},
-  {id:'md3',name:'3 Whole Eggs',p:18,c:1,f:15,cal:207},
-  {id:'md4',name:'Protein Shake',p:25,c:5,f:2,cal:138},
-  {id:'md5',name:'Tuna Can (170g)',p:30,c:0,f:2,cal:138},
-  {id:'md6',name:'Rice + Chicken Bowl',p:40,c:55,f:5,cal:425},
-  {id:'md7',name:'Oatmeal (100g dry)',p:13,c:68,f:7,cal:389},
-  {id:'md8',name:'Cottage Cheese (200g)',p:24,c:6,f:4,cal:156},
-  {id:'md9',name:'Beef (150g)',p:35,c:0,f:12,cal:252},
-  {id:'md10',name:'Rice (1 cup cooked)',p:4,c:45,f:0,cal:206},
+  // Proteins
+  {id:'md1', name:'Egg',           unit:'egg',    defaultQty:4,  p:6,  c:0,  f:5,  cal:70},
+  {id:'md2', name:'Egg White',     unit:'white',  defaultQty:5,  p:4,  c:0,  f:0,  cal:17},
+  {id:'md3', name:'Chicken Thigh', unit:'thigh',  defaultQty:1,  p:30, c:0,  f:12, cal:230},
+  {id:'md4', name:'Chicken Burger',unit:'patty',  defaultQty:1,  p:22, c:0,  f:8,  cal:165},
+  {id:'md5', name:'Cheese',        unit:'oz',     defaultQty:1,  p:7,  c:1,  f:9,  cal:110},
+  {id:'md6', name:'Cheese Slice',  unit:'slice',  defaultQty:2,  p:5,  c:1,  f:7,  cal:88},
+  {id:'md7', name:'Burger Bun',    unit:'bun',    defaultQty:1,  p:6,  c:26, f:3,  cal:150},
+  {id:'md8', name:'Vega Protein',  unit:'scoop',  defaultQty:1,  p:25, c:5,  f:3,  cal:130},
+  {id:'md9', name:'Greek Yogurt',  unit:'cup',    defaultQty:1,  p:17, c:9,  f:0,  cal:100},
+  // Carbs & Other
+  {id:'md10',name:'Banana',        unit:'banana', defaultQty:1,  p:1,  c:27, f:0,  cal:105},
+  {id:'md11',name:'Oatmeal',       unit:'serving',defaultQty:1,  p:6,  c:27, f:3,  cal:154},
+  {id:'md12',name:'Mixed Berries', unit:'cup',    defaultQty:1,  p:2,  c:21, f:1,  cal:85},
+  {id:'md13',name:'Almond Milk',   unit:'cup',    defaultQty:1,  p:1,  c:2,  f:3,  cal:40},
+  {id:'md14',name:'Peanut Butter', unit:'tbsp',   defaultQty:2,  p:4,  c:3,  f:8,  cal:95},
+  {id:'md15',name:'Pumpkin Seeds', unit:'tbsp',   defaultQty:2,  p:2,  c:2,  f:3,  cal:40},
 ];
 const SUPPLEMENTS=[
   {id:'vitd',l:'Vitamin D'},{id:'vitk',l:'Vitamin K'},{id:'creatine',l:'Creatine'},
@@ -2301,8 +2383,21 @@ const SUPPLEMENTS=[
   {id:'omega3',l:'Omega-3'},{id:'zinc',l:'Zinc'},{id:'magnesium',l:'Magnesium'},
 ];
 let mealDB=[],mealLog=[],suppData={};
+let foodQtys={}; // transient per-session qty selections
+
 function loadNutrition(){
-  mealDB=ls('meal-db');if(!mealDB||!mealDB.length)mealDB=[...DEFAULT_MEAL_DB];
+  mealDB=ls('meal-db');
+  if(!mealDB||!mealDB.length){
+    mealDB=[...DEFAULT_MEAL_DB];
+  } else {
+    // Merge: add any new default items not already in saved DB
+    DEFAULT_MEAL_DB.forEach(d=>{
+      if(!mealDB.find(m=>m.id===d.id)) mealDB.push(d);
+    });
+  }
+  // Init foodQtys from defaults
+  foodQtys={};
+  mealDB.forEach(m=>{ foodQtys[m.id]=m.defaultQty||1; });
   mealLog=ls('meal-log:'+viewDate)||[];
   suppData=ls('supp:'+viewDate)||{};
 }
@@ -2346,31 +2441,75 @@ function toggleAddMealForm(){
 }
 function renderMealDB(){
   const el=document.getElementById('meal-db-list');if(!el)return;
-  el.innerHTML=mealDB.map(m=>`
-    <div class="meal-db-item">
-      <span class="meal-db-name">${m.name}</span>
-      <span class="meal-db-macros">P:${m.p}g · C:${m.c}g · F:${m.f}g · ${m.cal}cal</span>
-      <button class="meal-db-add-btn" onclick="logMeal('${m.id}')" title="Log this meal">+</button>
-      <button class="meal-db-del-btn" onclick="deleteMealFromDB('${m.id}')" title="Remove"><i class="ti ti-x"></i></button>
-    </div>`).join('');
+  const q=document.getElementById('meal-search');
+  const filter=(q&&q.value.trim().toLowerCase())||'';
+  const list=filter?mealDB.filter(m=>m.name.toLowerCase().includes(filter)):mealDB;
+  if(!list.length){el.innerHTML='<div style="padding:1rem;text-align:center;font-size:12px;color:var(--t3)">No foods found</div>';return;}
+  el.innerHTML=list.map(m=>{
+    const qty=foodQtys[m.id]||m.defaultQty||1;
+    const totalP=Math.round(m.p*qty);
+    const totalCal=Math.round(m.cal*qty);
+    const unit=m.unit||'serving';
+    return`<div class="meal-food-card">
+      <div class="meal-food-top">
+        <span class="meal-food-name">${m.name}</span>
+        <button class="meal-food-del" onclick="deleteMealFromDB('${m.id}')" title="Remove food"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="meal-food-per">Per ${unit}: P:${m.p}g · C:${m.c}g · F:${m.f}g · ${m.cal}cal</div>
+      <div class="meal-food-footer">
+        <div class="meal-food-stepper">
+          <button class="wkt-step-btn" onclick="adjustFoodQty('${m.id}',-1)">−</button>
+          <span class="meal-food-qty" id="mfq-${m.id}">${qty}</span>
+          <span class="meal-food-unit">${unit}</span>
+          <button class="wkt-step-btn" onclick="adjustFoodQty('${m.id}',1)">+</button>
+        </div>
+        <div class="meal-food-preview">→ P:<b>${totalP}g</b> · ${totalCal}cal</div>
+        <button class="meal-food-log-btn" onclick="logMeal('${m.id}')">Log</button>
+      </div>
+    </div>`;
+  }).join('');
 }
 function saveMealToDB(){
   const name=document.getElementById('mdb-name').value.trim();
+  const unit=(document.getElementById('mdb-unit').value.trim())||'serving';
   const p=parseFloat(document.getElementById('mdb-p').value)||0;
   const c=parseFloat(document.getElementById('mdb-c').value)||0;
   const f=parseFloat(document.getElementById('mdb-f').value)||0;
   const cal=parseFloat(document.getElementById('mdb-cal').value)||Math.round(p*4+c*4+f*9);
   if(!name)return;
-  mealDB.push({id:'m'+Date.now(),name,p,c,f,cal});
+  const id='m'+Date.now();
+  mealDB.push({id,name,unit,defaultQty:1,p,c,f,cal});
+  foodQtys[id]=1;
   saveMealDB();
-  ['mdb-name','mdb-p','mdb-c','mdb-f','mdb-cal'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['mdb-name','mdb-unit','mdb-p','mdb-c','mdb-f','mdb-cal'].forEach(k=>{const el=document.getElementById(k);if(el)el.value='';});
   renderMealDB();
 }
 function deleteMealFromDB(id){mealDB=mealDB.filter(m=>m.id!==id);saveMealDB();renderMealDB();}
+function adjustFoodQty(id,delta){
+  const meal=mealDB.find(m=>m.id===id);if(!meal)return;
+  foodQtys[id]=Math.max(0.5,(foodQtys[id]||meal.defaultQty||1)+delta);
+  const el=document.getElementById('mfq-'+id);
+  if(el)el.textContent=foodQtys[id];
+  // update preview
+  const card=el&&el.closest('.meal-food-card');
+  if(card){
+    const qty=foodQtys[id];
+    const prev=card.querySelector('.meal-food-preview');
+    if(prev)prev.innerHTML=`→ P:<b>${Math.round(meal.p*qty)}g</b> · ${Math.round(meal.cal*qty)}cal`;
+  }
+}
 function logMeal(id){
   const meal=mealDB.find(m=>m.id===id);if(!meal||!isToday())return;
-  mealLog.push({...meal,id:Date.now(),mealId:id});
-  saveMealLog();renderMealLog();renderMacros();renderHealth();
+  const qty=foodQtys[id]||meal.defaultQty||1;
+  const p=Math.round(meal.p*qty), c=Math.round(meal.c*qty), f=Math.round(meal.f*qty), cal=Math.round(meal.cal*qty);
+  const unit=meal.unit||'serving';
+  const name=qty===1?meal.name:`${meal.name} ×${qty} ${unit}`;
+  mealLog.push({id:Date.now(),name,p,c,f,cal,qty,unit,mealId:id});
+  saveMealLog();renderMealLog();renderMacros();renderHealth();renderFitnessProtein();
+  // Flash the log button
+  const btn=document.querySelector(`[onclick="logMeal('${id}')"]`);
+  if(btn){btn.textContent='✓';btn.style.background='#22c55e44';btn.style.color='#4ade80';
+    setTimeout(()=>{btn.textContent='Log';btn.style.background='';btn.style.color='';},900);}
 }
 function openCustomMeal(){
   const name=prompt('Meal name:');if(!name)return;
@@ -2388,12 +2527,17 @@ function renderMealLog(){
   const empty=document.getElementById('meal-log-empty');
   if(!list)return;
   const ro=!isToday();
+  const t=getMacroTotals();
+  const calLbl=document.getElementById('meal-log-cal-lbl');
+  if(calLbl)calLbl.textContent=mealLog.length?`${t.cal} cal · P:${t.p}g`:'';
   if(!mealLog.length){list.innerHTML='';if(empty)empty.style.display='block';return;}
   if(empty)empty.style.display='none';
   list.innerHTML=mealLog.map(m=>`
     <div class="meal-log-entry">
-      <span class="meal-log-name">${m.name}</span>
-      <div class="meal-log-macros">P:${m.p}g · C:${m.c}g · F:${m.f}g<br>${m.cal} cal</div>
+      <div class="meal-log-left">
+        <span class="meal-log-name">${m.name}</span>
+        <span class="meal-log-macros-row">P:<b>${m.p}g</b> · C:${m.c}g · F:${m.f}g · ${m.cal}cal</span>
+      </div>
       ${ro?'':` <button class="meal-log-del" onclick="deleteMealLog(${m.id})" title="Remove"><i class="ti ti-x"></i></button>`}
     </div>`).join('');
 }
@@ -2484,49 +2628,123 @@ const RACE_LABELS={white:'White',east_asian:'East Asian',south_asian:'South Asia
 const CLOSE_LABELS={phone:'📱 Number',ig:'📸 IG',both:'🔥 Both',soft_no:'🤷 Soft No',hard_no:'❌ No',open:'💬 Talking'};
 const CLOSE_COLORS={phone:'#22c55e',ig:'#a855f7',both:'#f97316',soft_no:'#f59e0b',hard_no:'#ef4444',open:'#3b82f6'};
 let gameLog=[];
+let glCat='nightlife';
+
+const GL_VENUES={
+  nightlife:{
+    label:'Venue',
+    options:['AMPM','Mahjong Bar','Midnight Arcade','Big Trouble','Hush Hush',"Isabelle's",'Bar Bowie','Other venue']
+  },
+  daytime:{
+    label:'Location',
+    options:['Gym','Mall / Shopping','Grocery Store','Coffee Shop / Café','Park / Outdoors','Street','Restaurant','Beach','Library','Other']
+  },
+  work:{
+    label:'Setting',
+    options:['On shift','Break room','After work','Other']
+  },
+  social:{
+    label:'Event type',
+    options:['House party','Birthday','Rooftop / Patio','Wedding / Event','Networking','Dinner party','Other']
+  },
+  app:{
+    label:'Platform',
+    options:['Hinge','Bumble','Tinder','Instagram DM','Snapchat','Other']
+  },
+  transit:{
+    label:'Where',
+    options:['Subway / TTC','Bus','Uber / Lyft','Train','Airport','Other']
+  },
+  other:{
+    label:'Location',
+    options:['Other']
+  }
+};
+
+const GL_CAT_META={
+  nightlife:{emoji:'🌙',label:'Nightlife',color:'#a78bfa'},
+  daytime:{emoji:'☀️',label:'Daytime',color:'#f59e0b'},
+  work:{emoji:'💼',label:'Work',color:'#3b82f6'},
+  social:{emoji:'🎉',label:'Social',color:'#22c55e'},
+  app:{emoji:'📱',label:'App',color:'#f472b6'},
+  transit:{emoji:'🚇',label:'Transit',color:'#94a3b8'},
+  other:{emoji:'✦',label:'Other',color:'#6b7280'},
+};
+
+function setGLCat(cat){
+  glCat=cat;
+  document.querySelectorAll('.gl-cat-pill').forEach(b=>b.classList.remove('active'));
+  const btn=document.getElementById('glcat-'+cat);
+  if(btn)btn.classList.add('active');
+  // Update venue dropdown
+  const v=GL_VENUES[cat]||GL_VENUES.other;
+  const lbl=document.getElementById('gf-venue-lbl');
+  if(lbl)lbl.textContent=v.label;
+  const sel=document.getElementById('gf-venue');
+  if(sel){
+    sel.innerHTML=v.options.map(o=>`<option value="${o}">${o}</option>`).join('');
+    sel.onchange=function(){
+      const otherRow=document.getElementById('gf-venue-other-row');
+      if(otherRow)otherRow.style.display=(this.value.toLowerCase().startsWith('other')||this.value==='Other venue')? 'block':'none';
+    };
+  }
+  const otherRow=document.getElementById('gf-venue-other-row');
+  if(otherRow)otherRow.style.display='none';
+}
 function loadGameLog(){gameLog=ls('gamelog:'+viewDate)||[];}
 function saveGameLog(){lss('gamelog:'+viewDate,gameLog);}
 function toggleGameForm(){
   const f=document.getElementById('game-form');if(!f)return;
   const show=f.style.display==='none';
   f.style.display=show?'block':'none';
-  if(show)setTimeout(()=>document.getElementById('gf-name').focus(),50);
+  if(show){
+    setGLCat(glCat);
+    setTimeout(()=>document.getElementById('gf-name').focus(),50);
+  }
 }
 function saveGameEntry(){
   if(!isToday())return;
   const name=document.getElementById('gf-name').value.trim()||'Unknown';
   const age=document.getElementById('gf-age').value||'';
   const race=document.getElementById('gf-race').value;
-  const location=document.getElementById('gf-location').value;
-  const opener=document.getElementById('gf-opener').value.trim();
   const close=document.getElementById('gf-close').value;
   const contact=document.getElementById('gf-contact').value.trim();
-  gameLog.push({id:Date.now(),name,age,race,location,opener,close,contact});
+  const notes=document.getElementById('gf-notes').value.trim();
+  let venue=document.getElementById('gf-venue').value;
+  const venueOther=document.getElementById('gf-venue-other').value.trim();
+  if(venueOther)venue=venueOther;
+  gameLog.push({id:Date.now(),name,age,race,cat:glCat,venue,close,contact,notes});
   saveGameLog();
-  ['gf-name','gf-age','gf-opener','gf-contact'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-  ['gf-race','gf-location','gf-close'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['gf-name','gf-age','gf-contact','gf-notes','gf-venue-other'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['gf-race','gf-close'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('game-form').style.display='none';
   renderGameLog();
 }
 function delGameEntry(id){gameLog=gameLog.filter(e=>e.id!==id);saveGameLog();renderGameLog();}
 function renderGameLog(){
   const el=document.getElementById('game-log-list');if(!el)return;
+  const cnt=document.getElementById('game-log-count');
+  if(cnt)cnt.textContent=gameLog.length?gameLog.length+' today':'';
   const ro=!isToday();
-  if(!gameLog.length){el.innerHTML='<div class="game-empty">No approaches logged yet today.</div>';return;}
+  if(!gameLog.length){el.innerHTML='<div class="game-empty">No approaches logged yet. Get out there.</div>';return;}
   el.innerHTML=gameLog.map(e=>{
     const closeCol=CLOSE_COLORS[e.close]||'var(--t3)';
-    const raceLbl=RACE_LABELS[e.race]||e.race;
-    return`<div class="game-entry">
+    const raceLbl=RACE_LABELS[e.race]||'';
+    const meta=GL_CAT_META[e.cat]||GL_CAT_META.other;
+    return`<div class="game-entry" style="border-left-color:${meta.color}">
       <div class="game-entry-top">
-        <span class="game-name">${e.name}</span>
-        ${e.age?`<span class="game-badge" style="background:rgba(255,255,255,.06);color:var(--t2)">${e.age}</span>`:''}
-        ${e.race?`<span class="game-badge" style="background:rgba(59,130,246,.12);color:#60a5fa">${raceLbl}</span>`:''}
+        <span class="game-cat-badge" style="background:${meta.color}22;color:${meta.color}">${meta.emoji} ${meta.label}</span>
+        ${e.venue?`<span class="game-badge" style="background:rgba(255,255,255,.06);color:var(--t2)">📍 ${e.venue}</span>`:''}
         ${e.close?`<span class="game-close-badge" style="background:${closeCol}22;color:${closeCol}">${CLOSE_LABELS[e.close]||e.close}</span>`:''}
         ${ro?'':` <button class="game-del" onclick="delGameEntry(${e.id})"><i class="ti ti-x"></i></button>`}
       </div>
-      ${e.location?`<div class="game-details"><span>📍 ${e.location.replace('_',' ')}</span></div>`:''}
-      ${e.opener?`<div class="game-opener">"${e.opener}"</div>`:''}
-      ${e.contact?`<div class="game-contact">${e.contact}</div>`:''}
+      <div class="game-entry-mid">
+        <span class="game-name">${e.name}</span>
+        ${e.age?`<span style="font-size:12px;color:var(--t3)">· ${e.age}yo</span>`:''}
+        ${raceLbl?`<span style="font-size:11px;color:var(--t3);font-style:italic">· ${raceLbl}</span>`:''}
+      </div>
+      ${e.contact?`<div class="game-contact">📲 ${e.contact}</div>`:''}
+      ${e.notes?`<div class="game-opener">${e.notes}</div>`:''}
     </div>`;
   }).join('');
 }
