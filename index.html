@@ -517,6 +517,34 @@ input,select{font-family:inherit;color:var(--t1)}
 .tab-btn .tbl{font-size:10px;letter-spacing:.02em}
 .tsec{display:none}.tsec.active{display:block}
 .phil-card:hover .phil-del{opacity:1}
+/* ── Workout Tracker ─────────────────────────────── */
+.wkt-day-btn{padding:6px 14px;border-radius:20px;border:1px solid var(--border2);background:transparent;color:var(--t2);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;font-family:inherit}
+.wkt-day-btn:hover{border-color:var(--acc);color:var(--acc)}
+.wkt-day-btn.active{background:var(--acc);border-color:var(--acc);color:#fff}
+.wkt-ex-card{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--border2);border-radius:var(--r);padding:.65rem .85rem;display:flex;align-items:center;gap:8px;transition:border-color .15s}
+.wkt-ex-card.done{border-left-color:#22c55e;opacity:.75}
+.wkt-ex-card:hover{border-color:var(--border2)}
+.wkt-done-btn{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--border2);background:transparent;color:var(--t3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .15s;flex-shrink:0}
+.wkt-done-btn.on{background:#22c55e22;border-color:#22c55e;color:#4ade80}
+.wkt-ex-name{flex:1;font-size:13px;font-weight:500;color:var(--t1);background:transparent;border:none;outline:none;font-family:inherit}
+.wkt-ex-name::placeholder{color:var(--t3)}
+.wkt-scheme{display:flex;align-items:center;gap:4px;flex-shrink:0}
+.wkt-step-btn{width:22px;height:22px;border-radius:5px;border:1px solid var(--border2);background:var(--bg3);color:var(--t2);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;transition:all .15s;flex-shrink:0}
+.wkt-step-btn:hover{background:var(--border2);color:var(--t1)}
+.wkt-val{font-size:12px;font-weight:600;font-family:var(--mono);min-width:20px;text-align:center;color:var(--t1)}
+.wkt-sep{font-size:11px;color:var(--t3)}
+.wkt-unit{font-size:10px;color:var(--t3);margin-left:1px}
+.wkt-weight-inp{width:48px;font-size:12px;font-family:var(--mono);background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--t1);text-align:center;padding:2px 4px;outline:none}
+.wkt-del{background:transparent;border:none;color:var(--t3);cursor:pointer;font-size:13px;opacity:0;transition:opacity .15s;padding:2px 4px;flex-shrink:0}
+.wkt-ex-card:hover .wkt-del{opacity:1}
+.wkt-fixed-card{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--acc);border-radius:var(--r);padding:.65rem .85rem;display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.wkt-fixed-card.done{border-left-color:#22c55e}
+.wkt-history-entry{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.6rem .85rem;margin-bottom:6px;font-size:12px;color:var(--t2)}
+.wkt-history-entry b{color:var(--t1)}
+@media(max-width:600px){
+  .wkt-scheme{gap:2px}
+  .wkt-weight-inp{width:38px}
+}
 .mist-card{background:var(--bg2);border:1px solid var(--border);border-left:3px solid #ef4444;border-radius:var(--r);padding:.85rem 1rem;margin-bottom:8px;transition:border-color .15s}
 .mist-card.resolved{border-left-color:#22c55e;opacity:.7}
 .mist-card:hover{border-color:var(--border2)}
@@ -794,6 +822,75 @@ create policy "allow all" on dashboard_data
     <div id="mtodo-list"></div>
   </div>
 
+</div>
+<div class="tsec" data-tab="fitness">
+  <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
+    <span>🏋️ Workout tracker</span>
+    <div style="display:flex;gap:6px;align-items:center">
+      <span id="wkt-status" style="font-size:11px;color:var(--t3)"></span>
+      <button class="nutr-sm-btn" onclick="logWorkout()" id="wkt-log-btn">✓ Log workout</button>
+    </div>
+  </div>
+
+  <!-- Day selector -->
+  <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">
+    <button class="wkt-day-btn active" onclick="setWorkoutDay('push')" id="wday-push">Push</button>
+    <button class="wkt-day-btn" onclick="setWorkoutDay('pull')" id="wday-pull">Pull</button>
+    <button class="wkt-day-btn" onclick="setWorkoutDay('legs')" id="wday-legs">Legs</button>
+    <button class="wkt-day-btn" onclick="setWorkoutDay('upper')" id="wday-upper">Upper</button>
+    <button class="wkt-day-btn" onclick="setWorkoutDay('lower')" id="wday-lower">Lower</button>
+    <button class="nutr-sm-btn" style="margin-left:auto" onclick="resetWorkoutToTemplate()" title="Reset to default template">↺ Template</button>
+  </div>
+
+  <!-- Main exercises -->
+  <div id="wkt-exercises" style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px"></div>
+  <button class="nutr-sm-btn" onclick="addWorkoutExercise()" style="margin-bottom:14px;width:100%;justify-content:center">+ Add exercise</button>
+
+  <!-- Cardio -->
+  <div class="wkt-fixed-card" id="wkt-cardio-card">
+    <div style="display:flex;align-items:center;gap:8px;flex:1">
+      <button class="wkt-done-btn" id="wkt-cardio-done" onclick="toggleWktCardio()"><i class="ti ti-check"></i></button>
+      <div>
+        <div style="font-size:13px;font-weight:500;color:var(--t1)">Incline Treadmill</div>
+        <div style="font-size:11px;color:var(--t3);margin-top:1px">Cardio — steady state</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px">
+      <button class="wkt-step-btn" onclick="adjustCardio(-5)">−</button>
+      <span id="wkt-cardio-min" style="font-size:13px;font-weight:600;font-family:var(--mono);min-width:36px;text-align:center">30 min</span>
+      <button class="wkt-step-btn" onclick="adjustCardio(5)">+</button>
+    </div>
+  </div>
+
+  <!-- Abs -->
+  <div class="wkt-fixed-card" id="wkt-abs-card">
+    <div style="display:flex;align-items:center;gap:8px;flex:1">
+      <button class="wkt-done-btn" id="wkt-abs-done" onclick="toggleWktAbs()"><i class="ti ti-check"></i></button>
+      <div style="flex:1">
+        <input class="wkt-abs-name" id="wkt-abs-name" value="Decline Crunches" style="font-size:13px;font-weight:500;color:var(--t1);background:transparent;border:none;outline:none;width:100%;font-family:inherit">
+        <div style="font-size:11px;color:var(--t3);margin-top:1px">Abs — always included</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:4px">
+      <button class="wkt-step-btn" onclick="adjustAbs('sets',-1)">−</button>
+      <span id="wkt-abs-sets" style="font-size:12px;font-family:var(--mono);min-width:18px;text-align:center">3</span>
+      <span style="font-size:11px;color:var(--t3)">×</span>
+      <button class="wkt-step-btn" onclick="adjustAbs('reps',-1)">−</button>
+      <span id="wkt-abs-reps" style="font-size:12px;font-family:var(--mono);min-width:18px;text-align:center">8</span>
+      <button class="wkt-step-btn" onclick="adjustAbs('sets',1)" style="display:none"></button>
+      <button class="wkt-step-btn" onclick="adjustAbs('reps',1)" style="display:none"></button>
+    </div>
+    <div style="display:flex;align-items:center;gap:3px;margin-left:4px">
+      <button class="wkt-step-btn" onclick="adjustAbs('sets',-1)">−</button>
+      <span style="font-size:10px;color:var(--t3)">sets</span>
+      <button class="wkt-step-btn" onclick="adjustAbs('sets',1)">+</button>
+      <span style="width:6px"></span>
+      <button class="wkt-step-btn" onclick="adjustAbs('reps',-1)">−</button>
+      <span style="font-size:10px;color:var(--t3)">reps</span>
+      <button class="wkt-step-btn" onclick="adjustAbs('reps',1)">+</button>
+    </div>
+  </div>
+  <div id="wkt-history" style="margin-top:12px"></div>
 </div>
 <div class="tsec" data-tab="fitness">
   <div class="slbl" style="margin-top:.75rem;display:flex;justify-content:space-between;align-items:center">
@@ -2614,7 +2711,7 @@ function showBackupMsg(msg){
   el.style.animation='none';
   setTimeout(()=>{el.style.animation='fadeOut 3s forwards';},50);
 }
-function renderAll(){renderDateNav();renderHealth();renderEnergy();renderHabits();renderGameLog();renderDTodos();renderMTodos();renderVO2();renderGymGoals();renderTrading();renderStats();renderExpenses();renderNet();renderBills();renderShop();renderGroceries();renderMacros();renderMealLog();renderSupplements();renderEntries();renderTimeline();pStatsRender();pLogRender();loadCalendar();renderCalendar();loadJournal();renderProgress();renderLTG();renderBodyIssues();renderDates();renderPhilos();renderMistakes();}
+function renderAll(){renderDateNav();renderHealth();renderEnergy();renderHabits();renderGameLog();renderDTodos();renderMTodos();renderVO2();renderGymGoals();renderTrading();renderStats();renderExpenses();renderNet();renderBills();renderShop();renderGroceries();renderMacros();renderMealLog();renderSupplements();renderEntries();renderTimeline();pStatsRender();pLogRender();loadCalendar();renderCalendar();loadJournal();renderProgress();renderLTG();renderBodyIssues();renderDates();renderPhilos();renderMistakes();loadWorkout();renderWorkout();}
 // ─── Groceries ────────────────────────────────────────────────
 const GROC_CATS={protein:{lbl:'Protein',col:'#f97316'},produce:{lbl:'Produce',col:'#22c55e'},dairy:{lbl:'Dairy',col:'#60a5fa'},carbs:{lbl:'Carbs',col:'#f59e0b'},fats:{lbl:'Fats',col:'#a78bfa'},snacks:{lbl:'Snacks',col:'#f87171'},other:{lbl:'Other',col:'#6b7280'}};
 let grocItems=[];
@@ -3218,11 +3315,11 @@ function renderMistakes(){
 }
 // ─── init ─────────────────────────────────────────────────────
 function init(){
-  setHeader();loadAll();loadNutrition();loadCalendar();loadDates();loadTodos();loadVO2();loadPhilos();loadGameLog();loadGymGoals();loadBills();loadShop();loadBodyIssues();loadEnergy();loadGroceries();loadMistakes();
+  setHeader();loadAll();loadNutrition();loadCalendar();loadDates();loadTodos();loadVO2();loadPhilos();loadGameLog();loadGymGoals();loadBills();loadShop();loadBodyIssues();loadEnergy();loadGroceries();loadMistakes();loadWorkout();
   renderDateNav();renderHealth();renderEnergy();renderHabits();renderGameLog();renderDTodos();renderMTodos();renderVO2();renderGymGoals();renderTrading();renderStats();renderExpenses();renderNet();renderBills();renderShop();renderGroceries();
   renderMacros();renderMealLog();renderSupplements();
   setDefaultTime();renderEntries();renderTimeline();
-  pDisp();pRing();pStatsRender();pLogRender();renderRM();renderProgress();initJournal();renderLTG();renderCalendar();renderBodyIssues();renderDates();renderPhilos();renderMistakes();
+  pDisp();pRing();pStatsRender();pLogRender();renderRM();renderProgress();initJournal();renderLTG();renderCalendar();renderBodyIssues();renderDates();renderPhilos();renderMistakes();renderWorkout();
 }
 
 // ─── Tab switching ────────────────────────────────────────────
@@ -3241,6 +3338,233 @@ function initTabs(){
   switchTab(saved);
 }
 
+// ─── Workout Tracker ─────────────────────────────────────────
+const WKT_TEMPLATES = {
+  push: [
+    {name:'Incline Bench Press', sets:4, reps:8, weight:135},
+    {name:'Overhead Press',      sets:4, reps:8, weight:95},
+    {name:'Cable Lateral Raise', sets:3, reps:15, weight:20},
+    {name:'Tricep Pushdown',     sets:3, reps:12, weight:50},
+  ],
+  pull: [
+    {name:'Deadlift',            sets:4, reps:5, weight:225},
+    {name:'Pull-ups',            sets:4, reps:8, weight:0},
+    {name:'Cable Row',           sets:3, reps:10, weight:120},
+    {name:'Face Pull',           sets:3, reps:15, weight:40},
+  ],
+  legs: [
+    {name:'Squat',               sets:4, reps:6, weight:185},
+    {name:'Leg Press',           sets:4, reps:10, weight:270},
+    {name:'Hamstring Curl',      sets:3, reps:12, weight:80},
+    {name:'Calf Raises',         sets:4, reps:15, weight:150},
+  ],
+  upper: [
+    {name:'Bench Press',         sets:4, reps:8, weight:155},
+    {name:'Bent Over Row',       sets:4, reps:8, weight:135},
+    {name:'Overhead Press',      sets:3, reps:10, weight:85},
+    {name:'Lat Pulldown',        sets:3, reps:10, weight:120},
+  ],
+  lower: [
+    {name:'Squat',               sets:4, reps:6, weight:185},
+    {name:'Romanian Deadlift',   sets:4, reps:8, weight:155},
+    {name:'Leg Press',           sets:3, reps:12, weight:270},
+    {name:'Walking Lunges',      sets:3, reps:12, weight:50},
+  ],
+};
+const WKT_DAY_LABELS = {push:'Push Day',pull:'Pull Day',legs:'Legs Day',upper:'Upper Day',lower:'Lower Day'};
+
+let wktState = {day:'push', exercises:[], cardio:{min:30,done:false}, abs:{name:'Decline Crunches',sets:3,reps:8,done:false}};
+
+function loadWorkout(){
+  const saved = ls('workout-session:'+viewDate);
+  if(saved){
+    wktState = saved;
+  } else {
+    const lastDay = ls('workout-last-day')||'push';
+    wktState = {
+      day: lastDay,
+      exercises: WKT_TEMPLATES[lastDay].map(e=>({...e,done:false})),
+      cardio: {min:30,done:false},
+      abs: {name:'Decline Crunches',sets:3,reps:8,done:false}
+    };
+  }
+}
+function saveWorkout(){
+  lss('workout-session:'+viewDate, wktState);
+}
+function setWorkoutDay(day){
+  wktState.day = day;
+  wktState.exercises = WKT_TEMPLATES[day].map(e=>({...e,done:false}));
+  wktState.cardio.done = false;
+  wktState.abs.done = false;
+  lss('workout-last-day', day);
+  saveWorkout();
+  renderWorkout();
+}
+function resetWorkoutToTemplate(){
+  wktState.exercises = WKT_TEMPLATES[wktState.day].map(e=>({...e,done:false}));
+  saveWorkout(); renderWorkout();
+}
+function toggleWktExercise(i){
+  if(!isToday())return;
+  wktState.exercises[i].done = !wktState.exercises[i].done;
+  saveWorkout(); renderWorkoutStatus();
+  const card = document.getElementById('wkt-ex-'+i);
+  if(card) card.classList.toggle('done', wktState.exercises[i].done);
+  const btn = document.getElementById('wkt-btn-'+i);
+  if(btn) btn.classList.toggle('on', wktState.exercises[i].done);
+}
+function adjustWkt(i, field, delta){
+  const ex = wktState.exercises[i];
+  if(field==='sets') ex.sets = Math.max(1, (ex.sets||1)+delta);
+  if(field==='reps') ex.reps = Math.max(1, (ex.reps||1)+delta);
+  if(field==='weight') ex.weight = Math.max(0, (ex.weight||0)+delta);
+  saveWorkout();
+  renderWorkoutExercise(i);
+}
+function updateWktName(i, val){
+  wktState.exercises[i].name = val;
+  saveWorkout();
+}
+function updateWktWeight(i, val){
+  wktState.exercises[i].weight = parseFloat(val)||0;
+  saveWorkout();
+}
+function deleteWktExercise(i){
+  wktState.exercises.splice(i,1);
+  saveWorkout(); renderWorkout();
+}
+function addWorkoutExercise(){
+  wktState.exercises.push({name:'', sets:3, reps:10, weight:0, done:false});
+  saveWorkout(); renderWorkout();
+  setTimeout(()=>{
+    const inputs = document.querySelectorAll('.wkt-ex-name');
+    if(inputs.length) inputs[inputs.length-1].focus();
+  },50);
+}
+function toggleWktCardio(){
+  if(!isToday())return;
+  wktState.cardio.done = !wktState.cardio.done;
+  saveWorkout();
+  const card=document.getElementById('wkt-cardio-card');
+  const btn=document.getElementById('wkt-cardio-done');
+  if(card) card.classList.toggle('done', wktState.cardio.done);
+  if(btn) btn.classList.toggle('on', wktState.cardio.done);
+  renderWorkoutStatus();
+}
+function adjustCardio(delta){
+  wktState.cardio.min = Math.max(5, (wktState.cardio.min||30)+delta);
+  saveWorkout();
+  const el=document.getElementById('wkt-cardio-min');
+  if(el) el.textContent=wktState.cardio.min+' min';
+}
+function toggleWktAbs(){
+  if(!isToday())return;
+  wktState.abs.done = !wktState.abs.done;
+  saveWorkout();
+  const card=document.getElementById('wkt-abs-card');
+  const btn=document.getElementById('wkt-abs-done');
+  if(card) card.classList.toggle('done', wktState.abs.done);
+  if(btn) btn.classList.toggle('on', wktState.abs.done);
+  renderWorkoutStatus();
+}
+function adjustAbs(field, delta){
+  if(field==='sets') wktState.abs.sets = Math.max(1,(wktState.abs.sets||3)+delta);
+  if(field==='reps') wktState.abs.reps = Math.max(1,(wktState.abs.reps||8)+delta);
+  saveWorkout();
+  const s=document.getElementById('wkt-abs-sets'), r=document.getElementById('wkt-abs-reps');
+  if(s) s.textContent=wktState.abs.sets;
+  if(r) r.textContent=wktState.abs.reps;
+}
+function logWorkout(){
+  if(!isToday())return;
+  wktState.exercises.forEach((_,i)=>{wktState.exercises[i].done=true;});
+  wktState.cardio.done=true; wktState.abs.done=true;
+  wktState.completedAt=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  saveWorkout(); renderWorkout();
+}
+function renderWorkoutExercise(i){
+  const el=document.getElementById('wkt-ex-'+i);
+  if(!el) return;
+  const ex=wktState.exercises[i];
+  el.className='wkt-ex-card'+(ex.done?' done':'');
+  el.querySelector('.wkt-done-btn').className='wkt-done-btn'+(ex.done?' on':'');
+  el.querySelector('[data-sets]').textContent=ex.sets;
+  el.querySelector('[data-reps]').textContent=ex.reps;
+  el.querySelector('input[type="number"]').value=ex.weight||0;
+}
+function renderWorkoutStatus(){
+  const total = wktState.exercises.length + 2;
+  const done = wktState.exercises.filter(e=>e.done).length + (wktState.cardio.done?1:0) + (wktState.abs.done?1:0);
+  const el=document.getElementById('wkt-status');
+  if(el) el.textContent = done===total ? '✅ All done!' : `${done}/${total} complete`;
+}
+function renderWorkout(){
+  if(!document.getElementById('wkt-exercises')) return;
+  // Day buttons
+  Object.keys(WKT_TEMPLATES).forEach(d=>{
+    const btn=document.getElementById('wday-'+d);
+    if(btn) btn.classList.toggle('active', wktState.day===d);
+  });
+  // Exercises
+  const el=document.getElementById('wkt-exercises');
+  el.innerHTML = wktState.exercises.map((ex,i)=>`
+    <div class="wkt-ex-card${ex.done?' done':''}" id="wkt-ex-${i}">
+      <button class="wkt-done-btn${ex.done?' on':''}" id="wkt-btn-${i}" onclick="toggleWktExercise(${i})"><i class="ti ti-check"></i></button>
+      <input class="wkt-ex-name" value="${ex.name}" placeholder="Exercise name" oninput="updateWktName(${i},this.value)" ${!isToday()?'disabled':''}>
+      <div class="wkt-scheme">
+        <button class="wkt-step-btn" onclick="adjustWkt(${i},'sets',-1)">−</button>
+        <span class="wkt-val" data-sets>${ex.sets}</span>
+        <span class="wkt-sep">×</span>
+        <button class="wkt-step-btn" onclick="adjustWkt(${i},'reps',-1)">−</button>
+        <span class="wkt-val" data-reps>${ex.reps}</span>
+        <button class="wkt-step-btn" onclick="adjustWkt(${i},'reps',1)">+</button>
+        <button class="wkt-step-btn" onclick="adjustWkt(${i},'sets',1)" style="display:none"></button>
+        <span class="wkt-sep" style="margin-left:2px">@</span>
+        <input type="number" class="wkt-weight-inp" value="${ex.weight||0}" min="0" step="5" onchange="updateWktWeight(${i},this.value)" ${!isToday()?'disabled':''}>
+        <span class="wkt-unit">lbs</span>
+        <button class="wkt-step-btn" onclick="adjustWkt(${i},'sets',1)" style="margin-left:2px">+</button>
+      </div>
+      <button class="wkt-del" onclick="deleteWktExercise(${i})" title="Remove"><i class="ti ti-x"></i></button>
+    </div>`).join('');
+  // Cardio
+  const cc=document.getElementById('wkt-cardio-card');
+  const cb=document.getElementById('wkt-cardio-done');
+  if(cc) cc.classList.toggle('done', wktState.cardio.done);
+  if(cb) cb.classList.toggle('on', wktState.cardio.done);
+  const cm=document.getElementById('wkt-cardio-min');
+  if(cm) cm.textContent=wktState.cardio.min+' min';
+  // Abs
+  const ac=document.getElementById('wkt-abs-card');
+  const ab=document.getElementById('wkt-abs-done');
+  if(ac) ac.classList.toggle('done', wktState.abs.done);
+  if(ab) ab.classList.toggle('on', wktState.abs.done);
+  const an=document.getElementById('wkt-abs-name');
+  if(an){an.value=wktState.abs.name;}
+  const as_=document.getElementById('wkt-abs-sets'), ar=document.getElementById('wkt-abs-reps');
+  if(as_) as_.textContent=wktState.abs.sets;
+  if(ar) ar.textContent=wktState.abs.reps;
+  // History — last 3 workouts
+  const hist=document.getElementById('wkt-history');
+  if(hist){
+    const entries=[];
+    for(let d=1;d<=7;d++){
+      const dt=new Date(); dt.setDate(dt.getDate()-d);
+      const k='workout-session:'+dt.toISOString().slice(0,10);
+      const s=ls(k);
+      if(s && s.completedAt){
+        const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        entries.push(`<div class="wkt-history-entry"><b>${WKT_DAY_LABELS[s.day]||s.day}</b> — ${months[dt.getMonth()]} ${dt.getDate()} at ${s.completedAt} · ${s.exercises.filter(e=>e.done).length}/${s.exercises.length} exercises</div>`);
+      }
+      if(entries.length>=3) break;
+    }
+    hist.innerHTML = entries.length ? '<div style="font-size:11px;color:var(--t3);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em">Recent sessions</div>'+entries.join('') : '';
+  }
+  renderWorkoutStatus();
+  // Log button state
+  const lb=document.getElementById('wkt-log-btn');
+  if(lb) lb.style.opacity=isToday()?'1':'.4';
+}
 syncFromCloud();
 initTabs();
 
