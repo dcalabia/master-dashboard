@@ -506,6 +506,16 @@ input,select{font-family:inherit;color:var(--t1)}
 .bi-pills{display:flex;gap:4px;flex-wrap:wrap}
 .bi-pill{font-size:9px;font-weight:600;padding:1px 6px;border-radius:8px}
 .bi-empty{padding:1.25rem;text-align:center;font-size:13px;color:var(--t3);background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl)}
+
+/* ── Tab navigation ─────────────────────────────── */
+.tab-bar{position:sticky;top:0;z-index:200;background:var(--bg);border-bottom:1px solid var(--border);display:flex;gap:2px;padding:6px 8px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab-btn{flex:1;padding:8px 4px;border-radius:8px;border:none;background:transparent;color:var(--t3);font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;transition:all .15s;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:56px}
+.tab-btn:hover{background:var(--bg2);color:var(--t1)}
+.tab-btn.active{background:var(--acc);color:#fff}
+.tab-btn .tbi{font-size:16px;line-height:1}
+.tab-btn .tbl{font-size:10px;letter-spacing:.02em}
+.tsec{display:none}.tsec.active{display:block}
 .phil-card:hover .phil-del{opacity:1}
 .mist-card{background:var(--bg2);border:1px solid var(--border);border-left:3px solid #ef4444;border-radius:var(--r);padding:.85rem 1rem;margin-bottom:8px;transition:border-color .15s}
 .mist-card.resolved{border-left-color:#22c55e;opacity:.7}
@@ -641,6 +651,15 @@ create policy "allow all" on dashboard_data
   </div>
 </div>
 
+
+<!-- Tab navigation -->
+<div class="tab-bar" id="main-tab-bar">
+  <button class="tab-btn active" onclick="switchTab('home')" id="tab-btn-home"><span class="tbi">🏠</span><span class="tbl">Home</span></button>
+  <button class="tab-btn" onclick="switchTab('fitness')" id="tab-btn-fitness"><span class="tbi">💪</span><span class="tbl">Fitness</span></button>
+  <button class="tab-btn" onclick="switchTab('daily')" id="tab-btn-daily"><span class="tbi">📋</span><span class="tbl">Daily</span></button>
+  <button class="tab-btn" onclick="switchTab('finance')" id="tab-btn-finance"><span class="tbi">💰</span><span class="tbl">Finance</span></button>
+  <button class="tab-btn" onclick="switchTab('journal')" id="tab-btn-journal"><span class="tbi">📓</span><span class="tbl">Journal</span></button>
+</div>
 <div class="vt">
   <button class="vt-btn active" onclick="setView('today')" id="vt-today">Today</button>
   <button class="vt-btn" onclick="setView('month')" id="vt-month">Monthly</button>
@@ -658,6 +677,7 @@ create policy "allow all" on dashboard_data
   </div>
   <div id="ro-banner" style="display:none" class="ro-banner"><i class="ti ti-eye" style="font-size:14px"></i> Viewing past data — read only</div>
 
+<div class="tsec active" data-tab="home">
   <!-- Daily completion progress bar -->
   <div style="margin-bottom:1.25rem">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
@@ -669,18 +689,26 @@ create policy "allow all" on dashboard_data
     </div>
   </div>
 
+</div>
+<div class="tsec" data-tab="home">
   <div class="slbl">Health metrics</div>
   <div class="grid4" id="health-grid"></div>
 
+</div>
+<div class="tsec" data-tab="home">
   <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
     <span>⚡ Energy levels</span>
     <span style="font-size:10px;color:var(--t3)">1 = depleted · 10 = peak</span>
   </div>
   <div class="energy-grid" id="energy-grid"></div>
 
+</div>
+<div class="tsec" data-tab="home">
   <div class="slbl">Daily habits</div>
   <div id="habits-grid"></div>
 
+</div>
+<div class="tsec" data-tab="home">
   <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
     <span>🎯 Game log</span>
     <button class="nutr-sm-btn" id="game-add-btn" onclick="toggleGameForm()">+ Log approach</button>
@@ -738,6 +766,9 @@ create policy "allow all" on dashboard_data
     </div>
   </div>
   <div id="game-log-list" style="margin-bottom:1.5rem"></div>
+</div>
+<div class="tsec" data-tab="daily">
+  <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
     <span>Daily to-do</span>
     <span id="dtodo-count" style="font-size:11px;color:var(--t3)"></span>
   </div>
@@ -749,6 +780,8 @@ create policy "allow all" on dashboard_data
     <div id="dtodo-list"></div>
   </div>
 
+</div>
+<div class="tsec" data-tab="daily">
   <div class="slbl" style="display:flex;justify-content:space-between;align-items:center;margin-top:.75rem">
     <span>Master list</span>
     <span style="font-size:10px;color:var(--t3)">Persists until done</span>
@@ -761,12 +794,16 @@ create policy "allow all" on dashboard_data
     <div id="mtodo-list"></div>
   </div>
 
+</div>
+<div class="tsec" data-tab="fitness">
   <div class="slbl" style="margin-top:.75rem;display:flex;justify-content:space-between;align-items:center">
     <span>Weekly protocols</span>
     <span id="vo2-week-lbl" style="font-size:11px;color:var(--t3)"></span>
   </div>
   <div id="vo2-section" style="margin-bottom:1.5rem"></div>
 
+</div>
+<div class="tsec" data-tab="fitness">
   <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
     <span>🏋 Gym weight goals</span>
     <button class="nutr-sm-btn" onclick="toggleGymForm()">+ Add exercise</button>
@@ -787,6 +824,8 @@ create policy "allow all" on dashboard_data
   </div>
   <div id="gym-goals-list" style="margin-bottom:1.5rem"></div>
 
+</div>
+<div class="tsec" data-tab="daily">
   <div class="slbl">Trading session</div>
   <div id="trading-section" style="margin-bottom:1.5rem">
     <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;margin-bottom:8px">
@@ -799,8 +838,12 @@ create policy "allow all" on dashboard_data
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px" id="trading-checks"></div>
   </div>
 
+</div>
+<div class="tsec" data-tab="home">
   <div class="slbl">Daily stats</div>
   <div class="grid4s" id="stats-grid"></div>
+</div>
+<div class="tsec" data-tab="finance">
   <div class="slbl" style="margin-top:.75rem">Expenses</div>
   <div class="exp-card">
     <div class="exp-add-row" id="exp-add-row">
@@ -825,6 +868,8 @@ create policy "allow all" on dashboard_data
     </div>
   </div>
 
+</div>
+<div class="tsec" data-tab="finance">
   <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
     <span>💳 Monthly bills</span>
     <div style="display:flex;align-items:center;gap:8px">
@@ -845,6 +890,8 @@ create policy "allow all" on dashboard_data
   </div>
   <div id="bills-list" style="margin-bottom:1.5rem"></div>
 
+</div>
+<div class="tsec" data-tab="finance">
   <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
     <span>🛍 Shopping list</span>
     <div style="display:flex;align-items:center;gap:8px">
@@ -864,6 +911,8 @@ create policy "allow all" on dashboard_data
   </div>
   <div id="shop-list" style="margin-bottom:1.5rem"></div>
 
+</div>
+<div class="tsec" data-tab="finance">
   <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
     <span>🛒 Groceries</span>
     <div style="display:flex;align-items:center;gap:8px">
@@ -898,6 +947,8 @@ create policy "allow all" on dashboard_data
   </div>
   <div class="macro-grid" id="macro-grid"></div>
 
+</div>
+<div class="tsec" data-tab="finance">
   <div class="slbl" style="display:flex;justify-content:space-between;align-items:center;margin-top:.75rem">
     <span>Meal log</span>
     <div style="display:flex;gap:6px">
@@ -924,12 +975,16 @@ create policy "allow all" on dashboard_data
     <div class="meal-log-empty" id="meal-log-empty">No meals logged yet.</div>
   </div>
 
+</div>
+<div class="tsec" data-tab="fitness">
   <div class="slbl" style="margin-top:1rem;display:flex;justify-content:space-between;align-items:center">
     <span>Supplements</span>
     <span style="font-size:10px;color:var(--t3);font-style:italic">Not in daily score</span>
   </div>
   <div class="supp-grid" id="supp-grid"></div>
 
+</div>
+<div class="tsec" data-tab="daily">
   <div class="slbl">Pomodoro</div>
   <div class="pomo-wrap" id="pomo-section">
     <div class="pmodes">
@@ -963,6 +1018,8 @@ create policy "allow all" on dashboard_data
     </div>
   </div>
 
+</div>
+<div class="tsec" data-tab="fitness">
   <div class="slbl">Log activity</div>
   <div class="act-card" id="act-add-card">
     <div class="irow">
@@ -976,15 +1033,21 @@ create policy "allow all" on dashboard_data
       <button class="abtn" onclick="addEntry()">+ Add</button>
     </div>
   </div>
+</div>
+<div class="tsec" data-tab="fitness">
   <div class="slbl"><span>Today's log</span><span id="entry-count" style="font-weight:400"></span></div>
   <div class="elist" id="entries-list"></div>
 
+</div>
+<div class="tsec" data-tab="fitness">
   <div class="slbl">Timeline — 6 AM to 12 AM</div>
   <div class="tl-wrap">
     <div class="tl-track" id="tl-track"></div>
     <div class="tlticks"><span class="tltick">6am</span><span class="tltick">9am</span><span class="tltick">12pm</span><span class="tltick">3pm</span><span class="tltick">6pm</span><span class="tltick">9pm</span><span class="tltick">12am</span></div>
   </div>
 
+</div>
+<div class="tsec" data-tab="daily">
   <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
     <span>Daily schedule</span>
     <div style="display:flex;gap:6px">
@@ -1016,6 +1079,8 @@ create policy "allow all" on dashboard_data
     </div>
   </div>
 
+</div>
+<div class="tsec" data-tab="journal">
   <div class="slbl">Daily journal</div>
   <div class="journal-wrap">
     <div class="journal-header">
@@ -1029,12 +1094,16 @@ create policy "allow all" on dashboard_data
     </div>
   </div>
 
+</div>
+<div class="tsec" data-tab="journal">
   <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
     <span>📅 Important dates</span>
     <button class="nutr-sm-btn" onclick="openAddDate()">+ Add</button>
   </div>
   <div class="idate-wrap" id="idate-wrap"></div>
 
+</div>
+<div class="tsec" data-tab="journal">
   <div class="slbl">Dashboard roadmap</div>
   <div class="rm-card">
     <div class="rmh" onclick="toggleRM()">
@@ -1044,9 +1113,13 @@ create policy "allow all" on dashboard_data
     <div id="rm-body"></div>
   </div>
 
+</div>
+<div class="tsec" data-tab="finance">
   <div class="slbl">Long term goals</div>
   <div id="ltg-section"></div>
 
+</div>
+<div class="tsec" data-tab="fitness">
   <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
     <span>🩺 Body issues to address</span>
     <button class="nutr-sm-btn" onclick="toggleBodyIssueForm()">+ Add</button>
@@ -1075,6 +1148,8 @@ create policy "allow all" on dashboard_data
     </div>
   </div>
   <div id="body-issues-list" style="margin-bottom:1.5rem"></div>
+</div>
+<div class="tsec" data-tab="journal">
   <div class="ideas-wrap">
     <div class="ideas-header">
       <span class="ideas-tagline">If you can think it, you can build it.</span>
@@ -1086,6 +1161,8 @@ create policy "allow all" on dashboard_data
     <div id="ideas-list"></div>
   </div>
 
+</div>
+<div class="tsec" data-tab="journal">
   <!-- Work Mistakes -->
   <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
     <span>⚠️ Work mistakes</span>
@@ -1131,6 +1208,8 @@ create policy "allow all" on dashboard_data
   </div>
   <div id="mistakes-list" style="margin-bottom:1.5rem"></div>
 
+</div>
+<div class="tsec" data-tab="journal">
   <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
     <span>🧭 Personal philosophy</span>
     <button class="nutr-sm-btn" onclick="togglePhilForm()">+ Add principle</button>
@@ -1143,6 +1222,7 @@ create policy "allow all" on dashboard_data
     </div>
   </div>
   <div class="phil-wrap" id="phil-wrap"></div>
+</div>
 </div>
 
 <div id="month-view" style="display:none">
@@ -3144,7 +3224,26 @@ function init(){
   setDefaultTime();renderEntries();renderTimeline();
   pDisp();pRing();pStatsRender();pLogRender();renderRM();renderProgress();initJournal();renderLTG();renderCalendar();renderBodyIssues();renderDates();renderPhilos();renderMistakes();
 }
+
+// ─── Tab switching ────────────────────────────────────────────
+function switchTab(tab){
+  document.querySelectorAll('.tsec').forEach(s=>{
+    s.classList.toggle('active', s.dataset.tab===tab);
+  });
+  document.querySelectorAll('.tab-btn').forEach(b=>{
+    b.classList.toggle('active', b.id==='tab-btn-'+tab);
+  });
+  localStorage.setItem('active-tab', tab);
+  window.scrollTo({top:0, behavior:'instant'});
+}
+function initTabs(){
+  const saved = localStorage.getItem('active-tab') || 'home';
+  switchTab(saved);
+}
+
 syncFromCloud();
+initTabs();
+
 let ideas=[];
 function loadIdeas(){ideas=ls('crazy-ideas')||[];}
 function saveIdeas(){lss('crazy-ideas',ideas);}
