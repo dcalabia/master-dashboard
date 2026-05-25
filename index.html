@@ -1167,7 +1167,7 @@ create policy "allow all" on dashboard_data
     <div id="ai-meal-preview" style="display:none;margin-top:10px"></div>
   </div>
 
-  <div class="meal-db-panel" id="meal-db-panel" style="display:none">
+  <div class="meal-db-panel" id="meal-db-panel" style="display:none"><div style="display:flex;justify-content:flex-end;padding:6px 1rem 0"><button onclick="toggleMealDB()" style="font-size:11px;color:var(--t3);background:transparent;border:none;cursor:pointer;padding:2px 6px">Hide ✕</button></div>
     <div style="padding:8px 1rem 6px;border-bottom:1px solid var(--border)">
       <input class="gf-inp" id="meal-search" placeholder="Search foods..." oninput="renderMealDB()" style="width:100%;font-size:13px">
     </div>
@@ -3045,7 +3045,8 @@ function toggleBillPaid(id){bills=bills.map(b=>b.id===id?{...b,paid:!b.paid}:b);
 function delBill(id){bills=bills.filter(b=>b.id!==id);saveBills();renderBills();}
 function renderBills(){
   const el=document.getElementById('bills-list');if(!el)return;
-  const total=bills.reduce((a,b)=>a+b.amt,0);
+  if(!Array.isArray(bills))bills=[...DEFAULT_BILLS];
+  const total=bills.reduce((a,b)=>a+(parseFloat(b.amt)||0),0);
   const paid=bills.reduce((a,b)=>a+(b.paid?b.amt:0),0);
   const lbl=document.getElementById('bills-total');
   if(lbl)lbl.textContent=`$${paid.toFixed(0)}/$${total.toFixed(0)}/mo`;
@@ -3083,7 +3084,8 @@ function toggleShopBought(id){shopItems=shopItems.map(s=>s.id===id?{...s,bought:
 function delShopItem(id){shopItems=shopItems.filter(s=>s.id!==id);saveShop();renderShop();}
 function renderShop(){
   const el=document.getElementById('shop-list');if(!el)return;
-  const total=shopItems.reduce((a,s)=>a+s.price,0);
+  if(!Array.isArray(shopItems))shopItems=[...DEFAULT_SHOP];
+  const total=shopItems.reduce((a,s)=>a+(parseFloat(s.price)||0),0);
   const remaining=shopItems.filter(s=>!s.bought).reduce((a,s)=>a+s.price,0);
   const lbl=document.getElementById('shop-total');
   if(lbl)lbl.textContent=`$${remaining.toFixed(0)} left`;
@@ -3580,11 +3582,16 @@ function renderMistakes(){
 }
 // ─── init ─────────────────────────────────────────────────────
 function init(){
-  setHeader();loadAll();loadNutrition();loadCalendar();loadDates();loadTodos();loadVO2();loadPhilos();loadGameLog();loadGymGoals();loadBills();loadShop();loadBodyIssues();loadEnergy();loadGroceries();loadMistakes();loadWorkout();
-  renderDateNav();renderHealth();renderEnergy();renderHabits();renderGameLog();renderDTodos();renderMTodos();renderVO2();renderGymGoals();renderTrading();renderStats();renderExpenses();renderNet();renderBills();renderShop();renderGroceries();
-  renderMacros();renderMealLog();renderSupplements();renderFitnessProtein();
-  setDefaultTime();renderEntries();renderTimeline();
-  pDisp();pRing();pStatsRender();pLogRender();renderRM();renderProgress();initJournal();renderLTG();renderCalendar();renderBodyIssues();renderDates();renderPhilos();renderMistakes();renderWorkout();renderFitnessProtein();renderStreaks();
+  try{setHeader();loadAll();loadNutrition();loadCalendar();loadDates();loadTodos();loadVO2();loadPhilos();loadGameLog();loadGymGoals();loadBills();loadShop();loadBodyIssues();loadEnergy();loadGroceries();loadMistakes();loadWorkout();}catch(e){console.error('Load error:',e);}
+  try{renderDateNav();renderHealth();renderEnergy();renderHabits();}catch(e){console.error('Render1:',e);}
+  try{renderGameLog();renderDTodos();renderMTodos();renderVO2();renderGymGoals();renderTrading();}catch(e){console.error('Render2:',e);}
+  try{renderStats();renderExpenses();renderNet();renderBills();renderShop();renderGroceries();}catch(e){console.error('Render3:',e);}
+  try{renderMacros();renderMealLog();renderSupplements();renderFitnessProtein();}catch(e){console.error('Render4:',e);}
+  try{setDefaultTime();renderEntries();renderTimeline();}catch(e){console.error('Render5:',e);}
+  try{pDisp();pRing();pStatsRender();pLogRender();renderRM();renderProgress();}catch(e){console.error('Render6:',e);}
+  try{initJournal();renderLTG();renderCalendar();renderBodyIssues();renderDates();renderPhilos();}catch(e){console.error('Render7:',e);}
+  try{renderMistakes();renderWorkout();renderFitnessProtein();renderStreaks();}catch(e){console.error('Render8:',e);}
+  initTabs();
 }
 
 // ─── Tab switching ────────────────────────────────────────────
@@ -3981,7 +3988,6 @@ function renderWorkout(){
   if(lb) lb.style.opacity=isToday()?'1':'.4';
 }
 syncFromCloud();
-initTabs();
 
 let ideas=[];
 function loadIdeas(){ideas=ls('crazy-ideas')||[];}
