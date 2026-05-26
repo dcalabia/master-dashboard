@@ -228,7 +228,7 @@ input,select{font-family:inherit;color:var(--t1)}
 .journal-header{display:flex;justify-content:space-between;align-items:center;padding:.7rem 1.25rem;border-bottom:1px solid var(--border)}
 .journal-title{font-size:13px;font-weight:500;color:var(--t1)}
 .journal-meta{font-size:11px;color:var(--t3)}
-.journal-textarea{width:100%;min-height:420px;background:transparent;border:none;outline:none;resize:vertical;padding:1rem 1.25rem;font-size:13px;color:var(--t1);font-family:var(--font-sans,system-ui,-apple-system,sans-serif);line-height:1.65;caret-color:var(--accent)}
+.journal-textarea{width:100%;min-height:140px;background:transparent;border:none;outline:none;resize:vertical;padding:1rem 1.25rem;font-size:13px;color:var(--t1);font-family:var(--font-sans,system-ui,-apple-system,sans-serif);line-height:1.65;caret-color:var(--accent)}
 .journal-textarea::placeholder{color:var(--t3)}
 .journal-footer{padding:.5rem 1.25rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.1)}
 .journal-saved{font-size:11px;color:var(--t3);transition:color .3s}
@@ -669,25 +669,6 @@ input,select{font-family:inherit;color:var(--t1)}
 .cal-pop-save{flex:2;height:28px;background:var(--accent-dim);border:1px solid rgba(59,130,246,.4);border-radius:var(--r);color:#93c5fd;font-size:12px;font-weight:500;cursor:pointer}
 .cal-pop-save:hover{background:rgba(59,130,246,.25)}
 
-/* ── AI Meal Parser ─── */
-.ai-meal-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.85rem 1rem;margin-bottom:10px}
-.ai-meal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.ai-meal-title{font-size:13px;font-weight:500;color:var(--t1)}
-.ai-meal-hint{font-size:11px;color:var(--t3)}
-.ai-meal-textarea{width:100%;min-height:80px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);color:var(--t1);padding:.65rem .85rem;font-size:13px;font-family:inherit;outline:none;resize:vertical;line-height:1.6;caret-color:var(--accent);display:block;box-sizing:border-box}
-.ai-meal-textarea::placeholder{color:var(--t3)}
-.ai-meal-textarea:focus{border-color:var(--accent)}
-.ai-meal-btn{height:32px;padding:0 16px;font-size:13px;font-weight:600;border-radius:var(--r);border:1px solid rgba(59,130,246,.4);background:rgba(59,130,246,.12);color:#93c5fd;cursor:pointer;transition:all .15s;font-family:inherit;white-space:nowrap;flex-shrink:0}
-.ai-meal-btn:hover{background:rgba(59,130,246,.22)}
-.ai-meal-btn:disabled{opacity:.5;cursor:not-allowed}
-.ai-parsed-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:.5rem .75rem;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);margin-bottom:5px}
-.ai-parsed-name{font-size:13px;font-weight:500;color:var(--t1)}
-.ai-parsed-macros{font-size:11px;color:var(--t3);margin-top:2px}
-.ai-parsed-macros b{color:#60a5fa}
-.ai-parsed-add{height:26px;padding:0 10px;font-size:11px;font-weight:600;border-radius:6px;border:1px solid rgba(34,197,94,.3);background:rgba(34,197,94,.08);color:#4ade80;cursor:pointer;white-space:nowrap;transition:all .15s;font-family:inherit;flex-shrink:0}
-.ai-parsed-add:hover{background:rgba(34,197,94,.18)}
-.ai-parsed-add.added{background:rgba(34,197,94,.15);color:#4ade80;border-color:#22c55e44;cursor:default}
-
 </style>
 </head>
 <body>
@@ -779,6 +760,18 @@ create policy "allow all" on dashboard_data
     <button class="dnav-btn" onclick="shiftDate(1)">›</button>
   </div>
   <div id="ro-banner" style="display:none" class="ro-banner"><i class="ti ti-eye" style="font-size:14px"></i> Viewing past data — read only</div>
+
+<div class="tsec active" data-tab="home">
+  <!-- Daily completion progress bar -->
+  <div style="margin-bottom:1.25rem">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+      <span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--t3)">Today's completion</span>
+      <span style="font-size:12px;font-weight:600;font-family:var(--mono)" id="progress-pct">0%</span>
+    </div>
+    <div style="height:5px;border-radius:3px;background:var(--border2);overflow:hidden">
+      <div id="progress-bar" style="height:100%;width:0%;border-radius:3px;background:linear-gradient(90deg,#3b82f6,#22c55e);transition:width .4s ease"></div>
+    </div>
+  </div>
 
   <!-- Streaks -->
   <div id="streak-row" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:1.25rem"></div>
@@ -1450,18 +1443,6 @@ create policy "allow all" on dashboard_data
   <div class="phil-wrap" id="phil-wrap"></div>
 </div>
 </div>
-
-  <div class="tsec active" data-tab="home">
-  <!-- Daily completion progress bar -->
-  <div style="margin-bottom:1.25rem">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
-      <span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--t3)">Today's completion</span>
-      <span style="font-size:12px;font-weight:600;font-family:var(--mono)" id="progress-pct">0%</span>
-    </div>
-    <div style="height:5px;border-radius:3px;background:var(--border2);overflow:hidden">
-      <div id="progress-bar" style="height:100%;width:0%;border-radius:3px;background:linear-gradient(90deg,#3b82f6,#22c55e);transition:width .4s ease"></div>
-    </div>
-  </div>
 
 <div id="month-view" style="display:none">
   <div class="mo-nav"><button class="monb" onclick="moNav(-1)">‹</button><span class="mot" id="mo-title"></span><button class="monb" onclick="moNav(1)">›</button></div>
@@ -3642,14 +3623,6 @@ async function parseMealWithAI(){
   if(!text){status.textContent='Type or dictate what you ate first.';return;}
   if(!isToday()){status.textContent='Can only log meals for today.';return;}
 
-  let apiKey = localStorage.getItem('anthropic-api-key');
-  if(!apiKey){
-    apiKey = prompt('Enter your Anthropic API key (stored locally, never shared):');
-    if(!apiKey){status.textContent='API key required.';return;}
-    localStorage.setItem('anthropic-api-key', apiKey.trim());
-    apiKey = apiKey.trim();
-  }
-
   btn.disabled = true;
   btn.textContent = '⏳ Parsing...';
   status.textContent = '';
@@ -3658,53 +3631,23 @@ async function parseMealWithAI(){
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
-        system: 'You are a nutrition assistant. Parse meal descriptions and return ONLY a JSON array. No markdown, no explanation, just raw valid JSON. Each item: name (string), qty (number), unit (string), p (protein g), c (carbs g), f (fat g), cal (calories). All numbers. Reflect full quantity eaten, not per-unit.',
-        messages: [{role:'user', content:'Parse this into food items with macros: ' + text}]
+        system: 'You are a nutrition assistant. Parse meal descriptions and return ONLY a JSON array. No markdown, no explanation, just valid JSON. Each item must have: name (string), qty (number), unit (string, e.g. "egg", "cup", "tbsp", "piece"), p (protein grams, number), c (carbs grams, number), f (fat grams, number), cal (calories, number). Estimate macros accurately based on the quantity described. Total macros should reflect the full amount described, not per-unit.',
+        messages: [{
+          role: 'user',
+          content: 'Parse this into food items with macros: ' + text
+        }]
       })
     });
-
-    if(response.status===401){
-      localStorage.removeItem('anthropic-api-key');
-      throw new Error('Invalid API key — cleared. Try again.');
-    }
-    if(!response.ok) throw new Error('API error ' + response.status);
-
     const data = await response.json();
     const raw = data.content && data.content[0] && data.content[0].text;
-    if(!raw) throw new Error('No response from API');
+    if(!raw){throw new Error('No response');}
     const clean = raw.replace(/```json|```/g,'').trim();
     const items = JSON.parse(clean);
-    if(!Array.isArray(items)||!items.length) throw new Error('Could not parse response');
-
-    preview.style.display = 'block';
-    preview.innerHTML = '<div style="font-size:11px;color:var(--t3);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em">Tap to add each item</div>'
-      + items.map((item,i) => `
-        <div class="ai-parsed-item" id="ai-item-${i}">
-          <div>
-            <div class="ai-parsed-name">${item.qty} ${item.unit} ${item.name}</div>
-            <div class="ai-parsed-macros">P:<b>${Math.round(item.p)}g</b> · C:${Math.round(item.c)}g · F:${Math.round(item.f)}g · ${Math.round(item.cal)}cal</div>
-          </div>
-          <button class="ai-parsed-add" onclick="addAIParsedItem(${i},${JSON.stringify(item).replace(/"/g,'&quot;')})">+ Add</button>
-        </div>`).join('')
-      + `<button onclick="addAllAIParsedItems(${JSON.stringify(items).replace(/"/g,'&quot;')})" style="width:100%;margin-top:6px;padding:8px;background:rgba(59,130,246,.15);color:#93c5fd;border:1px solid rgba(59,130,246,.3);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">+ Add all to log</button>`;
-
-    status.textContent = items.length + ' items parsed';
-  } catch(e) {
-    status.textContent = e.message || 'Could not parse — try being more specific.';
-    console.error('AI parse error:', e);
-  }
-  btn.disabled = false;
-  btn.textContent = '✨ Parse & add to log';
-}
+    if(!Array.isArray(items)||!items.length){throw new Error('Empty result');}
 
     // Show preview
     preview.style.display = 'block';
