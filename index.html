@@ -702,14 +702,13 @@ create policy "allow all" on dashboard_data
 </div>
 </div>
 <div class="tsec" data-tab="journal">
-  <div class="slbl" onclick="toggleSec('approaches')" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer">
+  <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
     <span>🎯 Approach log</span>
     <div style="display:flex;gap:6px;align-items:center">
       <span id="game-log-count" style="font-size:11px;color:var(--t3)"></span>
-      <button class="nutr-sm-btn" id="game-add-btn" onclick="event.stopPropagation();toggleGameForm()">+ Log approach</button>
-      <button class="arc-btn" onclick="event.stopPropagation();clearSec('approaches')" title="Clear all">✕ Clear</button><button class="arc-btn" onclick="event.stopPropagation();archiveSec('approaches')" title="Archive">↓ Archive</button>
-    <span id="sci-approaches" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
-<div id="secb-approaches">
+      <button class="nutr-sm-btn" id="game-add-btn" onclick="toggleGameForm()">+ Log approach</button>
+      <button class="arc-btn clr" onclick="clearSec('approaches')" title="Clear all">✕ Clear</button><button class="arc-btn" onclick="archiveSec('approaches')" title="Archive">↓ Archive</button>
+    </div>
   
 <div class="arc-wrap">
   <div class="arc-hdr" onclick="toggleSec('arc-approaches');event.stopPropagation()">
@@ -1006,14 +1005,13 @@ create policy "allow all" on dashboard_data
 </div>
 </div>
 <div class="tsec" data-tab="daily">
-  <div class="slbl" onclick="toggleSec('meallog')" style="display:flex;justify-content:space-between;align-items:center;margin-top:.75rem;cursor:pointer">
+  <div class="slbl" style="display:flex;justify-content:space-between;align-items:center;margin-top:.75rem">
     <span>🍽️ Meal log</span>
     <div style="display:flex;gap:6px;align-items:center">
       <span id="meal-log-cal-lbl" style="font-size:11px;color:var(--t3)"></span>
-      <button class="nutr-sm-btn" onclick="event.stopPropagation();toggleMealDB()" id="meal-db-toggle-btn">+ Log food</button>
-      <button class="arc-btn" onclick="event.stopPropagation();clearSec('meallog')" title="Clear all">✕ Clear</button><button class="arc-btn" onclick="event.stopPropagation();archiveSec('meallog')" title="Archive">↓ Archive</button>
-    <span id="sci-meallog" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
-<div id="secb-meallog">
+      <button class="nutr-sm-btn" onclick="toggleMealDB()" id="meal-db-toggle-btn">+ Log food</button>
+      <button class="arc-btn clr" onclick="clearSec('meallog')" title="Clear all">✕ Clear</button><button class="arc-btn" onclick="archiveSec('meallog')" title="Archive">↓ Archive</button>
+    </div>
   
 <div class="arc-wrap">
   <div class="arc-hdr" onclick="toggleSec('arc-meallog');event.stopPropagation()">
@@ -1131,15 +1129,14 @@ create policy "allow all" on dashboard_data
 </div>
 </div>
 <div class="tsec" data-tab="daily">
-  <div class="slbl" onclick="toggleSec('schedule')" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer">
+  <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
     <span>Daily schedule</span>
     <div style="display:flex;gap:6px">
       <span class="cal-legend" style="background:#22c55e22;color:#4ade80">Done</span>
       <span class="cal-legend" style="background:#f59e0b22;color:#fbbf24">In progress</span>
       <span class="cal-legend" style="background:#378add22;color:#60a5fa">Planned</span>
       <span class="cal-legend" style="background:#8b5cf622;color:#a78bfa">Personal</span>
-    <span id="sci-schedule" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
-<div id="secb-schedule">
+    </div>
   </div>
   <div class="day-cal-wrap">
     <div class="day-cal-cols">
@@ -1185,11 +1182,27 @@ create policy "allow all" on dashboard_data
 <div class="tsec" data-tab="journal">
   <div class="slbl" onclick="toggleSec('dates')" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer">
     <span>📅 Important dates</span>
-    <button class="nutr-sm-btn" onclick="event.stopPropagation();openAddDate()">+ Add</button>
-  <span id="sci-dates" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+    <div style="display:flex;gap:4px;align-items:center">
+      <button class="nutr-sm-btn" onclick="event.stopPropagation();openAddDate()">+ Add</button>
+      <button class="arc-btn clr" onclick="event.stopPropagation();clearSec('dates')" title="Clear all">✕ Clear</button>
+      <button class="arc-btn" onclick="event.stopPropagation();archiveSec('dates')" title="Archive past">↓ Archive</button>
+      <span id="sci-dates" style="font-size:10px;color:var(--t3);margin-left:2px;flex-shrink:0">▼</span>
+    </div>
 <div id="secb-dates">
   <div class="idate-wrap" id="idate-wrap"></div>
 
+<div class="arc-wrap">
+  <div class="arc-hdr" onclick="toggleSec('arc-dates');event.stopPropagation()">
+    <span class="arc-hdr-lbl">📦 Archived <span id="arc-count-dates" class="arc-count"></span></span>
+    <span id="sci-arc-dates" style="font-size:10px;color:var(--t3)">▶</span>
+  </div>
+  <div id="secb-arc-dates" class="arc-body" style="display:none">
+    <div id="arc-body-dates"></div>
+    <div class="arc-footer">
+      <button onclick="clearArc('dates');event.stopPropagation()" class="arc-clr-btn">Clear archive</button>
+    </div>
+  </div>
+</div>
 </div>
 </div>
 <div class="tsec" data-tab="journal">
@@ -1379,6 +1392,8 @@ const HEALTH=[
   {id:'bp',     l:'Blood Pressure',u:'',   d:0,    type:'bp'},
   {id:'bedtime',l:'Bedtime',     u:'',     d:'',   type:'bedtime'},
   {id:'macros', l:'Macros Hit',  u:'',           type:'macro-check'},
+  {id:'pee',    l:'💧 Pee',       u:'times',d:0,    type:'num',       step:1,   min:0, min_target:6},
+  {id:'poo',    l:'💩 Poo',       u:'times',d:0,    type:'num',       step:1,   min:0},
 ];
 const STATS=[
   {id:'tips',l:'Tips',u:'CAD',p:'$',d:0,ro:false,type:'step',step:5,min:0,max:500},
@@ -3580,6 +3595,8 @@ const ARC_CFG={
     reload:()=>{mistakes=ls('work-mistakes')||[];}, render:()=>{renderMistakes();renderSecArchive('mistakes');}},
   philosophy:{ mainKey:()=>'philosophy',          arcKey:'arc-philosophy', filter:()=>true,
     reload:()=>{philos=ls('philosophy')||[];}, render:()=>{renderPhilos();renderSecArchive('philosophy');}},
+  dates:     { mainKey:()=>'important-dates',   arcKey:'arc-dates',      filter:i=>{ const d=getDaysUntil(i.date); return d<0; },
+    reload:()=>{importantDates=ls('important-dates')||[];}, render:()=>{renderDates();renderSecArchive('dates');}},
   bodyissues:{ mainKey:()=>'body-issues',         arcKey:'arc-bodyissues', filter:i=>i.status==='resolved',
     reload:()=>{bodyIssues=ls('body-issues')||[];}, render:()=>{renderBodyIssues();renderSecArchive('bodyissues');}},
 };
