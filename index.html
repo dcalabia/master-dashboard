@@ -259,6 +259,51 @@ input,select{font-family:inherit;color:var(--t1)}
 .meal-log-group-hdr:hover .meal-log-del{opacity:1}
 .meal-log-child{border-bottom:0.5px solid var(--border);background:rgba(0,0,0,.12);padding-left:2rem}
 .meal-log-child:last-child{border-bottom:none}
+.meal-slot{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:8px;overflow:hidden;transition:border-color .15s}
+.meal-slot.drag-over{border-color:var(--accent);background:var(--accent-dim)}
+.meal-slot-hdr{display:flex;align-items:center;gap:8px;padding:.5rem .85rem;border-bottom:1px solid var(--border);background:rgba(0,0,0,.12);cursor:pointer;user-select:none}
+.meal-slot-hdr:hover{background:rgba(0,0,0,.2)}
+.meal-slot-icon{font-size:14px;flex-shrink:0}
+.meal-slot-name{font-size:12px;font-weight:600;color:var(--t2);flex:1}
+.meal-slot-macros{font-size:10px;color:var(--t3);font-family:var(--mono)}
+.meal-slot-chevron{font-size:9px;color:var(--t3)}
+.meal-slot-body{display:block}
+.meal-slot-empty{padding:.5rem 1rem;font-size:12px;color:var(--t3);font-style:italic;border-top:none}
+.meal-item{display:flex;align-items:center;gap:8px;padding:.45rem 1rem;border-bottom:0.5px solid var(--border);font-size:13px;cursor:grab;transition:background .1s;user-select:none}
+.meal-item:last-child{border-bottom:none}
+.meal-item:hover{background:var(--bgh)}
+.meal-item:active{cursor:grabbing}
+.meal-item.dragging{opacity:.4}
+.meal-item-drag{font-size:12px;color:var(--t3);flex-shrink:0;cursor:grab}
+.meal-unassigned{background:var(--bg2);border:1px solid rgba(255,255,255,.06);border-radius:var(--r);margin-bottom:12px;overflow:hidden}
+.meal-unassigned-hdr{display:flex;align-items:center;gap:6px;padding:.4rem .85rem;font-size:11px;font-weight:600;color:var(--t3);letter-spacing:.05em;text-transform:uppercase;border-bottom:1px solid var(--border);background:rgba(0,0,0,.1);cursor:pointer}
+.meal-view-btn{height:22px;padding:0 10px;font-size:11px;font-weight:500;border-radius:5px;border:1px solid transparent;background:transparent;color:var(--t3);cursor:pointer;transition:all .15s}
+.meal-view-btn.active{background:var(--bg3);border-color:var(--border2);color:var(--t1)}
+.meal-view-btn:hover:not(.active){color:var(--t2)}
+.meal-slots-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:500px){.meal-slots-grid{grid-template-columns:1fr}}
+.meal-slot{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:border-color .15s}
+.meal-slot.drag-over{border-color:var(--accent);background:var(--accent-dim)}
+.meal-slot-hdr{display:flex;align-items:center;gap:6px;padding:.45rem .75rem;background:rgba(0,0,0,.15);cursor:pointer;user-select:none}
+.meal-slot-icon{font-size:13px;flex-shrink:0}
+.meal-slot-name{font-size:12px;font-weight:600;color:var(--t2);flex:1}
+.meal-slot-macros{font-size:10px;color:var(--t3);font-family:var(--mono)}
+.meal-slot-chevron{font-size:9px;color:var(--t3);transition:transform .15s}
+.meal-slot-body{min-height:36px}
+.meal-slot-drop-hint{padding:.45rem .75rem;font-size:11px;color:var(--t3);font-style:italic;text-align:center;border:1.5px dashed var(--border);border-radius:5px;margin:.35rem;transition:border-color .15s}
+.meal-slot.drag-over .meal-slot-drop-hint{border-color:var(--accent);color:var(--accent)}
+.meal-item{display:flex;align-items:center;gap:6px;padding:.35rem .6rem;border-bottom:0.5px solid var(--border);font-size:12px;cursor:grab;transition:background .1s;user-select:none}
+.meal-item:last-child{border-bottom:none}
+.meal-item:hover{background:var(--bgh)}
+.meal-item.dragging{opacity:.35;cursor:grabbing}
+.meal-item-handle{color:var(--t3);font-size:11px;flex-shrink:0;cursor:grab}
+.meal-item-name{flex:1;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meal-item-macros{font-size:10px;color:var(--t3);white-space:nowrap}
+.meal-item-del{background:transparent;border:none;color:var(--t3);font-size:13px;cursor:pointer;padding:0 2px;opacity:0;transition:opacity .15s;flex-shrink:0}
+.meal-item:hover .meal-item-del{opacity:1}
+.meal-unassigned{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:8px}
+.meal-unassigned-hdr{display:flex;align-items:center;gap:6px;padding:.4rem .75rem;font-size:11px;font-weight:500;color:var(--t3);background:rgba(0,0,0,.1);cursor:pointer;user-select:none}
+.meal-unassigned-hdr span{flex:1}
 .supp-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:1.5rem;width:100%}
 .mosum,.mo-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:1.25rem;width:100%}
 .supp-card{background:var(--bg2);border:1px solid transparent;border-radius:var(--r);padding:.6rem .9rem;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:8px;user-select:none}
@@ -1073,7 +1118,12 @@ create policy "allow all" on dashboard_data
     </div>
   </div>
   <div class="meal-log-wrap" id="meal-log-wrap">
+    <div style="display:flex;gap:4px;padding:.45rem .85rem;border-bottom:1px solid var(--border);background:rgba(0,0,0,.1)">
+      <button class="meal-view-btn active" id="mvb-list" onclick="setMealView('list')">📋 List</button>
+      <button class="meal-view-btn" id="mvb-slots" onclick="setMealView('slots')">🍽️ Meals</button>
+    </div>
     <div id="meal-log-list"></div>
+    <div id="meal-slots-view" style="display:none;padding:.5rem"></div>
     <div class="meal-log-empty" id="meal-log-empty">No meals logged yet.</div>
   </div>
 
@@ -2205,7 +2255,7 @@ function openCustomMeal(){
   mealLog.push({id:Date.now(),name,p,c,f,cal});
   saveMealLog();renderMealLog();renderMacros();renderHealth();
 }
-function deleteMealLog(id){mealLog=mealLog.filter(m=>m.id!==id);saveMealLog();renderMealLog();renderMacros();renderHealth();}
+function deleteMealLog(id){mealLog=mealLog.filter(m=>m.id!==id);saveMealLog();renderMealLog();if(mealView==='slots')renderMealSlots();renderMacros();renderHealth();}
 function toggleMealGroup(groupId){
   const body = document.getElementById('mlg-body-'+groupId);
   const icon = document.getElementById('mlg-icon-'+groupId);
@@ -2248,12 +2298,12 @@ function renderMealLog(){
     const gp = g.items.reduce((a,m)=>({p:a.p+(m.p||0),c:a.c+(m.c||0),f:a.f+(m.f||0),cal:a.cal+(m.cal||0)}),{p:0,c:0,f:0,cal:0});
     html += `<div class="meal-log-group">
       <div class="meal-log-group-hdr" onclick="toggleMealGroup('${gid}')">
-        <span id="mlg-icon-${gid}" style="font-size:9px;color:var(--t3);flex-shrink:0">▼</span>
+        <span id="mlg-icon-${gid}" style="font-size:9px;color:var(--t3);flex-shrink:0">▶</span>
         <span class="meal-log-name" style="flex:1">${g.name}</span>
         <span class="meal-log-macros-row" style="margin-right:6px">P:<b>${gp.p}g</b> · ${gp.cal}cal</span>
         ${ro?'':` <button class="meal-log-del" onclick="event.stopPropagation();deleteMealGroup('${gid}')" title="Remove meal"><i class="ti ti-x"></i></button>`}
       </div>
-      <div id="mlg-body-${gid}">
+      <div id="mlg-body-${gid}" style="display:none">
         ${g.items.map(m=>`
           <div class="meal-log-entry meal-log-child">
             <div class="meal-log-left">
@@ -2279,6 +2329,118 @@ function renderMealLog(){
 
   list.innerHTML = html;
 }
+// ── Meal slots ───────────────────────────────────────────────
+const MEAL_SLOTS = [
+  {id:'breakfast', icon:'🌅', name:'Breakfast'},
+  {id:'lunch',     icon:'☀️',  name:'Lunch'},
+  {id:'dinner',    icon:'🌙', name:'Dinner'},
+  {id:'snack',     icon:'🍎', name:'Snack'},
+];
+let mealView = 'list'; // 'list' | 'slots'
+let dragItemId = null;
+let slotCollapsed = {}; // {slotId: bool}
+
+function setMealView(v){
+  mealView = v;
+  document.getElementById('mvb-list').classList.toggle('active', v==='list');
+  document.getElementById('mvb-slots').classList.toggle('active', v==='slots');
+  document.getElementById('meal-log-list').style.display = v==='list' ? 'block' : 'none';
+  document.getElementById('meal-slots-view').style.display = v==='slots' ? 'block' : 'none';
+  if(v==='slots') renderMealSlots();
+}
+
+function assignMealSlot(itemId, slotId){
+  mealLog = mealLog.map(m => m.id==itemId ? {...m, slotId} : m);
+  saveMealLog(); renderMealSlots(); renderMacros();
+}
+
+function renderMealSlots(){
+  const wrap = document.getElementById('meal-slots-view');
+  if(!wrap) return;
+  const ro = !isToday();
+
+  // Unassigned items (no slotId)
+  const unassigned = mealLog.filter(m => !m.slotId);
+  let html = '';
+  if(unassigned.length){
+    html += `<div class="meal-unassigned" id="slot-unassigned"
+      ondragover="event.preventDefault();document.getElementById('slot-unassigned').classList.add('drag-over')"
+      ondragleave="document.getElementById('slot-unassigned').classList.remove('drag-over')"
+      ondrop="onSlotDrop(event,'')">
+      <div class="meal-unassigned-hdr" onclick="toggleSlotCollapse('unassigned')">
+        <span>Unassigned</span>
+        <span style="font-size:10px;color:var(--t3)">${unassigned.length} item${unassigned.length===1?'':'s'}</span>
+        <span id="slotchev-unassigned" style="font-size:9px;color:var(--t3)">${slotCollapsed['unassigned']?'▶':'▼'}</span>
+      </div>
+      <div id="slotbody-unassigned" style="display:${slotCollapsed['unassigned']?'none':'block'}">
+        ${unassigned.map(m=>mealItemHTML(m, ro)).join('')}
+      </div>
+    </div>`;
+  }
+
+  // Slot grid
+  html += `<div class="meal-slots-grid">`;
+  MEAL_SLOTS.forEach(slot => {
+    const items = mealLog.filter(m => m.slotId === slot.id);
+    const tot = items.reduce((a,m)=>({p:a.p+(m.p||0),cal:a.cal+(m.cal||0)}),{p:0,cal:0});
+    const collapsed = slotCollapsed[slot.id];
+    html += `<div class="meal-slot" id="slot-${slot.id}"
+      ondragover="event.preventDefault();document.getElementById('slot-${slot.id}').classList.add('drag-over')"
+      ondragleave="document.getElementById('slot-${slot.id}').classList.remove('drag-over')"
+      ondrop="onSlotDrop(event,'${slot.id}')">
+      <div class="meal-slot-hdr" onclick="toggleSlotCollapse('${slot.id}')">
+        <span class="meal-slot-icon">${slot.icon}</span>
+        <span class="meal-slot-name">${slot.name}</span>
+        ${items.length ? `<span class="meal-slot-macros">P:${tot.p}g · ${tot.cal}cal</span>` : ''}
+        <span class="meal-slot-chevron" id="slotchev-${slot.id}">${collapsed?'▶':'▼'}</span>
+      </div>
+      <div class="meal-slot-body" id="slotbody-${slot.id}" style="display:${collapsed?'none':'block'}">
+        ${items.length
+          ? items.map(m=>mealItemHTML(m, ro)).join('')
+          : `<div class="meal-slot-drop-hint">Drop items here</div>`}
+      </div>
+    </div>`;
+  });
+  html += `</div>`;
+  wrap.innerHTML = html;
+
+  // Re-attach drag listeners after render
+  wrap.querySelectorAll('.meal-item').forEach(el => {
+    el.addEventListener('dragstart', e => {
+      dragItemId = e.currentTarget.dataset.id;
+      setTimeout(()=>e.currentTarget.classList.add('dragging'), 0);
+    });
+    el.addEventListener('dragend', e => {
+      e.currentTarget.classList.remove('dragging');
+      document.querySelectorAll('.meal-slot,.meal-unassigned').forEach(s=>s.classList.remove('drag-over'));
+    });
+  });
+}
+
+function mealItemHTML(m, ro){
+  const name = m.groupName ? `${m.groupName}` : m.name;
+  const sub = m.groupName ? `${m.items ? m.items.length+' items' : m.name}` : `P:${m.p}g · ${m.cal}cal`;
+  return `<div class="meal-item" draggable="${ro?'false':'true'}" data-id="${m.id}">
+    ${ro?'':`<span class="meal-item-handle" title="Drag to move">⠿</span>`}
+    <div class="meal-item-name" title="${m.name}">${name}</div>
+    <span class="meal-item-macros">P:${m.p}g · ${m.cal}cal</span>
+    ${ro?'':` <button class="meal-item-del" onclick="deleteMealLog(${m.id})" title="Remove"><i class="ti ti-x"></i></button>`}
+  </div>`;
+}
+
+function onSlotDrop(e, slotId){
+  e.preventDefault();
+  document.querySelectorAll('.meal-slot,.meal-unassigned').forEach(s=>s.classList.remove('drag-over'));
+  if(!dragItemId) return;
+  assignMealSlot(dragItemId, slotId||'');
+  dragItemId = null;
+}
+
+function toggleSlotCollapse(id){
+  slotCollapsed[id] = !slotCollapsed[id];
+  renderMealSlots();
+}
+
 function toggleSupp(id){
   if(!isToday())return;
   suppData[id]=!suppData[id];
