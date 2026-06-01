@@ -559,6 +559,26 @@ input,select{font-family:inherit;color:var(--t1)}
 .cal-pop-save{flex:2;height:28px;background:var(--accent-dim);border:1px solid rgba(59,130,246,.4);border-radius:var(--r);color:#93c5fd;font-size:12px;font-weight:500;cursor:pointer}
 .cal-pop-save:hover{background:rgba(59,130,246,.25)}
 
+
+/* ── Archive system ─────────────────────── */
+.arc-btn{height:20px;padding:0 7px;font-size:10px;font-weight:500;border-radius:10px;border:1px solid var(--border2);background:transparent;color:var(--t3);cursor:pointer;transition:all .15s;white-space:nowrap}
+.arc-btn:hover{background:var(--bg3);color:var(--t1)}
+.arc-btn.clr:hover{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.25);color:#f87171}
+.arc-wrap{margin-top:.6rem}
+.arc-hdr{display:flex;justify-content:space-between;align-items:center;padding:.35rem .75rem;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);cursor:pointer;transition:background .15s}
+.arc-hdr:hover{background:var(--bgh)}
+.arc-hdr-lbl{font-size:11px;font-weight:500;color:var(--t3);display:flex;align-items:center;gap:5px}
+.arc-count{font-size:10px;font-weight:600;background:var(--border2);border-radius:8px;padding:0 5px;color:var(--t2)}
+.arc-body{background:var(--bg2);border:1px solid var(--border);border-top:none;border-radius:0 0 var(--r) var(--r);overflow:hidden}
+.arc-row{display:flex;align-items:center;gap:8px;padding:.4rem .85rem;border-bottom:.5px solid var(--border);font-size:12px}
+.arc-row:last-of-type{border-bottom:none}
+.arc-row-text{flex:1;color:var(--t3);line-height:1.4}
+.arc-row-date{font-size:10px;color:var(--t3);font-family:var(--mono);white-space:nowrap}
+.arc-row-btn{background:transparent;border:1px solid var(--border2);border-radius:4px;color:var(--t3);font-size:10px;cursor:pointer;padding:1px 6px;transition:all .15s;white-space:nowrap}
+.arc-row-btn:hover{color:var(--t1);background:var(--bg3)}
+.arc-footer{padding:.4rem .85rem;border-top:1px solid var(--border);display:flex;justify-content:flex-end;background:rgba(0,0,0,.1)}
+.arc-clr-btn{background:transparent;border:none;font-size:10px;color:var(--t3);cursor:pointer;padding:2px 6px;border-radius:4px;transition:color .15s}
+.arc-clr-btn:hover{color:#f87171}
 </style>
 </head>
 <body>
@@ -665,26 +685,45 @@ create policy "allow all" on dashboard_data
 
 </div>
 <div class="tsec" data-tab="home">
-  <div class="slbl">Health metrics</div>
+  <div class="slbl" onclick="toggleSec('health')" style="cursor:pointer">Health metrics<span id="sci-health" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+<div id="secb-health">
   <div class="grid4" id="health-grid"></div>
 
 </div>
+</div>
 <div class="tsec" data-tab="home">
-  <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
+  <div class="slbl" onclick="toggleSec('energy')" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer">
     <span>⚡ Energy levels</span>
     <span style="font-size:10px;color:var(--t3)">1 = depleted · 10 = peak</span>
-  </div>
+  <span id="sci-energy" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+<div id="secb-energy">
   <div class="energy-grid" id="energy-grid"></div>
 
 </div>
+</div>
 <div class="tsec" data-tab="journal">
-  <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
+  <div class="slbl" onclick="toggleSec('approaches')" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer">
     <span>🎯 Approach log</span>
     <div style="display:flex;gap:6px;align-items:center">
       <span id="game-log-count" style="font-size:11px;color:var(--t3)"></span>
-      <button class="nutr-sm-btn" id="game-add-btn" onclick="toggleGameForm()">+ Log approach</button>
+      <button class="nutr-sm-btn" id="game-add-btn" onclick="event.stopPropagation();toggleGameForm()">+ Log approach</button>
+      <button class="arc-btn" onclick="event.stopPropagation();clearSec('approaches')" title="Clear all">✕ Clear</button><button class="arc-btn" onclick="event.stopPropagation();archiveSec('approaches')" title="Archive">↓ Archive</button>
+    <span id="sci-approaches" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+<div id="secb-approaches">
+  
+<div class="arc-wrap">
+  <div class="arc-hdr" onclick="toggleSec('arc-approaches');event.stopPropagation()">
+    <span class="arc-hdr-lbl">📦 Archived <span id="arc-count-approaches" class="arc-count"></span></span>
+    <span id="sci-arc-approaches" style="font-size:10px;color:var(--t3)">▶</span>
+  </div>
+  <div id="secb-arc-approaches" class="arc-body" style="display:none">
+    <div id="arc-body-approaches"></div>
+    <div class="arc-footer">
+      <button onclick="clearArc('approaches');event.stopPropagation()" class="arc-clr-btn">Clear archive</button>
     </div>
   </div>
+</div>
+</div>
 
   <div id="game-form" style="display:none;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.85rem 1rem;margin-bottom:10px">
 
@@ -762,11 +801,13 @@ create policy "allow all" on dashboard_data
 
   <div id="game-log-list" style="margin-bottom:1.5rem"></div>
 </div>
+</div>
 <div class="tsec" data-tab="daily">
-  <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
+  <div class="slbl" onclick="toggleSec('dtodo')" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer">
     <span>Daily to-do</span>
     <span id="dtodo-count" style="font-size:11px;color:var(--t3)"></span>
-  </div>
+    <div style="display:flex;gap:4px;align-items:center"><button class="arc-btn" onclick="event.stopPropagation();clearSec('dtodo')" title="Clear all">✕ Clear</button><button class="arc-btn" onclick="event.stopPropagation();archiveSec('dtodo')" title="Archive done">↓ Archive</button><span id="sci-dtodo" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div> style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+<div id="secb-dtodo">
   <div class="todo-card" id="dtodo-card">
     <div class="todo-add-row" id="dtodo-add-row">
       <input class="todo-inp" id="dtodo-inp" placeholder="Add a task for today..." onkeydown="if(event.key==='Enter')addDTodo()">
@@ -775,12 +816,26 @@ create policy "allow all" on dashboard_data
     <div id="dtodo-list"></div>
   </div>
 
+
+<div class="arc-wrap">
+  <div class="arc-hdr" onclick="toggleSec('arc-dtodo');event.stopPropagation()">
+    <span class="arc-hdr-lbl">📦 Archived <span id="arc-count-dtodo" class="arc-count"></span></span>
+    <span id="sci-arc-dtodo" style="font-size:10px;color:var(--t3)">▶</span>
+  </div>
+  <div id="secb-arc-dtodo" class="arc-body" style="display:none">
+    <div id="arc-body-dtodo"></div>
+    <div class="arc-footer">
+      <button onclick="clearArc('dtodo');event.stopPropagation()" class="arc-clr-btn">Clear archive</button>
+    </div>
+  </div>
+</div>
+</div>
 </div>
 <div class="tsec" data-tab="daily">
-  <div class="slbl" style="display:flex;justify-content:space-between;align-items:center;margin-top:.75rem">
+  <div class="slbl" onclick="toggleSec('mtodo')" style="display:flex;justify-content:space-between;align-items:center;margin-top:.75rem;cursor:pointer">
     <span>Master list</span>
-    <span style="font-size:10px;color:var(--t3)">Persists until done</span>
-  </div>
+    <div style="display:flex;gap:4px;align-items:center"><span style="font-size:10px;color:var(--t3)">Persists until done</span><button class="arc-btn" onclick="event.stopPropagation();clearSec('mtodo')" title="Clear all">✕ Clear</button><button class="arc-btn" onclick="event.stopPropagation();archiveSec('mtodo')" title="Archive done">↓ Archive</button><span id="sci-mtodo" style="font-size:10px;color:var(--t3);margin-left:2px;flex-shrink:0">▼</span></div> style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+<div id="secb-mtodo">
   <div class="todo-card" id="mtodo-card">
     <div class="todo-add-row">
       <input class="todo-inp" id="mtodo-inp" placeholder="Add a lingering task..." onkeydown="if(event.key==='Enter')addMTodo()">
@@ -789,6 +844,20 @@ create policy "allow all" on dashboard_data
     <div id="mtodo-list"></div>
   </div>
 
+
+<div class="arc-wrap">
+  <div class="arc-hdr" onclick="toggleSec('arc-mtodo');event.stopPropagation()">
+    <span class="arc-hdr-lbl">📦 Archived <span id="arc-count-mtodo" class="arc-count"></span></span>
+    <span id="sci-arc-mtodo" style="font-size:10px;color:var(--t3)">▶</span>
+  </div>
+  <div id="secb-arc-mtodo" class="arc-body" style="display:none">
+    <div id="arc-body-mtodo"></div>
+    <div class="arc-footer">
+      <button onclick="clearArc('mtodo');event.stopPropagation()" class="arc-clr-btn">Clear archive</button>
+    </div>
+  </div>
+</div>
+</div>
 </div>
 <div class="tsec" data-tab="fitness">
   <!-- Protein progress bar -->
@@ -800,12 +869,13 @@ create policy "allow all" on dashboard_data
     <span id="fitness-protein-lbl" style="font-size:12px;font-weight:600;font-family:var(--mono);color:var(--t1);white-space:nowrap">0 / 160g</span>
   </div>
 
-  <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
+  <div class="slbl" onclick="toggleSec('workout')" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer">
     <span>🏋️ Workout tracker</span>
     <div style="display:flex;gap:6px;align-items:center">
       <span id="wkt-status" style="font-size:11px;color:var(--t3)"></span>
-      <button class="nutr-sm-btn" onclick="logWorkout()" id="wkt-log-btn">✓ Log workout</button>
-    </div>
+      <button class="nutr-sm-btn" onclick="event.stopPropagation();logWorkout()" id="wkt-log-btn">✓ Log workout</button>
+    <span id="sci-workout" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+<div id="secb-workout">
   </div>
 
   <!-- Day selector -->
@@ -868,19 +938,23 @@ create policy "allow all" on dashboard_data
   </div>
   <div id="wkt-history" style="margin-top:12px"></div>
 </div>
+</div>
 <div class="tsec" data-tab="fitness">
-  <div class="slbl" style="margin-top:.75rem;display:flex;justify-content:space-between;align-items:center">
+  <div class="slbl" onclick="toggleSec('protocols')" style="margin-top:.75rem;display:flex;justify-content:space-between;align-items:center;cursor:pointer">
     <span>Weekly protocols</span>
     <span id="vo2-week-lbl" style="font-size:11px;color:var(--t3)"></span>
-  </div>
+  <span id="sci-protocols" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+<div id="secb-protocols">
   <div id="vo2-section" style="margin-bottom:1.5rem"></div>
 
 </div>
+</div>
 <div class="tsec" data-tab="fitness">
-  <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
-    <span>🏋 Gym weight goals</span>
-    <button class="nutr-sm-btn" onclick="toggleGymForm()">+ Add exercise</button>
+  <div class="slbl" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="toggleGymCollapse()">
+    <span>🏋 Gym weight goals <span id="sci-gym" style="font-size:10px;color:var(--t3);margin-left:4px">▼</span></span>
+    <button class="nutr-sm-btn" onclick="event.stopPropagation();toggleGymForm()">+ Add exercise</button>
   </div>
+  <div id="secb-gym">
   <div id="gym-add-form" style="display:none;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;margin-bottom:8px">
     <div style="display:grid;grid-template-columns:1fr 80px 80px 60px;gap:6px;align-items:end">
       <div><label class="gf-lbl">Exercise</label><input class="gf-inp" id="gym-name" placeholder="e.g. Bench Press"></div>
@@ -896,10 +970,12 @@ create policy "allow all" on dashboard_data
     </div>
   </div>
   <div id="gym-goals-list" style="margin-bottom:1.5rem"></div>
+  </div><!-- end gym-collapsible -->
 
 </div>
 <div class="tsec" data-tab="daily">
-  <div class="slbl">Trading session</div>
+  <div class="slbl" onclick="toggleSec('trading')" style="cursor:pointer">Trading session<span id="sci-trading" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+<div id="secb-trading">
   <div id="trading-section" style="margin-bottom:1.5rem">
     <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;margin-bottom:8px">
       <div style="font-size:11px;color:var(--t3);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">
@@ -912,26 +988,46 @@ create policy "allow all" on dashboard_data
   </div>
 
 </div>
+</div>
 <div class="tsec" data-tab="home">
-  <div class="slbl">Daily stats</div>
+  <div class="slbl" onclick="toggleSec('stats')" style="cursor:pointer">Daily stats<span id="sci-stats" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+<div id="secb-stats">
   <div class="grid4s" id="stats-grid"></div>
 </div>
+</div>
 <div class="tsec" data-tab="daily">
-  <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
+  <div class="slbl" onclick="toggleSec('nutrition')" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer">
     <span>🥗 Nutrition</span>
     <span style="font-size:11px;color:var(--t3)">2,150 cal/day target</span>
-  </div>
+  <span id="sci-nutrition" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+<div id="secb-nutrition">
   <div class="macro-grid" id="macro-grid"></div>
 
 </div>
+</div>
 <div class="tsec" data-tab="daily">
-  <div class="slbl" style="display:flex;justify-content:space-between;align-items:center;margin-top:.75rem">
+  <div class="slbl" onclick="toggleSec('meallog')" style="display:flex;justify-content:space-between;align-items:center;margin-top:.75rem;cursor:pointer">
     <span>🍽️ Meal log</span>
     <div style="display:flex;gap:6px;align-items:center">
       <span id="meal-log-cal-lbl" style="font-size:11px;color:var(--t3)"></span>
-      <button class="nutr-sm-btn" onclick="toggleMealDB()" id="meal-db-toggle-btn">+ Log food</button>
+      <button class="nutr-sm-btn" onclick="event.stopPropagation();toggleMealDB()" id="meal-db-toggle-btn">+ Log food</button>
+      <button class="arc-btn" onclick="event.stopPropagation();clearSec('meallog')" title="Clear all">✕ Clear</button><button class="arc-btn" onclick="event.stopPropagation();archiveSec('meallog')" title="Archive">↓ Archive</button>
+    <span id="sci-meallog" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+<div id="secb-meallog">
+  
+<div class="arc-wrap">
+  <div class="arc-hdr" onclick="toggleSec('arc-meallog');event.stopPropagation()">
+    <span class="arc-hdr-lbl">📦 Archived <span id="arc-count-meallog" class="arc-count"></span></span>
+    <span id="sci-arc-meallog" style="font-size:10px;color:var(--t3)">▶</span>
+  </div>
+  <div id="secb-arc-meallog" class="arc-body" style="display:none">
+    <div id="arc-body-meallog"></div>
+    <div class="arc-footer">
+      <button onclick="clearArc('meallog');event.stopPropagation()" class="arc-clr-btn">Clear archive</button>
     </div>
   </div>
+</div>
+</div>
 
   <!-- AI meal parser -->
   <div class="ai-meal-wrap">
@@ -975,16 +1071,20 @@ create policy "allow all" on dashboard_data
   </div>
 
 </div>
+</div>
 <div class="tsec" data-tab="fitness">
-  <div class="slbl" style="margin-top:1rem;display:flex;justify-content:space-between;align-items:center">
+  <div class="slbl" onclick="toggleSec('supplements')" style="margin-top:1rem;display:flex;justify-content:space-between;align-items:center;cursor:pointer">
     <span>Supplements</span>
     <span style="font-size:10px;color:var(--t3);font-style:italic">Not in daily score</span>
-  </div>
+  <span id="sci-supplements" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+<div id="secb-supplements">
   <div class="supp-grid" id="supp-grid"></div>
 
 </div>
+</div>
 <div class="tsec" data-tab="daily">
-  <div class="slbl">Log activity</div>
+  <div class="slbl" onclick="toggleSec('logactivity')" style="cursor:pointer">Log activity<span id="sci-logactivity" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+<div id="secb-logactivity">
   <div class="act-card" id="act-add-card">
     <div class="irow">
       <input type="time" class="itime" id="inp-time">
@@ -998,28 +1098,47 @@ create policy "allow all" on dashboard_data
     </div>
   </div>
 </div>
-<div class="tsec" data-tab="daily">
-  <div class="slbl"><span>Today's log</span><span id="entry-count" style="font-weight:400"></span></div>
-  <div class="elist" id="entries-list"></div>
-
 </div>
 <div class="tsec" data-tab="daily">
-  <div class="slbl">Timeline — 6 AM to 12 AM</div>
+  <div class="slbl" onclick="toggleSec('todaylog')" style="cursor:pointer"><span>Today's log</span><span id="entry-count" style="font-weight:400"></span><span style="flex:1"></span><span style="display:flex;gap:4px;margin-right:4px"><button class="arc-btn" onclick="event.stopPropagation();clearSec('todaylog')" title="Clear all">✕ Clear</button><button class="arc-btn" onclick="event.stopPropagation();archiveSec('todaylog')" title="Archive">↓ Archive</button></span><span id="sci-todaylog" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+<div id="secb-todaylog">
+  <div class="elist" id="entries-list"></div>
+
+
+<div class="arc-wrap">
+  <div class="arc-hdr" onclick="toggleSec('arc-todaylog');event.stopPropagation()">
+    <span class="arc-hdr-lbl">📦 Archived <span id="arc-count-todaylog" class="arc-count"></span></span>
+    <span id="sci-arc-todaylog" style="font-size:10px;color:var(--t3)">▶</span>
+  </div>
+  <div id="secb-arc-todaylog" class="arc-body" style="display:none">
+    <div id="arc-body-todaylog"></div>
+    <div class="arc-footer">
+      <button onclick="clearArc('todaylog');event.stopPropagation()" class="arc-clr-btn">Clear archive</button>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div class="tsec" data-tab="daily">
+  <div class="slbl" onclick="toggleSec('timeline')" style="cursor:pointer">Timeline — 6 AM to 12 AM<span id="sci-timeline" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+<div id="secb-timeline">
   <div class="tl-wrap">
     <div class="tl-track" id="tl-track"></div>
     <div class="tlticks"><span class="tltick">6am</span><span class="tltick">9am</span><span class="tltick">12pm</span><span class="tltick">3pm</span><span class="tltick">6pm</span><span class="tltick">9pm</span><span class="tltick">12am</span></div>
   </div>
 
 </div>
+</div>
 <div class="tsec" data-tab="daily">
-  <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
+  <div class="slbl" onclick="toggleSec('schedule')" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer">
     <span>Daily schedule</span>
     <div style="display:flex;gap:6px">
       <span class="cal-legend" style="background:#22c55e22;color:#4ade80">Done</span>
       <span class="cal-legend" style="background:#f59e0b22;color:#fbbf24">In progress</span>
       <span class="cal-legend" style="background:#378add22;color:#60a5fa">Planned</span>
       <span class="cal-legend" style="background:#8b5cf622;color:#a78bfa">Personal</span>
-    </div>
+    <span id="sci-schedule" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+<div id="secb-schedule">
   </div>
   <div class="day-cal-wrap">
     <div class="day-cal-cols">
@@ -1044,8 +1163,10 @@ create policy "allow all" on dashboard_data
   </div>
 
 </div>
+</div>
 <div class="tsec" data-tab="journal">
-  <div class="slbl">Daily journal</div>
+  <div class="slbl" onclick="toggleSec('journal')" style="cursor:pointer">Daily journal<span id="sci-journal" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+<div id="secb-journal">
   <div class="journal-wrap">
     <div class="journal-header">
       <span class="journal-title">✍️ How did your day go?</span>
@@ -1059,16 +1180,20 @@ create policy "allow all" on dashboard_data
   </div>
 
 </div>
+</div>
 <div class="tsec" data-tab="journal">
-  <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
+  <div class="slbl" onclick="toggleSec('dates')" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer">
     <span>📅 Important dates</span>
-    <button class="nutr-sm-btn" onclick="openAddDate()">+ Add</button>
-  </div>
+    <button class="nutr-sm-btn" onclick="event.stopPropagation();openAddDate()">+ Add</button>
+  <span id="sci-dates" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+<div id="secb-dates">
   <div class="idate-wrap" id="idate-wrap"></div>
 
 </div>
+</div>
 <div class="tsec" data-tab="journal">
-  <div class="slbl">Dashboard roadmap</div>
+  <div class="slbl" onclick="toggleSec('roadmap')" style="cursor:pointer">Dashboard roadmap<span id="sci-roadmap" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+<div id="secb-roadmap">
   <div class="rm-card">
     <div class="rmh" onclick="toggleRM()">
       <div class="rmt"><i class="ti ti-map-2" style="font-size:15px"></i> Add later <span class="rmb" id="rm-badge">0 / 4</span></div>
@@ -1078,11 +1203,12 @@ create policy "allow all" on dashboard_data
   </div>
 
 </div>
+</div>
 <div class="tsec" data-tab="fitness">
-  <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
+  <div class="slbl" onclick="toggleSec('bodyissues')" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer">
     <span>🩺 Body issues to address</span>
-    <button class="nutr-sm-btn" onclick="toggleBodyIssueForm()">+ Add</button>
-  </div>
+    <div style="display:flex;gap:4px;align-items:center"><button class="nutr-sm-btn" onclick="event.stopPropagation();toggleBodyIssueForm()">+ Add</button><button class="arc-btn" onclick="event.stopPropagation();clearSec('bodyissues')" title="Clear all">✕ Clear</button><button class="arc-btn" onclick="event.stopPropagation();archiveSec('bodyissues')" title="Archive resolved">↓ Archive</button><span id="sci-bodyissues" style="font-size:10px;color:var(--t3);margin-left:2px;flex-shrink:0">▼</span></div> style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+<div id="secb-bodyissues">
   <div id="body-issue-form" style="display:none;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;margin-bottom:8px">
     <div style="display:grid;grid-template-columns:1fr 90px 90px;gap:6px;margin-bottom:6px">
       <div><label class="gf-lbl">Issue</label><input class="gf-inp" id="bi-name" placeholder="Describe the issue..."></div>
@@ -1107,6 +1233,20 @@ create policy "allow all" on dashboard_data
     </div>
   </div>
   <div id="body-issues-list" style="margin-bottom:1.5rem"></div>
+
+<div class="arc-wrap">
+  <div class="arc-hdr" onclick="toggleSec('arc-bodyissues');event.stopPropagation()">
+    <span class="arc-hdr-lbl">📦 Archived <span id="arc-count-bodyissues" class="arc-count"></span></span>
+    <span id="sci-arc-bodyissues" style="font-size:10px;color:var(--t3)">▶</span>
+  </div>
+  <div id="secb-arc-bodyissues" class="arc-body" style="display:none">
+    <div id="arc-body-bodyissues"></div>
+    <div class="arc-footer">
+      <button onclick="clearArc('bodyissues');event.stopPropagation()" class="arc-clr-btn">Clear archive</button>
+    </div>
+  </div>
+</div>
+</div>
 </div>
 <div class="tsec" data-tab="journal">
   <div class="ideas-wrap">
@@ -1123,13 +1263,28 @@ create policy "allow all" on dashboard_data
 </div>
 <div class="tsec" data-tab="journal">
   <!-- Work Mistakes -->
-  <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
+  <div class="slbl" onclick="toggleSec('mistakes')" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer">
     <span>⚠️ Work mistakes</span>
     <div style="display:flex;gap:6px;align-items:center">
       <span id="mistakes-count" style="font-size:11px;color:var(--t3)"></span>
-      <button class="nutr-sm-btn" onclick="toggleMistakeForm()">+ Log mistake</button>
+      <button class="nutr-sm-btn" onclick="event.stopPropagation();toggleMistakeForm()">+ Log mistake</button>
+      <button class="arc-btn" onclick="event.stopPropagation();clearSec('mistakes')" title="Clear all">✕ Clear</button><button class="arc-btn" onclick="event.stopPropagation();archiveSec('mistakes')" title="Archive resolved">↓ Archive</button>
+    <span id="sci-mistakes" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+<div id="secb-mistakes">
+  
+<div class="arc-wrap">
+  <div class="arc-hdr" onclick="toggleSec('arc-mistakes');event.stopPropagation()">
+    <span class="arc-hdr-lbl">📦 Archived <span id="arc-count-mistakes" class="arc-count"></span></span>
+    <span id="sci-arc-mistakes" style="font-size:10px;color:var(--t3)">▶</span>
+  </div>
+  <div id="secb-arc-mistakes" class="arc-body" style="display:none">
+    <div id="arc-body-mistakes"></div>
+    <div class="arc-footer">
+      <button onclick="clearArc('mistakes');event.stopPropagation()" class="arc-clr-btn">Clear archive</button>
     </div>
   </div>
+</div>
+</div>
   <div id="mistake-add-form" style="display:none;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;margin-bottom:8px">
     <div style="display:grid;grid-template-columns:1fr 110px 110px;gap:6px;margin-bottom:8px">
       <div>
@@ -1168,11 +1323,12 @@ create policy "allow all" on dashboard_data
   <div id="mistakes-list" style="margin-bottom:1.5rem"></div>
 
 </div>
+</div>
 <div class="tsec" data-tab="journal">
-  <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
+  <div class="slbl" onclick="toggleSec('philosophy')" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer">
     <span>🧭 Personal philosophy</span>
-    <button class="nutr-sm-btn" onclick="togglePhilForm()">+ Add principle</button>
-  </div>
+    <div style="display:flex;gap:4px;align-items:center"><button class="nutr-sm-btn" onclick="event.stopPropagation();togglePhilForm()">+ Add principle</button><button class="arc-btn" onclick="event.stopPropagation();clearSec('philosophy')" title="Clear all">✕ Clear</button><button class="arc-btn" onclick="event.stopPropagation();archiveSec('philosophy')" title="Archive">↓ Archive</button><span id="sci-philosophy" style="font-size:10px;color:var(--t3);margin-left:2px;flex-shrink:0">▼</span></div> style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+<div id="secb-philosophy">
   <div id="phil-add-form" style="display:none;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;margin-bottom:8px">
     <textarea id="phil-inp" onkeydown="if((event.ctrlKey||event.metaKey)&&event.key==='Enter')savePhil()" style="width:100%;min-height:72px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);color:var(--t1);padding:.6rem .75rem;font-size:13px;outline:none;resize:vertical;line-height:1.6;font-family:inherit" placeholder="Write your principle or piece of wisdom..."></textarea>
     <div style="display:flex;gap:6px;margin-top:6px">
@@ -1181,6 +1337,20 @@ create policy "allow all" on dashboard_data
     </div>
   </div>
   <div class="phil-wrap" id="phil-wrap"></div>
+
+<div class="arc-wrap">
+  <div class="arc-hdr" onclick="toggleSec('arc-philosophy');event.stopPropagation()">
+    <span class="arc-hdr-lbl">📦 Archived <span id="arc-count-philosophy" class="arc-count"></span></span>
+    <span id="sci-arc-philosophy" style="font-size:10px;color:var(--t3)">▶</span>
+  </div>
+  <div id="secb-arc-philosophy" class="arc-body" style="display:none">
+    <div id="arc-body-philosophy"></div>
+    <div class="arc-footer">
+      <button onclick="clearArc('philosophy');event.stopPropagation()" class="arc-clr-btn">Clear archive</button>
+    </div>
+  </div>
+</div>
+</div>
 </div>
 </div>
 
@@ -2252,7 +2422,10 @@ const DEFAULT_GYM_GOALS=[
   {id:'g9',name:'Bench (2-plate)',current:0,target:225,unit:'lbs'},
 ];
 let gymGoals=[];
-function loadGymGoals(){gymGoals=ls('gym-goals');if(!gymGoals||!gymGoals.length)gymGoals=[...DEFAULT_GYM_GOALS];}
+function toggleGymCollapse(){toggleSec('gym');}
+function loadGymGoals(){gymGoals=ls('gym-goals');if(!gymGoals||!gymGoals.length)gymGoals=[...DEFAULT_GYM_GOALS];
+
+}
 function saveGymGoals(){lss('gym-goals',gymGoals);}
 function toggleGymForm(){const f=document.getElementById('gym-add-form');if(!f)return;const show=f.style.display==='none';f.style.display=show?'block':'none';if(show)setTimeout(()=>document.getElementById('gym-name').focus(),50);}
 function saveGymGoal(){
@@ -2433,7 +2606,7 @@ function showBackupMsg(msg){
   el.style.animation='none';
   setTimeout(()=>{el.style.animation='fadeOut 3s forwards';},50);
 }
-function renderAll(){renderDateNav();renderHealth();renderEnergy();renderGameLog();renderDTodos();renderMTodos();renderVO2();renderGymGoals();renderTrading();renderStats();renderMacros();renderMealLog();renderSupplements();renderFitnessProtein();renderEntries();renderTimeline();loadCalendar();renderCalendar();loadJournal();renderProgress();renderBodyIssues();renderDates();renderPhilos();renderMistakes();loadWorkout();renderWorkout();}
+function renderAll(){renderAllArchives();renderDateNav();renderHealth();renderEnergy();renderGameLog();renderDTodos();renderMTodos();renderVO2();renderGymGoals();renderTrading();renderStats();renderMacros();renderMealLog();renderSupplements();renderFitnessProtein();renderEntries();renderTimeline();loadCalendar();renderCalendar();loadJournal();renderProgress();renderBodyIssues();renderDates();renderPhilos();renderMistakes();loadWorkout();renderWorkout();}
 // ─── Groceries ────────────────────────────────────────────────
 const GROC_CATS={protein:{lbl:'Protein',col:'#f97316'},produce:{lbl:'Produce',col:'#22c55e'},dairy:{lbl:'Dairy',col:'#60a5fa'},carbs:{lbl:'Carbs',col:'#f59e0b'},fats:{lbl:'Fats',col:'#a78bfa'},snacks:{lbl:'Snacks',col:'#f87171'},other:{lbl:'Other',col:'#6b7280'}};
 let grocItems=[];
@@ -3306,6 +3479,7 @@ function renderWorkout(){
   if(lb) lb.style.opacity=isToday()?'1':'.4';
 }
 syncFromCloud();
+restoreSecCollapsed();
 
 let ideas=[];
 function loadIdeas(){ideas=ls('crazy-ideas')||[];}
@@ -3356,6 +3530,135 @@ function renderIdeas(){
 }
 // Init ideas after functions are declared
 loadIdeas();renderIdeas();
+
+
+// ── Archive system ────────────────────────────────────────────
+const ARC_CFG={
+  approaches:{ mainKey:()=>'gamelog:'+viewDate,   arcKey:'arc-gamelog',    filter:()=>true,
+    reload:()=>{gameLog=ls('gamelog:'+viewDate)||[];}, render:()=>{renderGameLog();renderSecArchive('approaches');}},
+  dtodo:     { mainKey:()=>'dtodos:'+viewDate,    arcKey:'arc-dtodos',     filter:i=>i.done,
+    reload:()=>{dtodos=ls('dtodos:'+viewDate)||[];}, render:()=>{renderDTodos();renderSecArchive('dtodo');}},
+  mtodo:     { mainKey:()=>'mtodos',              arcKey:'arc-mtodos',     filter:i=>i.done,
+    reload:()=>{mtodos=ls('mtodos')||[];}, render:()=>{renderMTodos();renderSecArchive('mtodo');}},
+  meallog:   { mainKey:()=>'meal-log:'+viewDate,  arcKey:'arc-meallog',    filter:()=>true,
+    reload:()=>{mealLog=ls('meal-log:'+viewDate)||[];}, render:()=>{renderMealLog();renderMacros();renderSecArchive('meallog');}},
+  todaylog:  { mainKey:()=>'entries:'+viewDate,   arcKey:'arc-entries',    filter:()=>true,
+    reload:()=>{entries=ls('entries:'+viewDate)||[];}, render:()=>{renderEntries();renderTimeline();renderSecArchive('todaylog');}},
+  mistakes:  { mainKey:()=>'work-mistakes',       arcKey:'arc-mistakes',   filter:i=>i.resolved,
+    reload:()=>{mistakes=ls('work-mistakes')||[];}, render:()=>{renderMistakes();renderSecArchive('mistakes');}},
+  philosophy:{ mainKey:()=>'philosophy',          arcKey:'arc-philosophy', filter:()=>true,
+    reload:()=>{philos=ls('philosophy')||[];}, render:()=>{renderPhilos();renderSecArchive('philosophy');}},
+  bodyissues:{ mainKey:()=>'body-issues',         arcKey:'arc-bodyissues', filter:i=>i.status==='resolved',
+    reload:()=>{bodyIssues=ls('body-issues')||[];}, render:()=>{renderBodyIssues();renderSecArchive('bodyissues');}},
+};
+
+function archiveSec(id){
+  const cfg=ARC_CFG[id];if(!cfg)return;
+  const items=ls(cfg.mainKey())||[];
+  const toArc=items.filter(cfg.filter);
+  if(!toArc.length){showToast('Nothing to archive');return;}
+  const remaining=items.filter(i=>!toArc.some(a=>a.id===i.id));
+  const arc=ls(cfg.arcKey)||[];
+  const d=new Date().toLocaleDateString('en-CA');
+  lss(cfg.arcKey,[...toArc.map(i=>({...i,_arcDate:d})),...arc]);
+  lss(cfg.mainKey(),remaining);
+  cfg.reload();cfg.render();
+  showToast(toArc.length+' item'+(toArc.length===1?'':'s')+' archived');
+}
+
+function clearSec(id){
+  const cfg=ARC_CFG[id];if(!cfg)return;
+  const items=ls(cfg.mainKey())||[];
+  if(!items.length){showToast('Nothing to clear');return;}
+  if(!confirm('Clear all items? This cannot be undone.'))return;
+  lss(cfg.mainKey(),[]);
+  cfg.reload();cfg.render();
+}
+
+function restoreFromArc(id,itemId){
+  const cfg=ARC_CFG[id];if(!cfg)return;
+  const arc=ls(cfg.arcKey)||[];
+  const item=arc.find(i=>i.id==itemId);if(!item)return;
+  const {_arcDate,...rest}=item;
+  const main=ls(cfg.mainKey())||[];
+  lss(cfg.mainKey(),[rest,...main]);
+  lss(cfg.arcKey,arc.filter(i=>i.id!=itemId));
+  cfg.reload();cfg.render();
+}
+
+function deleteFromArc(id,itemId){
+  const cfg=ARC_CFG[id];if(!cfg)return;
+  const arc=ls(cfg.arcKey)||[];
+  lss(cfg.arcKey,arc.filter(i=>i.id!=itemId));
+  renderSecArchive(id);
+}
+
+function clearArc(id){
+  const cfg=ARC_CFG[id];if(!cfg)return;
+  if(!confirm('Permanently delete all archived items?'))return;
+  lss(cfg.arcKey,[]);
+  renderSecArchive(id);
+}
+
+function arcItemLabel(item){
+  return item.text||item.desc||item.name||item.l||item.title||'—';
+}
+
+function renderSecArchive(id){
+  const cfg=ARC_CFG[id];if(!cfg)return;
+  const countEl=document.getElementById('arc-count-'+id);
+  const bodyEl=document.getElementById('arc-body-'+id);
+  if(!bodyEl)return;
+  const arc=ls(cfg.arcKey)||[];
+  if(countEl)countEl.textContent=arc.length?String(arc.length):'';
+  if(!arc.length){
+    bodyEl.innerHTML='<div style="padding:.65rem .85rem;font-size:12px;color:var(--t3)">Nothing archived yet.</div>';
+    return;
+  }
+  bodyEl.innerHTML=arc.map(item=>`
+    <div class="arc-row">
+      <span class="arc-row-text">${arcItemLabel(item)}</span>
+      ${item._arcDate?`<span class="arc-row-date">${item._arcDate}</span>`:''}
+      <button class="arc-row-btn" onclick="restoreFromArc('${id}',${item.id})">↩ Restore</button>
+      <button class="arc-row-btn" onclick="deleteFromArc('${id}',${item.id})" style="color:var(--t3)">✕</button>
+    </div>`).join('');
+}
+
+function renderAllArchives(){
+  Object.keys(ARC_CFG).forEach(id=>renderSecArchive(id));
+}
+
+function showToast(msg){
+  const el=document.getElementById('backup-msg');
+  if(!el)return;
+  el.textContent=msg;el.style.opacity='1';el.style.animation='none';
+  setTimeout(()=>{el.style.animation='fadeOut 2.5s forwards';},50);
+}
+
+// ── Section collapse ─────────────────────────────────────────
+function toggleSec(id){
+  const body=document.getElementById('secb-'+id);
+  const icon=document.getElementById('sci-'+id);
+  if(!body)return;
+  const open=body.style.display!=='none';
+  body.style.display=open?'none':'block';
+  if(icon)icon.textContent=open?'▶':'▼';
+  try{const s=JSON.parse(localStorage.getItem('sec-collapsed')||'{}');s[id]=open;localStorage.setItem('sec-collapsed',JSON.stringify(s));}catch(e){}
+}
+function restoreSecCollapsed(){
+  try{
+    const s=JSON.parse(localStorage.getItem('sec-collapsed')||'{}');
+    Object.entries(s).forEach(([id,collapsed])=>{
+      if(!collapsed)return;
+      const body=document.getElementById('secb-'+id);
+      const icon=document.getElementById('sci-'+id);
+      if(body)body.style.display='none';
+      if(icon)icon.textContent='▶';
+    });
+  }catch(e){}
+}
+
+restoreSecCollapsed();renderAllArchives();
 </script>
 </body>
 </html>
