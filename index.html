@@ -252,6 +252,69 @@ input,select{font-family:inherit;color:var(--t1)}
 .meal-log-del{background:transparent;border:none;color:var(--t3);font-size:14px;cursor:pointer;padding:0 3px;opacity:0;transition:opacity .15s}
 .meal-log-entry:hover .meal-log-del{opacity:1}
 .meal-log-empty{padding:1rem;text-align:center;font-size:13px;color:var(--t3)}
+.meal-log-group{border-bottom:0.5px solid var(--border)}
+.meal-log-group:last-child{border-bottom:none}
+.meal-log-group-hdr{display:flex;align-items:center;gap:8px;padding:.55rem 1rem;cursor:pointer;transition:background .1s}
+.meal-log-group-hdr:hover{background:var(--bgh)}
+.meal-log-group-hdr:hover .meal-log-del{opacity:1}
+.meal-log-child{border-bottom:0.5px solid var(--border);background:rgba(0,0,0,.12);padding-left:2rem}
+.meal-log-child:last-child{border-bottom:none}
+.meal-slot{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:8px;overflow:hidden;transition:border-color .15s}
+.meal-slot.drag-over{border-color:var(--accent);background:var(--accent-dim)}
+.meal-slot-hdr{display:flex;align-items:center;gap:8px;padding:.5rem .85rem;border-bottom:1px solid var(--border);background:rgba(0,0,0,.12);cursor:pointer;user-select:none}
+.meal-slot-hdr:hover{background:rgba(0,0,0,.2)}
+.meal-slot-icon{font-size:14px;flex-shrink:0}
+.meal-slot-name{font-size:12px;font-weight:600;color:var(--t2);flex:1}
+.meal-slot-macros{font-size:10px;color:var(--t3);font-family:var(--mono)}
+.meal-slot-chevron{font-size:9px;color:var(--t3)}
+.meal-slot-body{display:block}
+.meal-slot-empty{padding:.5rem 1rem;font-size:12px;color:var(--t3);font-style:italic;border-top:none}
+.meal-item{display:flex;align-items:center;gap:8px;padding:.45rem 1rem;border-bottom:0.5px solid var(--border);font-size:13px;cursor:grab;transition:background .1s;user-select:none}
+.meal-item:last-child{border-bottom:none}
+.meal-item:hover{background:var(--bgh)}
+.meal-item:active{cursor:grabbing}
+.meal-item.dragging{opacity:.4}
+.meal-item-drag{font-size:12px;color:var(--t3);flex-shrink:0;cursor:grab}
+.meal-unassigned{background:var(--bg2);border:1px solid rgba(255,255,255,.06);border-radius:var(--r);margin-bottom:12px;overflow:hidden}
+.meal-unassigned-hdr{display:flex;align-items:center;gap:6px;padding:.4rem .85rem;font-size:11px;font-weight:600;color:var(--t3);letter-spacing:.05em;text-transform:uppercase;border-bottom:1px solid var(--border);background:rgba(0,0,0,.1);cursor:pointer}
+.disc-btn{height:28px;padding:0 12px;border-radius:6px;border:1px solid;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;font-family:var(--mono)}
+.disc-btn.resist{background:rgba(74,222,128,.1);border-color:rgba(74,222,128,.3);color:#4ade80}
+.disc-btn.resist:hover{background:rgba(74,222,128,.2)}
+.disc-btn.fail{background:rgba(248,113,113,.1);border-color:rgba(248,113,113,.25);color:#f87171}
+.disc-btn.fail:hover{background:rgba(248,113,113,.2)}
+.disc-pill{height:20px;padding:0 7px;border-radius:10px;font-size:10px;font-weight:600;display:flex;align-items:center;gap:3px;cursor:pointer;transition:opacity .15s}
+.disc-pill.r{background:rgba(74,222,128,.15);color:#4ade80}
+.disc-pill.f{background:rgba(248,113,113,.15);color:#f87171}
+.disc-pill:hover{opacity:.7}
+.disc-bar{border-radius:3px 3px 0 0;min-height:4px;transition:height .3s;position:relative;flex:1}
+.disc-bar-wrap{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1}
+.disc-bar-label{font-size:9px;color:var(--t3)}font-size:11px;font-weight:500;border-radius:5px;border:1px solid transparent;background:transparent;color:var(--t3);cursor:pointer;transition:all .15s}
+.meal-view-btn.active{background:var(--bg3);border-color:var(--border2);color:var(--t1)}
+.meal-view-btn:hover:not(.active){color:var(--t2)}
+.meal-slots-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:500px){.meal-slots-grid{grid-template-columns:1fr}}
+.meal-slot{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:border-color .15s}
+.meal-slot.drag-over{border-color:var(--accent);background:var(--accent-dim)}
+.meal-slot-hdr{display:flex;align-items:center;gap:6px;padding:.45rem .75rem;background:rgba(0,0,0,.15);cursor:pointer;user-select:none}
+.meal-slot-icon{font-size:13px;flex-shrink:0}
+.meal-slot-name{font-size:12px;font-weight:600;color:var(--t2);flex:1}
+.meal-slot-macros{font-size:10px;color:var(--t3);font-family:var(--mono)}
+.meal-slot-chevron{font-size:9px;color:var(--t3);transition:transform .15s}
+.meal-slot-body{min-height:36px}
+.meal-slot-drop-hint{padding:.45rem .75rem;font-size:11px;color:var(--t3);font-style:italic;text-align:center;border:1.5px dashed var(--border);border-radius:5px;margin:.35rem;transition:border-color .15s}
+.meal-slot.drag-over .meal-slot-drop-hint{border-color:var(--accent);color:var(--accent)}
+.meal-item{display:flex;align-items:center;gap:6px;padding:.35rem .6rem;border-bottom:0.5px solid var(--border);font-size:12px;cursor:grab;transition:background .1s;user-select:none}
+.meal-item:last-child{border-bottom:none}
+.meal-item:hover{background:var(--bgh)}
+.meal-item.dragging{opacity:.35;cursor:grabbing}
+.meal-item-handle{color:var(--t3);font-size:11px;flex-shrink:0;cursor:grab}
+.meal-item-name{flex:1;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meal-item-macros{font-size:10px;color:var(--t3);white-space:nowrap}
+.meal-item-del{background:transparent;border:none;color:var(--t3);font-size:13px;cursor:pointer;padding:0 2px;opacity:0;transition:opacity .15s;flex-shrink:0}
+.meal-item:hover .meal-item-del{opacity:1}
+.meal-unassigned{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:8px}
+.meal-unassigned-hdr{display:flex;align-items:center;gap:6px;padding:.4rem .75rem;font-size:11px;font-weight:500;color:var(--t3);background:rgba(0,0,0,.1);cursor:pointer;user-select:none}
+.meal-unassigned-hdr span{flex:1}
 .supp-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:1.5rem;width:100%}
 .mosum,.mo-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:1.25rem;width:100%}
 .supp-card{background:var(--bg2);border:1px solid transparent;border-radius:var(--r);padding:.6rem .9rem;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:8px;user-select:none}
@@ -702,6 +765,57 @@ create policy "allow all" on dashboard_data
 </div>
 </div>
 <div class="tsec" data-tab="journal">
+  <div class="slbl" onclick="toggleSec('discipline')" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer">
+    <span>🧠 Discipline</span>
+    <div style="display:flex;align-items:center;gap:6px">
+      <span id="disc-streak-lbl" style="font-size:11px;color:var(--t3)"></span>
+      <span id="sci-discipline" style="font-size:10px;color:var(--t3);margin-left:2px;flex-shrink:0">▼</span>
+    </div>
+  </div>
+  <div id="secb-discipline">
+    <div style="padding:.85rem 1rem 0">
+
+      <!-- Today row -->
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem">
+        <div style="flex:1">
+          <div style="font-size:11px;color:var(--t3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em">Today</div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <button class="disc-btn resist" onclick="logDisc('resist')" title="Resisted">✓ Resisted</button>
+            <button class="disc-btn fail" onclick="logDisc('fail')" title="Gave in">✗ Gave in</button>
+            <div id="disc-today-pills" style="display:flex;gap:4px;flex-wrap:wrap;flex:1"></div>
+          </div>
+        </div>
+        <div style="text-align:center;flex-shrink:0">
+          <div style="font-size:28px;font-weight:700;font-family:var(--mono);color:var(--accent)" id="disc-streak-num">0</div>
+          <div style="font-size:10px;color:var(--t3)">day streak</div>
+        </div>
+      </div>
+
+      <!-- Stats row -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem">
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.6rem .75rem;text-align:center">
+          <div style="font-size:18px;font-weight:700;color:#4ade80;font-family:var(--mono)" id="disc-week-wins">0</div>
+          <div style="font-size:10px;color:var(--t3)">wins this week</div>
+        </div>
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.6rem .75rem;text-align:center">
+          <div style="font-size:18px;font-weight:700;color:#f87171;font-family:var(--mono)" id="disc-week-fails">0</div>
+          <div style="font-size:10px;color:var(--t3)">slips this week</div>
+        </div>
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.6rem .75rem;text-align:center">
+          <div style="font-size:18px;font-weight:700;color:var(--accent);font-family:var(--mono)" id="disc-win-rate">–</div>
+          <div style="font-size:10px;color:var(--t3)">win rate</div>
+        </div>
+      </div>
+
+      <!-- Weekly chart -->
+      <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Last 7 days</div>
+      <div id="disc-chart" style="display:flex;gap:4px;align-items:flex-end;height:60px;margin-bottom:1rem"></div>
+
+    </div>
+  </div>
+</div>
+
+<div class="tsec" data-tab="journal">
   <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
     <span>🎯 Approach log</span>
     <div style="display:flex;gap:6px;align-items:center">
@@ -805,7 +919,8 @@ create policy "allow all" on dashboard_data
   <div class="slbl" onclick="toggleSec('dtodo')" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer">
     <span>Daily to-do</span>
     <span id="dtodo-count" style="font-size:11px;color:var(--t3)"></span>
-    <div style="display:flex;gap:4px;align-items:center"><button class="arc-btn" onclick="event.stopPropagation();clearSec('dtodo')" title="Clear all">✕ Clear</button><button class="arc-btn" onclick="event.stopPropagation();archiveSec('dtodo')" title="Archive done">↓ Archive</button><span id="sci-dtodo" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div> style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+    <div style="display:flex;gap:4px;align-items:center"><button class="arc-btn" onclick="event.stopPropagation();clearSec('dtodo')" title="Clear all">✕ Clear</button><button class="arc-btn" onclick="event.stopPropagation();archiveSec('dtodo')" title="Archive done">↓ Archive</button><span id="sci-dtodo" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+  </div>
 <div id="secb-dtodo">
   <div class="todo-card" id="dtodo-card">
     <div class="todo-add-row" id="dtodo-add-row">
@@ -833,7 +948,8 @@ create policy "allow all" on dashboard_data
 <div class="tsec" data-tab="daily">
   <div class="slbl" onclick="toggleSec('mtodo')" style="display:flex;justify-content:space-between;align-items:center;margin-top:.75rem;cursor:pointer">
     <span>Master list</span>
-    <div style="display:flex;gap:4px;align-items:center"><span style="font-size:10px;color:var(--t3)">Persists until done</span><button class="arc-btn" onclick="event.stopPropagation();clearSec('mtodo')" title="Clear all">✕ Clear</button><button class="arc-btn" onclick="event.stopPropagation();archiveSec('mtodo')" title="Archive done">↓ Archive</button><span id="sci-mtodo" style="font-size:10px;color:var(--t3);margin-left:2px;flex-shrink:0">▼</span></div> style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+    <div style="display:flex;gap:4px;align-items:center"><span style="font-size:10px;color:var(--t3)">Persists until done</span><button class="arc-btn" onclick="event.stopPropagation();clearSec('mtodo')" title="Clear all">✕ Clear</button><button class="arc-btn" onclick="event.stopPropagation();archiveSec('mtodo')" title="Archive done">↓ Archive</button><span id="sci-mtodo" style="font-size:10px;color:var(--t3);margin-left:2px;flex-shrink:0">▼</span></div>
+  </div>
 <div id="secb-mtodo">
   <div class="todo-card" id="mtodo-card">
     <div class="todo-add-row">
@@ -874,9 +990,8 @@ create policy "allow all" on dashboard_data
       <span id="wkt-status" style="font-size:11px;color:var(--t3)"></span>
       <button class="nutr-sm-btn" onclick="event.stopPropagation();logWorkout()" id="wkt-log-btn">✓ Log workout</button>
     <span id="sci-workout" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
-<div id="secb-workout">
   </div>
-
+<div id="secb-workout">
   <!-- Day selector -->
   <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">
     <button class="wkt-day-btn active" onclick="setWorkoutDay('push')" id="wday-push">Push</button>
@@ -1065,7 +1180,12 @@ create policy "allow all" on dashboard_data
     </div>
   </div>
   <div class="meal-log-wrap" id="meal-log-wrap">
+    <div style="display:flex;gap:4px;padding:.45rem .85rem;border-bottom:1px solid var(--border);background:rgba(0,0,0,.1)">
+      <button class="meal-view-btn active" id="mvb-list" onclick="setMealView('list')">📋 List</button>
+      <button class="meal-view-btn" id="mvb-slots" onclick="setMealView('slots')">🍽️ Meals</button>
+    </div>
     <div id="meal-log-list"></div>
+    <div id="meal-slots-view" style="display:none;padding:.5rem"></div>
     <div class="meal-log-empty" id="meal-log-empty">No meals logged yet.</div>
   </div>
 
@@ -1180,14 +1300,14 @@ create policy "allow all" on dashboard_data
 </div>
 </div>
 <div class="tsec" data-tab="journal">
-  <div class="slbl" onclick="toggleSec('dates')" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer">
+  <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
     <span>📅 Important dates</span>
     <div style="display:flex;gap:4px;align-items:center">
-      <button class="nutr-sm-btn" onclick="event.stopPropagation();openAddDate()">+ Add</button>
-      <button class="arc-btn clr" onclick="event.stopPropagation();clearSec('dates')" title="Clear all">✕ Clear</button>
-      <button class="arc-btn" onclick="event.stopPropagation();archiveSec('dates')" title="Archive past">↓ Archive</button>
-      <span id="sci-dates" style="font-size:10px;color:var(--t3);margin-left:2px;flex-shrink:0">▼</span>
+      <button class="nutr-sm-btn" onclick="openAddDate()">+ Add</button>
+      <button class="arc-btn clr" onclick="clearSec('dates')" title="Clear all">✕ Clear</button>
+      <button class="arc-btn" onclick="archiveSec('dates')" title="Archive past">↓ Archive</button>
     </div>
+  </div>
 <div id="secb-dates">
   <div class="idate-wrap" id="idate-wrap"></div>
 
@@ -1221,7 +1341,8 @@ create policy "allow all" on dashboard_data
 <div class="tsec" data-tab="fitness">
   <div class="slbl" onclick="toggleSec('bodyissues')" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer">
     <span>🩺 Body issues to address</span>
-    <div style="display:flex;gap:4px;align-items:center"><button class="nutr-sm-btn" onclick="event.stopPropagation();toggleBodyIssueForm()">+ Add</button><button class="arc-btn" onclick="event.stopPropagation();clearSec('bodyissues')" title="Clear all">✕ Clear</button><button class="arc-btn" onclick="event.stopPropagation();archiveSec('bodyissues')" title="Archive resolved">↓ Archive</button><span id="sci-bodyissues" style="font-size:10px;color:var(--t3);margin-left:2px;flex-shrink:0">▼</span></div> style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+    <div style="display:flex;gap:4px;align-items:center"><button class="nutr-sm-btn" onclick="event.stopPropagation();toggleBodyIssueForm()">+ Add</button><button class="arc-btn" onclick="event.stopPropagation();clearSec('bodyissues')" title="Clear all">✕ Clear</button><button class="arc-btn" onclick="event.stopPropagation();archiveSec('bodyissues')" title="Archive resolved">↓ Archive</button><span id="sci-bodyissues" style="font-size:10px;color:var(--t3);margin-left:2px;flex-shrink:0">▼</span></div>
+  </div>
 <div id="secb-bodyissues">
   <div id="body-issue-form" style="display:none;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;margin-bottom:8px">
     <div style="display:grid;grid-template-columns:1fr 90px 90px;gap:6px;margin-bottom:6px">
@@ -1284,21 +1405,8 @@ create policy "allow all" on dashboard_data
       <button class="nutr-sm-btn" onclick="event.stopPropagation();toggleMistakeForm()">+ Log mistake</button>
       <button class="arc-btn" onclick="event.stopPropagation();clearSec('mistakes')" title="Clear all">✕ Clear</button><button class="arc-btn" onclick="event.stopPropagation();archiveSec('mistakes')" title="Archive resolved">↓ Archive</button>
     <span id="sci-mistakes" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+  </div>
 <div id="secb-mistakes">
-  
-<div class="arc-wrap">
-  <div class="arc-hdr" onclick="toggleSec('arc-mistakes');event.stopPropagation()">
-    <span class="arc-hdr-lbl">📦 Archived <span id="arc-count-mistakes" class="arc-count"></span></span>
-    <span id="sci-arc-mistakes" style="font-size:10px;color:var(--t3)">▶</span>
-  </div>
-  <div id="secb-arc-mistakes" class="arc-body" style="display:none">
-    <div id="arc-body-mistakes"></div>
-    <div class="arc-footer">
-      <button onclick="clearArc('mistakes');event.stopPropagation()" class="arc-clr-btn">Clear archive</button>
-    </div>
-  </div>
-</div>
-</div>
   <div id="mistake-add-form" style="display:none;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;margin-bottom:8px">
     <div style="display:grid;grid-template-columns:1fr 110px 110px;gap:6px;margin-bottom:8px">
       <div>
@@ -1336,12 +1444,24 @@ create policy "allow all" on dashboard_data
   </div>
   <div id="mistakes-list" style="margin-bottom:1.5rem"></div>
 
+<div class="arc-wrap">
+  <div class="arc-hdr" onclick="toggleSec('arc-mistakes');event.stopPropagation()">
+    <span class="arc-hdr-lbl">📦 Archived <span id="arc-count-mistakes" class="arc-count"></span></span>
+    <span id="sci-arc-mistakes" style="font-size:10px;color:var(--t3)">▶</span>
+  </div>
+  <div id="secb-arc-mistakes" class="arc-body" style="display:none">
+    <div id="arc-body-mistakes"></div>
+    <div class="arc-footer">
+      <button onclick="clearArc('mistakes');event.stopPropagation()" class="arc-clr-btn">Clear archive</button>
+    </div>
+  </div>
 </div>
 </div>
 <div class="tsec" data-tab="journal">
   <div class="slbl" onclick="toggleSec('philosophy')" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer">
     <span>🧭 Personal philosophy</span>
-    <div style="display:flex;gap:4px;align-items:center"><button class="nutr-sm-btn" onclick="event.stopPropagation();togglePhilForm()">+ Add principle</button><button class="arc-btn" onclick="event.stopPropagation();clearSec('philosophy')" title="Clear all">✕ Clear</button><button class="arc-btn" onclick="event.stopPropagation();archiveSec('philosophy')" title="Archive">↓ Archive</button><span id="sci-philosophy" style="font-size:10px;color:var(--t3);margin-left:2px;flex-shrink:0">▼</span></div> style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+    <div style="display:flex;gap:4px;align-items:center"><button class="nutr-sm-btn" onclick="event.stopPropagation();togglePhilForm()">+ Add principle</button><button class="arc-btn" onclick="event.stopPropagation();clearSec('philosophy')" title="Clear all">✕ Clear</button><button class="arc-btn" onclick="event.stopPropagation();archiveSec('philosophy')" title="Archive">↓ Archive</button><span id="sci-philosophy" style="font-size:10px;color:var(--t3);margin-left:2px;flex-shrink:0">▼</span></div>
+  </div>
 <div id="secb-philosophy">
   <div id="phil-add-form" style="display:none;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;margin-bottom:8px">
     <textarea id="phil-inp" onkeydown="if((event.ctrlKey||event.metaKey)&&event.key==='Enter')savePhil()" style="width:100%;min-height:72px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);color:var(--t1);padding:.6rem .75rem;font-size:13px;outline:none;resize:vertical;line-height:1.6;font-family:inherit" placeholder="Write your principle or piece of wisdom..."></textarea>
@@ -1707,30 +1827,14 @@ function renderHealth(){
         <div class="cunit" style="color:${on?'#22c55e':'var(--t3)'}">${on?'Done':'Tap to log'}</div>
       </div>`;
     }
-    if(m.type==='bp'){
-      const readings=ls('bp-log:'+viewDate)||[];
-      const count=readings.length;
-      const latest=readings[readings.length-1];
-      const statusCol=latest?bpStatusColor(latest.sys,latest.dia):'var(--t3)';
-      const statusLbl=latest?bpStatusLabel(latest.sys,latest.dia):'—';
-      return`<div class="card" style="cursor:default;min-width:0;grid-column:span 2">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
-          <span class="clbl" style="margin-bottom:0">Blood Pressure</span>
-          <span style="font-size:10px;font-weight:600;padding:1px 7px;border-radius:8px;background:${statusCol}22;color:${statusCol}">${statusLbl}</span>
+    if(m.type==='bp'){      const count=metrics[m.id]||0;
+      return`<div class="card check-card" onclick="cycleBP()">
+        <div class="clbl">${m.l}</div>
+        <div class="bp-dots">
+          <div class="bp-dot${count>=1?' on':''}"><i class="ti ti-check"></i></div>
+          <div class="bp-dot${count>=2?' on':''}"><i class="ti ti-check"></i></div>
         </div>
-        ${latest
-          ?`<div style="font-size:22px;font-weight:700;font-family:var(--mono);line-height:1;color:${statusCol}">${latest.sys}/${latest.dia}</div>
-             <div style="font-size:10px;color:var(--t3);margin-top:2px">${latest.hr?`❤️ ${latest.hr} bpm · `:''}${count}/2 readings today</div>`
-          :`<div style="font-size:14px;color:var(--t3);margin:4px 0">No readings today</div>`}
-        <div style="display:flex;gap:5px;margin-top:8px;flex-wrap:wrap">
-          ${isToday()&&count<2?`<button onclick="openBPLog()" style="height:24px;padding:0 10px;font-size:11px;font-weight:500;border-radius:var(--r);border:1px solid var(--border2);background:transparent;color:var(--t2);cursor:pointer;transition:all .15s;font-family:inherit" onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background='transparent'">+ Log reading</button>`:''}
-          ${count>0?`<button onclick="openBPHistory()" style="height:24px;padding:0 10px;font-size:11px;font-weight:500;border-radius:var(--r);border:1px solid var(--border2);background:transparent;color:var(--t3);cursor:pointer;font-family:inherit" onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background='transparent'">History</button>`:''}
-        </div>
-        ${count>0?`<div style="margin-top:6px;display:flex;gap:6px">${readings.map(r=>`
-          <div style="flex:1;background:var(--bg3);border-radius:5px;padding:4px 7px;font-size:11px">
-            <div style="font-family:var(--mono);font-weight:600;color:${bpStatusColor(r.sys,r.dia)}">${r.sys}/${r.dia}</div>
-            <div style="color:var(--t3);font-size:10px">${r.time}${r.hr?` · ${r.hr}bpm`:''}</div>
-          </div>`).join('')}</div>`:''}
+        <div class="bp-lbl">${count}/2 readings${count===2?' ✓':''}</div>
       </div>`;
     }
     if(m.type==='bedtime'){
@@ -1828,123 +1932,7 @@ function stepBedtime(dir){
 }
 function toggleMultiCheck(id){if(!isToday())return;metrics[id]=!metrics[id];lss('metrics:'+viewDate,metrics);renderHealth();renderProgress();}
 function toggleCheck(id){if(!isToday())return;metrics[id]=!metrics[id];lss('metrics:'+viewDate,metrics);renderHealth();renderProgress();}
-function cycleBP(){} // legacy — replaced by openBPLog
-
-function bpStatusColor(sys,dia){
-  if(sys>=180||dia>=120)return'#f87171'; // Crisis
-  if(sys>=140||dia>=90) return'#f87171'; // Stage 2
-  if(sys>=130||dia>=80) return'#f59e0b'; // Stage 1
-  if(sys>=120&&dia<80)  return'#fbbf24'; // Elevated
-  return'#4ade80'; // Normal
-}
-function bpStatusLabel(sys,dia){
-  if(sys>=180||dia>=120)return'Crisis';
-  if(sys>=140||dia>=90) return'High S2';
-  if(sys>=130||dia>=80) return'High S1';
-  if(sys>=120&&dia<80)  return'Elevated';
-  return'Normal';
-}
-
-function openBPLog(){
-  if(!isToday())return;
-  let modal=document.getElementById('bp-log-modal');
-  if(!modal){
-    modal=document.createElement('div');
-    modal.id='bp-log-modal';
-    modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1rem';
-    modal.innerHTML=`<div style="background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl);padding:1.25rem;width:min(360px,92vw);box-shadow:0 24px 64px rgba(0,0,0,.5)">
-      <div style="font-size:15px;font-weight:600;margin-bottom:1rem">🩺 Log Blood Pressure</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:1rem">
-        <div>
-          <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Systolic</label>
-          <input id="bp-sys" type="number" min="60" max="250" placeholder="120" style="width:100%;height:36px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);color:var(--t1);padding:0 10px;font-size:16px;font-family:var(--mono);outline:none;font-weight:600">
-        </div>
-        <div>
-          <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Diastolic</label>
-          <input id="bp-dia" type="number" min="40" max="150" placeholder="80" style="width:100%;height:36px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);color:var(--t1);padding:0 10px;font-size:16px;font-family:var(--mono);outline:none;font-weight:600">
-        </div>
-        <div>
-          <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Heart Rate</label>
-          <input id="bp-hr" type="number" min="30" max="220" placeholder="72" style="width:100%;height:36px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);color:var(--t1);padding:0 10px;font-size:16px;font-family:var(--mono);outline:none;font-weight:600">
-        </div>
-      </div>
-      <div id="bp-preview" style="min-height:28px;margin-bottom:.75rem;font-size:13px;color:var(--t3)"></div>
-      <div style="display:flex;gap:8px">
-        <button onclick="document.getElementById('bp-log-modal').remove()" style="flex:1;height:34px;background:transparent;border:1px solid var(--border);border-radius:var(--r);color:var(--t3);font-size:13px;cursor:pointer;font-family:inherit">Cancel</button>
-        <button onclick="saveBPReading()" style="flex:2;height:34px;background:var(--accent-dim);border:1px solid rgba(59,130,246,.4);border-radius:var(--r);color:#93c5fd;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit">Save reading</button>
-      </div>
-    </div>`;
-    document.body.appendChild(modal);
-    modal.addEventListener('click',e=>{if(e.target===modal)modal.remove();});
-    // Live preview
-    ['bp-sys','bp-dia'].forEach(id=>{
-      document.getElementById(id).addEventListener('input',()=>{
-        const s=parseInt(document.getElementById('bp-sys').value)||0;
-        const d=parseInt(document.getElementById('bp-dia').value)||0;
-        const prev=document.getElementById('bp-preview');
-        if(s>0&&d>0){
-          const col=bpStatusColor(s,d),lbl=bpStatusLabel(s,d);
-          prev.innerHTML=`<span style="font-family:var(--mono);font-size:18px;font-weight:700;color:${col}">${s}/${d}</span> <span style="font-size:11px;padding:2px 8px;border-radius:8px;background:${col}22;color:${col}">${lbl}</span>`;
-        }else prev.textContent='';
-      });
-    });
-    setTimeout(()=>document.getElementById('bp-sys').focus(),50);
-  }
-  modal.style.display='flex';
-}
-
-function saveBPReading(){
-  const sys=parseInt(document.getElementById('bp-sys').value)||0;
-  const dia=parseInt(document.getElementById('bp-dia').value)||0;
-  const hr=parseInt(document.getElementById('bp-hr').value)||0;
-  if(!sys||!dia){alert('Enter both systolic and diastolic.');return;}
-  const now=new Date();
-  const time=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-  const readings=ls('bp-log:'+viewDate)||[];
-  readings.push({sys,dia,hr:hr||null,time});
-  lss('bp-log:'+viewDate,readings);
-  // Keep metrics.bp count in sync for progress bar
-  metrics.bp=readings.length;
-  lss('metrics:'+viewDate,metrics);
-  document.getElementById('bp-log-modal').remove();
-  renderHealth();renderProgress();
-}
-
-function openBPHistory(){
-  let modal=document.getElementById('bp-hist-modal');
-  if(modal){modal.remove();return;}
-  // Collect last 14 days of readings
-  const rows=[];
-  for(let i=0;i<14;i++){
-    const d=new Date();d.setDate(d.getDate()-i);
-    const dk=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-    const rds=ls('bp-log:'+dk)||[];
-    rds.forEach(r=>rows.push({...r,date:dk,d}));
-  }
-  const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  modal=document.createElement('div');
-  modal.id='bp-hist-modal';
-  modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1rem';
-  modal.innerHTML=`<div style="background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl);padding:1.25rem;width:min(480px,92vw);max-height:80vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.5)">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
-      <div style="font-size:15px;font-weight:600">🩺 BP History (14 days)</div>
-      <button onclick="document.getElementById('bp-hist-modal').remove()" style="background:transparent;border:none;color:var(--t3);font-size:18px;cursor:pointer;padding:0 4px">×</button>
-    </div>
-    ${!rows.length?'<div style="text-align:center;color:var(--t3);padding:1rem">No readings yet.</div>'
-    :rows.map(r=>{
-      const col=bpStatusColor(r.sys,r.dia),lbl=bpStatusLabel(r.sys,r.dia);
-      const day=`${mo[r.d.getMonth()]} ${r.d.getDate()}`;
-      return`<div style="display:flex;align-items:center;gap:10px;padding:.5rem 0;border-bottom:.5px solid var(--border)">
-        <span style="font-size:11px;color:var(--t3);font-family:var(--mono);min-width:70px">${day} ${r.time}</span>
-        <span style="font-family:var(--mono);font-size:15px;font-weight:700;color:${col};flex:1">${r.sys}/${r.dia}</span>
-        ${r.hr?`<span style="font-size:11px;color:var(--t3)">❤️ ${r.hr}</span>`:''}
-        <span style="font-size:10px;padding:1px 7px;border-radius:8px;background:${col}22;color:${col}">${lbl}</span>
-      </div>`;
-    }).join('')}
-  </div>`;
-  document.body.appendChild(modal);
-  modal.addEventListener('click',e=>{if(e.target===modal)modal.remove();});
-}
+function cycleBP(){if(!isToday())return;const cur=metrics.bp||0;metrics.bp=cur>=2?0:cur+1;lss('metrics:'+viewDate,metrics);renderHealth();renderProgress();}
 function startEH(id){if(!isToday()||editH===id)return;editH=id;renderHealth();}
 function commitH(id){const i=document.getElementById('he-'+id);if(i){metrics[id]=i.value;lss('metrics:'+viewDate,metrics);}editH=null;renderHealth();}
 
@@ -2093,9 +2081,8 @@ function calcProgress(){
   if(metrics.workout){total+=2;if(metrics.elbow)done++;if(metrics.knee)done++;}
   // Workout — weekly goal 4x (counts as 1 point, met when week ≥ 4)
   total++;if(getWeeklyWorkouts()>=4)done++;
-  // BP — 1 reading counts as done, 2 is bonus
-  const bpReadings=ls('bp-log:'+viewDate)||[];
-  total++;if(bpReadings.length>=1)done++;
+  // BP — 2/2
+  total++;if((metrics.bp||0)>=2)done++;
   // Bedtime — weeknights only
   const vd=new Date(viewDate+'T12:00:00'),dow=vd.getDay();
   if(dow>=0&&dow<=4){
@@ -2330,12 +2317,18 @@ function openCustomMeal(){
   mealLog.push({id:Date.now(),name,p,c,f,cal});
   saveMealLog();renderMealLog();renderMacros();renderHealth();
 }
-function deleteMealLog(id){mealLog=mealLog.filter(m=>m.id!==id);saveMealLog();renderMealLog();renderMacros();renderHealth();}
-function repeatMealLog(id){
-  if(!isToday())return;
-  const m=mealLog.find(x=>x.id===id);if(!m)return;
-  mealLog.push({...m,id:Date.now()});
-  saveMealLog();renderMealLog();renderMacros();renderHealth();renderFitnessProtein();
+function deleteMealLog(id){mealLog=mealLog.filter(m=>m.id!==id);saveMealLog();renderMealLog();if(mealView==='slots')renderMealSlots();renderMacros();renderHealth();}
+function toggleMealGroup(groupId){
+  const body = document.getElementById('mlg-body-'+groupId);
+  const icon = document.getElementById('mlg-icon-'+groupId);
+  if(!body) return;
+  const open = body.style.display !== 'none';
+  body.style.display = open ? 'none' : 'block';
+  if(icon) icon.textContent = open ? '▶' : '▼';
+}
+function deleteMealGroup(groupId){
+  mealLog = mealLog.filter(m => m.groupId !== groupId);
+  saveMealLog(); renderMealLog(); renderMacros(); renderHealth();
 }
 function renderMealLog(){
   const list=document.getElementById('meal-log-list');
@@ -2348,49 +2341,300 @@ function renderMealLog(){
   if(!mealLog.length){list.innerHTML='';if(empty)empty.style.display='block';return;}
   if(empty)empty.style.display='none';
 
-  const btnStyle=`background:transparent;border:1px solid var(--border2);border-radius:5px;color:var(--t3);font-size:13px;width:24px;height:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s`;
-
-  list.innerHTML=mealLog.map(m=>{
-    if(m.type==='group'){
-      const open=!!mealGroupExpanded[m.id];
-      const arrow=open?'▼':'▶';
-      const children=m.children||[];
-      return`<div>
-        <div class="meal-log-entry" style="cursor:pointer" onclick="toggleMealGroup(${m.id})">
-          <span style="font-size:11px;color:var(--t3);margin-right:2px">${arrow}</span>
-          <div class="meal-log-left" style="flex:1">
-            <span class="meal-log-name">${m.name}</span>
-            <span class="meal-log-macros-row">P:<b>${m.p}g</b> · C:${m.c}g · F:${m.f}g · ${m.cal}cal</span>
-          </div>
-          ${ro?'':`
-            <button onclick="event.stopPropagation();repeatMealLog(${m.id})" title="Add again" style="${btnStyle}" onmouseover="this.style.color='#4ade80';this.style.borderColor='rgba(34,197,94,.4)'" onmouseout="this.style.color='var(--t3)';this.style.borderColor='var(--border2)'">+</button>
-            <button onclick="event.stopPropagation();deleteMealLog(${m.id})" title="Remove" style="${btnStyle}" onmouseover="this.style.color='#f87171';this.style.borderColor='rgba(239,68,68,.4)'" onmouseout="this.style.color='var(--t3)';this.style.borderColor='var(--border2)'"><i class="ti ti-x"></i></button>
-          `}
-        </div>
-        ${open?`<div style="background:var(--bg3);border-bottom:.5px solid var(--border)">
-          ${children.map(c=>`
-            <div class="meal-log-entry" style="padding-left:1.75rem;opacity:.8">
-              <div class="meal-log-left" style="flex:1">
-                <span class="meal-log-name" style="font-size:12px">↳ ${c.name}</span>
-                <span class="meal-log-macros-row">P:<b>${c.p}g</b> · C:${c.c}g · F:${c.f}g · ${c.cal}cal</span>
-              </div>
-            </div>`).join('')}
-        </div>`:''}
-      </div>`;
+  // Separate grouped from standalone items
+  const groups = {};
+  const standalone = [];
+  mealLog.forEach(m => {
+    if(m.groupId && m.groupName){
+      if(!groups[m.groupId]) groups[m.groupId] = {name: m.groupName, items: []};
+      groups[m.groupId].items.push(m);
+    } else {
+      standalone.push(m);
     }
-    // Regular flat entry
-    return`<div class="meal-log-entry">
+  });
+
+  let html = '';
+
+  // Render groups
+  Object.entries(groups).forEach(([gid, g]) => {
+    const gp = g.items.reduce((a,m)=>({p:a.p+(m.p||0),c:a.c+(m.c||0),f:a.f+(m.f||0),cal:a.cal+(m.cal||0)}),{p:0,c:0,f:0,cal:0});
+    html += `<div class="meal-log-group">
+      <div class="meal-log-group-hdr" onclick="toggleMealGroup('${gid}')">
+        <span id="mlg-icon-${gid}" style="font-size:9px;color:var(--t3);flex-shrink:0">▶</span>
+        <span class="meal-log-name" style="flex:1">${g.name}</span>
+        <span class="meal-log-macros-row" style="margin-right:6px">P:<b>${gp.p}g</b> · ${gp.cal}cal</span>
+        ${ro?'':` <button class="meal-log-del" onclick="event.stopPropagation();deleteMealGroup('${gid}')" title="Remove meal"><i class="ti ti-x"></i></button>`}
+      </div>
+      <div id="mlg-body-${gid}" style="display:none">
+        ${g.items.map(m=>`
+          <div class="meal-log-entry meal-log-child">
+            <div class="meal-log-left">
+              <span class="meal-log-name" style="font-size:12px;color:var(--t2)">${m.name}</span>
+              <span class="meal-log-macros-row">P:<b>${m.p}g</b> · C:${m.c}g · F:${m.f}g · ${m.cal}cal</span>
+            </div>
+            ${ro?'':` <button class="meal-log-del" onclick="deleteMealLog(${m.id})" title="Remove"><i class="ti ti-x"></i></button>`}
+          </div>`).join('')}
+      </div>
+    </div>`;
+  });
+
+  // Render standalone items
+  standalone.forEach(m => {
+    html += `<div class="meal-log-entry">
       <div class="meal-log-left">
         <span class="meal-log-name">${m.name}</span>
         <span class="meal-log-macros-row">P:<b>${m.p}g</b> · C:${m.c}g · F:${m.f}g · ${m.cal}cal</span>
       </div>
-      ${ro?'':`
-        <button onclick="repeatMealLog(${m.id})" title="Add another" style="${btnStyle}" onmouseover="this.style.color='#4ade80';this.style.borderColor='rgba(34,197,94,.4)'" onmouseout="this.style.color='var(--t3)';this.style.borderColor='var(--border2)'">+</button>
-        <button onclick="deleteMealLog(${m.id})" title="Remove" style="${btnStyle}" onmouseover="this.style.color='#f87171';this.style.borderColor='rgba(239,68,68,.4)'" onmouseout="this.style.color='var(--t3)';this.style.borderColor='var(--border2)'"><i class="ti ti-x"></i></button>
-      `}
+      ${ro?'':` <button class="meal-log-del" onclick="deleteMealLog(${m.id})" title="Remove"><i class="ti ti-x"></i></button>`}
+    </div>`;
+  });
+
+  list.innerHTML = html;
+}
+// ── Meal slots ───────────────────────────────────────────────
+const MEAL_SLOTS = [
+  {id:'breakfast', icon:'🌅', name:'Breakfast'},
+  {id:'lunch',     icon:'☀️',  name:'Lunch'},
+  {id:'dinner',    icon:'🌙', name:'Dinner'},
+  {id:'snack',     icon:'🍎', name:'Snack'},
+];
+let mealView = 'list'; // 'list' | 'slots'
+let dragItemId = null;
+let dragIsGroup = false;
+let slotCollapsed = {}; // {slotId: bool}
+
+function setMealView(v){
+  mealView = v;
+  document.getElementById('mvb-list').classList.toggle('active', v==='list');
+  document.getElementById('mvb-slots').classList.toggle('active', v==='slots');
+  document.getElementById('meal-log-list').style.display = v==='list' ? 'block' : 'none';
+  document.getElementById('meal-slots-view').style.display = v==='slots' ? 'block' : 'none';
+  if(v==='slots') renderMealSlots();
+}
+
+function renderMealSlots(){
+  const wrap = document.getElementById('meal-slots-view');
+  if(!wrap) return;
+  const ro = !isToday();
+
+  // Build display items: collapse grouped items into one entry per groupId
+  function getDisplayItems(items){
+    const seen = {};
+    const out = [];
+    items.forEach(m => {
+      if(m.groupId && m.groupName){
+        if(seen[m.groupId]) return; // already added
+        seen[m.groupId] = true;
+        // sum macros for the whole group
+        const groupItems = mealLog.filter(x => x.groupId === m.groupId);
+        const tot = groupItems.reduce((a,x)=>({p:a.p+(x.p||0),c:a.c+(x.c||0),f:a.f+(x.f||0),cal:a.cal+(x.cal||0)}),{p:0,c:0,f:0,cal:0});
+        out.push({...tot, id: m.groupId, name: m.groupName, isGroup: true, slotId: m.slotId});
+      } else {
+        out.push(m);
+      }
+    });
+    return out;
+  }
+
+  // Unassigned: items with no slotId
+  const unassignedRaw = mealLog.filter(m => !m.slotId);
+  const unassigned = getDisplayItems(unassignedRaw);
+
+  let html = '';
+  if(unassigned.length){
+    html += `<div class="meal-unassigned" id="slot-unassigned"
+      ondragover="event.preventDefault();document.getElementById('slot-unassigned').classList.add('drag-over')"
+      ondragleave="document.getElementById('slot-unassigned').classList.remove('drag-over')"
+      ondrop="onSlotDrop(event,'')">
+      <div class="meal-unassigned-hdr" onclick="toggleSlotCollapse('unassigned')">
+        <span>Unassigned</span>
+        <span style="font-size:10px;color:var(--t3)">${unassigned.length} item${unassigned.length===1?'':'s'}</span>
+        <span id="slotchev-unassigned" style="font-size:9px;color:var(--t3)">${slotCollapsed['unassigned']?'▶':'▼'}</span>
+      </div>
+      <div id="slotbody-unassigned" style="display:${slotCollapsed['unassigned']?'none':'block'}">
+        ${unassigned.map(m=>mealItemHTML(m, ro)).join('')}
+      </div>
+    </div>`;
+  }
+
+  html += `<div class="meal-slots-grid">`;
+  MEAL_SLOTS.forEach(slot => {
+    const rawItems = mealLog.filter(m => m.slotId === slot.id);
+    const displayItems = getDisplayItems(rawItems);
+    const tot = rawItems.reduce((a,m)=>({p:a.p+(m.p||0),cal:a.cal+(m.cal||0)}),{p:0,cal:0});
+    const collapsed = slotCollapsed[slot.id];
+    html += `<div class="meal-slot" id="slot-${slot.id}"
+      ondragover="event.preventDefault();document.getElementById('slot-${slot.id}').classList.add('drag-over')"
+      ondragleave="document.getElementById('slot-${slot.id}').classList.remove('drag-over')"
+      ondrop="onSlotDrop(event,'${slot.id}')">
+      <div class="meal-slot-hdr" onclick="toggleSlotCollapse('${slot.id}')">
+        <span class="meal-slot-icon">${slot.icon}</span>
+        <span class="meal-slot-name">${slot.name}</span>
+        ${rawItems.length ? `<span class="meal-slot-macros">P:${tot.p}g · ${tot.cal}cal</span>` : ''}
+        <span class="meal-slot-chevron" id="slotchev-${slot.id}">${collapsed?'▶':'▼'}</span>
+      </div>
+      <div class="meal-slot-body" id="slotbody-${slot.id}" style="display:${collapsed?'none':'block'}">
+        ${displayItems.length
+          ? displayItems.map(m=>mealItemHTML(m, ro)).join('')
+          : `<div class="meal-slot-drop-hint">Drop items here</div>`}
+      </div>
+    </div>`;
+  });
+  html += `</div>`;
+  wrap.innerHTML = html;
+
+  // Re-attach drag listeners
+  wrap.querySelectorAll('.meal-item').forEach(el => {
+    el.addEventListener('dragstart', e => {
+      dragItemId = e.currentTarget.dataset.id;
+      dragIsGroup = e.currentTarget.dataset.isgroup === 'true';
+      setTimeout(()=>e.currentTarget.classList.add('dragging'), 0);
+    });
+    el.addEventListener('dragend', e => {
+      e.currentTarget.classList.remove('dragging');
+      document.querySelectorAll('.meal-slot,.meal-unassigned').forEach(s=>s.classList.remove('drag-over'));
+    });
+  });
+}
+
+function mealItemHTML(m, ro){
+  const isGroup = m.isGroup;
+  const dragId = isGroup ? m.id : m.id; // groupId or item id
+  return `<div class="meal-item" draggable="${ro?'false':'true'}" data-id="${m.id}" data-isgroup="${isGroup?'true':'false'}">
+    ${ro?'':`<span class="meal-item-handle" title="Drag to move">⠿</span>`}
+    <div class="meal-item-name" title="${m.name}">${m.name}${isGroup?` <span style="font-size:10px;color:var(--t3)">(meal)</span>`:''}</div>
+    <span class="meal-item-macros">P:${m.p}g · ${m.cal}cal</span>
+    ${ro?'':isGroup
+      ? ` <button class="meal-item-del" onclick="deleteMealGroup('${m.id}')" title="Remove"><i class="ti ti-x"></i></button>`
+      : ` <button class="meal-item-del" onclick="deleteMealLog(${m.id})" title="Remove"><i class="ti ti-x"></i></button>`}
+  </div>`;
+}
+
+function onSlotDrop(e, slotId){
+  e.preventDefault();
+  document.querySelectorAll('.meal-slot,.meal-unassigned').forEach(s=>s.classList.remove('drag-over'));
+  if(!dragItemId) return;
+  if(dragIsGroup){
+    // Move all items in the group
+    mealLog = mealLog.map(m => m.groupId === dragItemId ? {...m, slotId: slotId||''} : m);
+  } else {
+    mealLog = mealLog.map(m => m.id == dragItemId ? {...m, slotId: slotId||''} : m);
+  }
+  saveMealLog(); renderMealSlots(); renderMacros();
+  dragItemId = null; dragIsGroup = false;
+}
+
+function toggleSlotCollapse(id){
+  slotCollapsed[id] = !slotCollapsed[id];
+  renderMealSlots();
+}
+
+// ── Discipline tracker ────────────────────────────────────────
+function discKey(d){ return 'disc:' + (d || currentDate); }
+
+function getDiscData(d){
+  try { return JSON.parse(localStorage.getItem(discKey(d))) || []; } catch { return []; }
+}
+function saveDiscData(d, arr){
+  localStorage.setItem(discKey(d), JSON.stringify(arr));
+}
+
+function logDisc(type){
+  if(!isToday()) return;
+  const arr = getDiscData();
+  arr.push({ type, time: new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}) });
+  saveDiscData(currentDate, arr);
+  renderDisc();
+}
+
+function removeDiscEntry(idx){
+  if(!isToday()) return;
+  const arr = getDiscData();
+  arr.splice(idx, 1);
+  saveDiscData(currentDate, arr);
+  renderDisc();
+}
+
+function getDiscStreak(){
+  let streak = 0;
+  const today = new Date();
+  for(let i = 0; i < 365; i++){
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    const key = d.toISOString().split('T')[0];
+    const arr = getDiscData(key);
+    if(!arr.length && i > 0) break; // no data = streak ends (skip today if empty)
+    const hasFail = arr.some(e => e.type === 'fail');
+    if(hasFail) break;
+    if(arr.length > 0) streak++;
+    else if(i === 0) continue; // today not logged yet, don't break
+  }
+  return streak;
+}
+
+function renderDisc(){
+  // Today pills
+  const pills = document.getElementById('disc-today-pills');
+  const arr = getDiscData();
+  if(pills){
+    pills.innerHTML = arr.map((e,i) =>
+      `<div class="disc-pill ${e.type==='resist'?'r':'f'}" onclick="removeDiscEntry(${i})" title="Tap to remove">
+        ${e.type==='resist'?'✓':'✗'} ${e.time}
+      </div>`
+    ).join('');
+  }
+
+  // Streak
+  const streak = getDiscStreak();
+  const streakNum = document.getElementById('disc-streak-num');
+  const streakLbl = document.getElementById('disc-streak-lbl');
+  if(streakNum) streakNum.textContent = streak;
+  if(streakLbl) streakLbl.textContent = streak > 0 ? `${streak}d streak 🔥` : '';
+
+  // Week stats (last 7 days)
+  let weekWins = 0, weekFails = 0;
+  const today = new Date();
+  const days = [];
+  for(let i = 6; i >= 0; i--){
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    const key = d.toISOString().split('T')[0];
+    const dayArr = getDiscData(key);
+    const wins = dayArr.filter(e=>e.type==='resist').length;
+    const fails = dayArr.filter(e=>e.type==='fail').length;
+    weekWins += wins;
+    weekFails += fails;
+    days.push({ label: d.toLocaleDateString('en-US',{weekday:'short'}).slice(0,1), wins, fails, key });
+  }
+
+  const winRate = document.getElementById('disc-win-rate');
+  const total = weekWins + weekFails;
+  if(winRate) winRate.textContent = total ? Math.round(weekWins/total*100)+'%' : '–';
+  const ww = document.getElementById('disc-week-wins');
+  const wf = document.getElementById('disc-week-fails');
+  if(ww) ww.textContent = weekWins;
+  if(wf) wf.textContent = weekFails;
+
+  // Chart
+  const chart = document.getElementById('disc-chart');
+  if(!chart) return;
+  const maxVal = Math.max(...days.map(d=>d.wins+d.fails), 1);
+  chart.innerHTML = days.map(d => {
+    const total = d.wins + d.fails;
+    const winH = total ? Math.round((d.wins/maxVal)*52) : 0;
+    const failH = total ? Math.round((d.fails/maxVal)*52) : 0;
+    const isToday = d.key === currentDate;
+    return `<div class="disc-bar-wrap" style="opacity:${isToday?'1':'.7'}">
+      <div style="display:flex;flex-direction:column;justify-content:flex-end;height:52px;gap:1px;width:100%">
+        ${d.fails ? `<div class="disc-bar" style="height:${failH}px;background:rgba(248,113,113,.5)"></div>` : ''}
+        ${d.wins  ? `<div class="disc-bar" style="height:${winH}px;background:rgba(74,222,128,.6)"></div>` : ''}
+        ${!total  ? `<div style="height:4px;background:var(--border);border-radius:3px;width:100%"></div>` : ''}
+      </div>
+      <div class="disc-bar-label" style="${isToday?'color:var(--t1);font-weight:600':''}">${d.label}</div>
     </div>`;
   }).join('');
 }
+
 function toggleSupp(id){
   if(!isToday())return;
   suppData[id]=!suppData[id];
@@ -2796,7 +3040,7 @@ function showBackupMsg(msg){
   el.style.animation='none';
   setTimeout(()=>{el.style.animation='fadeOut 3s forwards';},50);
 }
-function renderAll(){renderAllArchives();renderDateNav();renderHealth();renderEnergy();renderGameLog();renderDTodos();renderMTodos();renderVO2();renderGymGoals();renderTrading();renderStats();renderMacros();renderMealLog();renderSupplements();renderFitnessProtein();renderEntries();renderTimeline();loadCalendar();renderCalendar();loadJournal();renderProgress();renderBodyIssues();renderDates();renderPhilos();renderMistakes();loadWorkout();renderWorkout();}
+function renderAll(){renderAllArchives();renderDateNav();renderHealth();renderEnergy();renderGameLog();renderDTodos();renderMTodos();renderVO2();renderGymGoals();renderTrading();renderStats();renderMacros();renderMealLog();renderSupplements();renderFitnessProtein();renderEntries();renderTimeline();loadCalendar();renderCalendar();loadJournal();renderProgress();renderBodyIssues();renderDates();renderPhilos();renderMistakes();loadWorkout();renderWorkout();renderDisc();}
 // ─── Groceries ────────────────────────────────────────────────
 const GROC_CATS={protein:{lbl:'Protein',col:'#f97316'},produce:{lbl:'Produce',col:'#22c55e'},dairy:{lbl:'Dairy',col:'#60a5fa'},carbs:{lbl:'Carbs',col:'#f59e0b'},fats:{lbl:'Fats',col:'#a78bfa'},snacks:{lbl:'Snacks',col:'#f87171'},other:{lbl:'Other',col:'#6b7280'}};
 let grocItems=[];
@@ -3388,7 +3632,12 @@ function addAIParsedItem(i, item){
   if(!isToday())return;
   const p=Math.round(item.p), c=Math.round(item.c), f=Math.round(item.f), cal=Math.round(item.cal);
   const name = item.qty + ' ' + item.unit + ' ' + item.name;
-  mealLog.push({id:Date.now(), name, p, c, f, cal});
+  const inputEl = document.getElementById('ai-meal-input');
+  const groupName = inputEl ? inputEl.value.trim() : '';
+  // Find or reuse a groupId for this parse session (all single adds from same session share one group)
+  const existing = mealLog.find(m=>m.groupName===groupName && m.groupName);
+  const groupId = existing ? existing.groupId : 'g'+Date.now();
+  mealLog.push({id:Date.now(), name, p, c, f, cal, groupId, groupName});
   saveMealLog(); renderMealLog(); renderMacros(); renderHealth(); renderFitnessProtein();
   const btn = document.querySelector('#ai-item-'+i+' .ai-parsed-add');
   if(btn){btn.textContent='✓ Added';btn.classList.add('added');btn.disabled=true;}
@@ -3396,51 +3645,25 @@ function addAIParsedItem(i, item){
 
 function addAllAIParsedItems(items){
   if(!isToday())return;
-  // Get the original description as the group name
-  const rawInput = (document.getElementById('ai-meal-input').value||'').trim();
-  const groupName = rawInput || 'Meal';
-
-  if(items.length === 1){
-    // Single item — no need for grouping
-    addAIParsedItem(0, items[0]);
-    return;
-  }
-
-  // Build grouped entry
-  const children = items.map(item=>({
-    name: item.qty + ' ' + item.unit + ' ' + item.name,
-    p: Math.round(item.p), c: Math.round(item.c),
-    f: Math.round(item.f), cal: Math.round(item.cal),
-  }));
-  const totP=children.reduce((s,x)=>s+x.p,0);
-  const totC=children.reduce((s,x)=>s+x.c,0);
-  const totF=children.reduce((s,x)=>s+x.f,0);
-  const totCal=children.reduce((s,x)=>s+x.cal,0);
-
-  mealLog.push({id:Date.now(), name:groupName, p:totP, c:totC, f:totF, cal:totCal,
-    type:'group', children});
-
-  items.forEach((_,i)=>{
-    const btn=document.querySelector('#ai-item-'+i+' .ai-parsed-add');
+  const inputEl = document.getElementById('ai-meal-input');
+  const groupName = inputEl ? inputEl.value.trim() : '';
+  const groupId = 'g'+Date.now();
+  items.forEach((item,i)=>{
+    const p=Math.round(item.p), c=Math.round(item.c), f=Math.round(item.f), cal=Math.round(item.cal);
+    const name = item.qty + ' ' + item.unit + ' ' + item.name;
+    mealLog.push({id:Date.now()+i, name, p, c, f, cal, groupId, groupName});
+    const btn = document.querySelector('#ai-item-'+i+' .ai-parsed-add');
     if(btn){btn.textContent='✓ Added';btn.classList.add('added');btn.disabled=true;}
   });
   saveMealLog(); renderMealLog(); renderMacros(); renderHealth(); renderFitnessProtein();
-  const status=document.getElementById('ai-meal-status');
-  if(status)status.textContent='Added as group!';
-  document.getElementById('ai-meal-input').value='';
+  const status = document.getElementById('ai-meal-status');
+  if(status) status.textContent = 'All items added!';
+  document.getElementById('ai-meal-input').value = '';
   setTimeout(()=>{
-    const preview=document.getElementById('ai-meal-preview');
-    if(preview)preview.style.display='none';
-    if(status)status.textContent='';
-  },2000);
-}
-
-// In-memory expanded state (not persisted — resets on reload which is fine)
-const mealGroupExpanded={};
-
-function toggleMealGroup(id){
-  mealGroupExpanded[id]=!mealGroupExpanded[id];
-  renderMealLog();
+    const preview = document.getElementById('ai-meal-preview');
+    if(preview) preview.style.display='none';
+    if(status) status.textContent='';
+  }, 2000);
 }
 
 // --- Streaks --------------------------------------------------
