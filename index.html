@@ -2530,7 +2530,7 @@ function toggleSlotCollapse(id){
 }
 
 // ── Discipline tracker ────────────────────────────────────────
-function discKey(d){ return 'disc:' + (d || currentDate); }
+function discKey(d){ return 'disc:' + (d || viewDate); }
 
 function getDiscData(d){
   try { return JSON.parse(localStorage.getItem(discKey(d))) || []; } catch { return []; }
@@ -2543,7 +2543,7 @@ function logDisc(type){
   if(!isToday()) return;
   const arr = getDiscData();
   arr.push({ type, time: new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}) });
-  saveDiscData(currentDate, arr);
+  saveDiscData(viewDate, arr);
   renderDisc();
 }
 
@@ -2551,23 +2551,22 @@ function removeDiscEntry(idx){
   if(!isToday()) return;
   const arr = getDiscData();
   arr.splice(idx, 1);
-  saveDiscData(currentDate, arr);
+  saveDiscData(viewDate, arr);
   renderDisc();
 }
 
 function getDiscStreak(){
   let streak = 0;
-  const today = new Date();
   for(let i = 0; i < 365; i++){
     const d = new Date(today);
     d.setDate(d.getDate() - i);
     const key = d.toISOString().split('T')[0];
     const arr = getDiscData(key);
-    if(!arr.length && i > 0) break; // no data = streak ends (skip today if empty)
+    if(!arr.length && i > 0) break;
     const hasFail = arr.some(e => e.type === 'fail');
     if(hasFail) break;
     if(arr.length > 0) streak++;
-    else if(i === 0) continue; // today not logged yet, don't break
+    else if(i === 0) continue;
   }
   return streak;
 }
@@ -2593,7 +2592,6 @@ function renderDisc(){
 
   // Week stats (last 7 days)
   let weekWins = 0, weekFails = 0;
-  const today = new Date();
   const days = [];
   for(let i = 6; i >= 0; i--){
     const d = new Date(today);
@@ -2623,7 +2621,7 @@ function renderDisc(){
     const total = d.wins + d.fails;
     const winH = total ? Math.round((d.wins/maxVal)*52) : 0;
     const failH = total ? Math.round((d.fails/maxVal)*52) : 0;
-    const isToday = d.key === currentDate;
+    const isToday = d.key === today;
     return `<div class="disc-bar-wrap" style="opacity:${isToday?'1':'.7'}">
       <div style="display:flex;flex-direction:column;justify-content:flex-end;height:52px;gap:1px;width:100%">
         ${d.fails ? `<div class="disc-bar" style="height:${failH}px;background:rgba(248,113,113,.5)"></div>` : ''}
