@@ -3399,6 +3399,59 @@ function openAddDate(){
   modal.addEventListener('click',e=>{if(e.target===modal)modal.remove();});
   document.getElementById('id-name').focus();
 }
+function openEditDate(id){
+  const item = importantDates.find(d=>d.id===id);
+  if(!item) return;
+  const existing=document.getElementById('idate-modal');
+  if(existing)existing.remove();
+  const modal=document.createElement('div');
+  modal.className='idate-modal';
+  modal.id='idate-modal';
+  // reconstruct full date value for the input
+  let dateInputVal = item.date;
+  if(item.recurring && item.date.length===5){
+    // stored as MM-DD, add current year
+    dateInputVal = new Date().getFullYear() + '-' + item.date;
+  }
+  modal.innerHTML=`<div class="idate-modal-box">
+    <div class="idate-modal-title">✏️ Edit date</div>
+    <div class="idate-field"><label>Name</label><input id="id-name" placeholder="e.g. Mom's Birthday" type="text" value="${item.name}"></div>
+    <div class="idate-field"><label>Date</label><input id="id-date" type="date" value="${dateInputVal}"></div>
+    <div class="idate-field">
+      <label>Type</label>
+      <select id="id-cat">${IDATE_CATS.map(c=>`<option value="${c.id}"${c.id===item.cat?' selected':''}>${c.l}</option>`).join('')}</select>
+    </div>
+    <div class="idate-field">
+      <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
+        <input type="checkbox" id="id-recurring" style="width:auto;height:auto"${item.recurring?' checked':''}>
+        Recurring yearly (ignore year)
+      </label>
+    </div>
+    <div class="idate-modal-btns">
+      <button class="idate-cancel" onclick="document.getElementById('idate-modal').remove()">Cancel</button>
+      <button class="idate-save" style="background:#ef444422;color:#f87171;border-color:#ef444444;margin-right:auto" onclick="deleteDate(${id});document.getElementById('idate-modal').remove()">Delete</button>
+      <button class="idate-save" onclick="saveEditDate(${id})">Save</button>
+    </div>
+  </div>`;
+  document.body.appendChild(modal);
+  modal.addEventListener('click',e=>{if(e.target===modal)modal.remove();});
+  document.getElementById('id-name').focus();
+}
+function saveEditDate(id){
+  const name=document.getElementById('id-name').value.trim();
+  const dateVal=document.getElementById('id-date').value;
+  const cat=document.getElementById('id-cat').value;
+  const recurring=document.getElementById('id-recurring').checked;
+  if(!name||!dateVal)return;
+  let stored=dateVal;
+  if(recurring){const p=dateVal.split('-');stored=p[1]+'-'+p[2];}
+  const idx=importantDates.findIndex(d=>d.id===id);
+  if(idx>-1) importantDates[idx]={id,name,date:stored,cat,recurring};
+  importantDates.sort((a,b)=>getDaysUntil(a.date)-getDaysUntil(b.date));
+  saveDates();
+  document.getElementById('idate-modal').remove();
+  renderDates();
+}
 function saveDate(){
   const name=document.getElementById('id-name').value.trim();
   const dateVal=document.getElementById('id-date').value;
@@ -3429,14 +3482,13 @@ function renderDates(){
     const cat=IDATE_CATS.find(c=>c.id===d.cat)||IDATE_CATS[3];
     const col=days<=7?'#f87171':days<=30?'#fbbf24':'#4ade80';
     const dayLbl=days===0?'Today!':days===1?'Tomorrow':days<0?`${Math.abs(days)}d ago`:`${days}d`;
-    return`<div class="idate-entry">
+    return`<div class="idate-entry" onclick="openEditDate(${d.id})" style="cursor:pointer">
       <div class="idate-countdown" style="color:${col}">${dayLbl}</div>
       <div class="idate-info">
         <div class="idate-name">${d.name}</div>
         <div class="idate-date">${formatDateDisplay(d.date)}${d.recurring?' · yearly':''}</div>
       </div>
       <span class="idate-tag" style="background:${cat.color}22;color:${cat.color}">${cat.l}</span>
-      <button class="idate-del" onclick="deleteDate(${d.id})"><i class="ti ti-trash"></i></button>
     </div>`;
   }).join('');
 }
