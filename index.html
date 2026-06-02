@@ -2344,20 +2344,52 @@ function renderMealLog(){
   const ro=!isToday();
   const t=getMacroTotals();
   const calLbl=document.getElementById('meal-log-cal-lbl');
-  if(calLbl)calLbl.textContent=mealLog.length?`${t.cal} cal · P:${t.p}g`:'';;
+  if(calLbl)calLbl.textContent=mealLog.length?`${t.cal} cal · P:${t.p}g`:'';
   if(!mealLog.length){list.innerHTML='';if(empty)empty.style.display='block';return;}
   if(empty)empty.style.display='none';
-  list.innerHTML=mealLog.map(m=>`
-    <div class="meal-log-entry">
+
+  const btnStyle=`background:transparent;border:1px solid var(--border2);border-radius:5px;color:var(--t3);font-size:13px;width:24px;height:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s`;
+
+  list.innerHTML=mealLog.map(m=>{
+    if(m.type==='group'){
+      const open=!!mealGroupExpanded[m.id];
+      const arrow=open?'▼':'▶';
+      const children=m.children||[];
+      return`<div>
+        <div class="meal-log-entry" style="cursor:pointer" onclick="toggleMealGroup(${m.id})">
+          <span style="font-size:11px;color:var(--t3);margin-right:2px">${arrow}</span>
+          <div class="meal-log-left" style="flex:1">
+            <span class="meal-log-name">${m.name}</span>
+            <span class="meal-log-macros-row">P:<b>${m.p}g</b> · C:${m.c}g · F:${m.f}g · ${m.cal}cal</span>
+          </div>
+          ${ro?'':`
+            <button onclick="event.stopPropagation();repeatMealLog(${m.id})" title="Add again" style="${btnStyle}" onmouseover="this.style.color='#4ade80';this.style.borderColor='rgba(34,197,94,.4)'" onmouseout="this.style.color='var(--t3)';this.style.borderColor='var(--border2)'">+</button>
+            <button onclick="event.stopPropagation();deleteMealLog(${m.id})" title="Remove" style="${btnStyle}" onmouseover="this.style.color='#f87171';this.style.borderColor='rgba(239,68,68,.4)'" onmouseout="this.style.color='var(--t3)';this.style.borderColor='var(--border2)'"><i class="ti ti-x"></i></button>
+          `}
+        </div>
+        ${open?`<div style="background:var(--bg3);border-bottom:.5px solid var(--border)">
+          ${children.map(c=>`
+            <div class="meal-log-entry" style="padding-left:1.75rem;opacity:.8">
+              <div class="meal-log-left" style="flex:1">
+                <span class="meal-log-name" style="font-size:12px">↳ ${c.name}</span>
+                <span class="meal-log-macros-row">P:<b>${c.p}g</b> · C:${c.c}g · F:${c.f}g · ${c.cal}cal</span>
+              </div>
+            </div>`).join('')}
+        </div>`:''}
+      </div>`;
+    }
+    // Regular flat entry
+    return`<div class="meal-log-entry">
       <div class="meal-log-left">
         <span class="meal-log-name">${m.name}</span>
         <span class="meal-log-macros-row">P:<b>${m.p}g</b> · C:${m.c}g · F:${m.f}g · ${m.cal}cal</span>
       </div>
       ${ro?'':`
-        <button onclick="repeatMealLog(${m.id})" title="Add another" style="background:transparent;border:1px solid var(--border2);border-radius:5px;color:var(--t3);font-size:13px;width:24px;height:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s" onmouseover="this.style.color='#4ade80';this.style.borderColor='rgba(34,197,94,.4)'" onmouseout="this.style.color='var(--t3)';this.style.borderColor='var(--border2)'">+</button>
-        <button onclick="deleteMealLog(${m.id})" title="Remove" style="background:transparent;border:1px solid var(--border2);border-radius:5px;color:var(--t3);font-size:11px;width:24px;height:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s" onmouseover="this.style.color='#f87171';this.style.borderColor='rgba(239,68,68,.4)'" onmouseout="this.style.color='var(--t3)';this.style.borderColor='var(--border2)'"><i class="ti ti-x"></i></button>
+        <button onclick="repeatMealLog(${m.id})" title="Add another" style="${btnStyle}" onmouseover="this.style.color='#4ade80';this.style.borderColor='rgba(34,197,94,.4)'" onmouseout="this.style.color='var(--t3)';this.style.borderColor='var(--border2)'">+</button>
+        <button onclick="deleteMealLog(${m.id})" title="Remove" style="${btnStyle}" onmouseover="this.style.color='#f87171';this.style.borderColor='rgba(239,68,68,.4)'" onmouseout="this.style.color='var(--t3)';this.style.borderColor='var(--border2)'"><i class="ti ti-x"></i></button>
       `}
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 function toggleSupp(id){
   if(!isToday())return;
@@ -3364,22 +3396,51 @@ function addAIParsedItem(i, item){
 
 function addAllAIParsedItems(items){
   if(!isToday())return;
-  items.forEach((item,i)=>{
-    const p=Math.round(item.p), c=Math.round(item.c), f=Math.round(item.f), cal=Math.round(item.cal);
-    const name = item.qty + ' ' + item.unit + ' ' + item.name;
-    mealLog.push({id:Date.now()+i, name, p, c, f, cal});
-    const btn = document.querySelector('#ai-item-'+i+' .ai-parsed-add');
+  // Get the original description as the group name
+  const rawInput = (document.getElementById('ai-meal-input').value||'').trim();
+  const groupName = rawInput || 'Meal';
+
+  if(items.length === 1){
+    // Single item — no need for grouping
+    addAIParsedItem(0, items[0]);
+    return;
+  }
+
+  // Build grouped entry
+  const children = items.map(item=>({
+    name: item.qty + ' ' + item.unit + ' ' + item.name,
+    p: Math.round(item.p), c: Math.round(item.c),
+    f: Math.round(item.f), cal: Math.round(item.cal),
+  }));
+  const totP=children.reduce((s,x)=>s+x.p,0);
+  const totC=children.reduce((s,x)=>s+x.c,0);
+  const totF=children.reduce((s,x)=>s+x.f,0);
+  const totCal=children.reduce((s,x)=>s+x.cal,0);
+
+  mealLog.push({id:Date.now(), name:groupName, p:totP, c:totC, f:totF, cal:totCal,
+    type:'group', children});
+
+  items.forEach((_,i)=>{
+    const btn=document.querySelector('#ai-item-'+i+' .ai-parsed-add');
     if(btn){btn.textContent='✓ Added';btn.classList.add('added');btn.disabled=true;}
   });
   saveMealLog(); renderMealLog(); renderMacros(); renderHealth(); renderFitnessProtein();
-  const status = document.getElementById('ai-meal-status');
-  if(status) status.textContent = 'All items added!';
-  document.getElementById('ai-meal-input').value = '';
+  const status=document.getElementById('ai-meal-status');
+  if(status)status.textContent='Added as group!';
+  document.getElementById('ai-meal-input').value='';
   setTimeout(()=>{
-    const preview = document.getElementById('ai-meal-preview');
-    if(preview) preview.style.display='none';
-    if(status) status.textContent='';
-  }, 2000);
+    const preview=document.getElementById('ai-meal-preview');
+    if(preview)preview.style.display='none';
+    if(status)status.textContent='';
+  },2000);
+}
+
+// In-memory expanded state (not persisted — resets on reload which is fine)
+const mealGroupExpanded={};
+
+function toggleMealGroup(id){
+  mealGroupExpanded[id]=!mealGroupExpanded[id];
+  renderMealLog();
 }
 
 // --- Streaks --------------------------------------------------
