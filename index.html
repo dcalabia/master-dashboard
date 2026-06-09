@@ -917,6 +917,87 @@ create policy "allow all" on dashboard_data
 </div>
 </div>
 <div class="tsec" data-tab="daily">
+  <div class="slbl" onclick="toggleSec('logactivity')" style="cursor:pointer">Log activity<span id="sci-logactivity" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+<div id="secb-logactivity">
+  <div class="act-card" id="act-add-card">
+    <div class="irow">
+      <input type="time" class="itime" id="inp-time">
+      <select class="icat" id="inp-cat">
+        <option value="trading">Trading</option><option value="gym">Gym</option>
+        <option value="study">Study</option><option value="work">Work</option>
+        <option value="personal">Personal</option><option value="other">Other</option>
+      </select>
+      <input type="text" class="idesc" id="inp-desc" placeholder="What did you work on?">
+      <button class="abtn" onclick="addEntry()">+ Add</button>
+    </div>
+  </div>
+</div>
+</div>
+<div class="tsec" data-tab="daily">
+  <div class="slbl" onclick="toggleSec('todaylog')" style="cursor:pointer"><span>Today's log</span><span id="entry-count" style="font-weight:400"></span><span style="flex:1"></span><span style="display:flex;gap:4px;margin-right:4px"><button class="arc-btn" onclick="event.stopPropagation();clearSec('todaylog')" title="Clear all">✕ Clear</button><button class="arc-btn" onclick="event.stopPropagation();archiveSec('todaylog')" title="Archive">↓ Archive</button></span><span id="sci-todaylog" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+<div id="secb-todaylog">
+  <div class="elist" id="entries-list"></div>
+
+
+<div class="arc-wrap">
+  <div class="arc-hdr" onclick="toggleSec('arc-todaylog');event.stopPropagation()">
+    <span class="arc-hdr-lbl">📦 Archived <span id="arc-count-todaylog" class="arc-count"></span></span>
+    <span id="sci-arc-todaylog" style="font-size:10px;color:var(--t3)">▶</span>
+  </div>
+  <div id="secb-arc-todaylog" class="arc-body" style="display:none">
+    <div id="arc-body-todaylog"></div>
+    <div class="arc-footer">
+      <button onclick="clearArc('todaylog');event.stopPropagation()" class="arc-clr-btn">Clear archive</button>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div class="tsec" data-tab="daily">
+  <div class="slbl" onclick="toggleSec('timeline')" style="cursor:pointer">Timeline — 6 AM to 12 AM<span id="sci-timeline" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+<div id="secb-timeline">
+  <div class="tl-wrap">
+    <div class="tl-track" id="tl-track"></div>
+    <div class="tlticks"><span class="tltick">6am</span><span class="tltick">9am</span><span class="tltick">12pm</span><span class="tltick">3pm</span><span class="tltick">6pm</span><span class="tltick">9pm</span><span class="tltick">12am</span></div>
+  </div>
+
+</div>
+</div>
+<div class="tsec" data-tab="daily">
+  <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
+    <span>Daily schedule</span>
+    <div style="display:flex;gap:6px">
+      <span class="cal-legend" style="background:#22c55e22;color:#4ade80">Done</span>
+      <span class="cal-legend" style="background:#f59e0b22;color:#fbbf24">In progress</span>
+      <span class="cal-legend" style="background:#378add22;color:#60a5fa">Planned</span>
+      <span class="cal-legend" style="background:#8b5cf622;color:#a78bfa">Personal</span>
+    </div>
+  </div>
+  <div class="day-cal-wrap">
+    <div class="day-cal-cols">
+      <div class="day-cal-col">
+        <div class="day-cal-hdr">🌙 12 AM – 11:30 AM</div>
+        <div id="cal-am"></div>
+      </div>
+      <div class="day-cal-col">
+        <div class="day-cal-hdr">☀️ 12 PM – 11:30 PM</div>
+        <div id="cal-pm"></div>
+      </div>
+    </div>
+    <div id="cal-popover" class="cal-popover" style="display:none" onclick="event.stopPropagation()">
+      <div class="cal-pop-time" id="cal-pop-time"></div>
+      <input class="cal-pop-inp" id="cal-pop-inp" placeholder="What are you doing?" onclick="event.stopPropagation()">
+      <div class="cal-pop-colors" id="cal-pop-colors"></div>
+      <div class="cal-pop-btns">
+        <button class="cal-pop-clear" onclick="clearSlot()">Clear</button>
+        <button class="cal-pop-save" id="cal-save-btn" onclick="saveSlot()">Save</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+<div class="tsec" data-tab="daily">
   <div class="slbl" onclick="toggleSec('dtodo')" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer">
     <span>Daily to-do</span>
     <span id="dtodo-count" style="font-size:11px;color:var(--t3)"></span>
@@ -1153,87 +1234,6 @@ create policy "allow all" on dashboard_data
   <span id="sci-supplements" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
 <div id="secb-supplements">
   <div class="supp-grid" id="supp-grid"></div>
-
-</div>
-</div>
-<div class="tsec" data-tab="daily">
-  <div class="slbl" onclick="toggleSec('logactivity')" style="cursor:pointer">Log activity<span id="sci-logactivity" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
-<div id="secb-logactivity">
-  <div class="act-card" id="act-add-card">
-    <div class="irow">
-      <input type="time" class="itime" id="inp-time">
-      <select class="icat" id="inp-cat">
-        <option value="trading">Trading</option><option value="gym">Gym</option>
-        <option value="study">Study</option><option value="work">Work</option>
-        <option value="personal">Personal</option><option value="other">Other</option>
-      </select>
-      <input type="text" class="idesc" id="inp-desc" placeholder="What did you work on?">
-      <button class="abtn" onclick="addEntry()">+ Add</button>
-    </div>
-  </div>
-</div>
-</div>
-<div class="tsec" data-tab="daily">
-  <div class="slbl" onclick="toggleSec('todaylog')" style="cursor:pointer"><span>Today's log</span><span id="entry-count" style="font-weight:400"></span><span style="flex:1"></span><span style="display:flex;gap:4px;margin-right:4px"><button class="arc-btn" onclick="event.stopPropagation();clearSec('todaylog')" title="Clear all">✕ Clear</button><button class="arc-btn" onclick="event.stopPropagation();archiveSec('todaylog')" title="Archive">↓ Archive</button></span><span id="sci-todaylog" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
-<div id="secb-todaylog">
-  <div class="elist" id="entries-list"></div>
-
-
-<div class="arc-wrap">
-  <div class="arc-hdr" onclick="toggleSec('arc-todaylog');event.stopPropagation()">
-    <span class="arc-hdr-lbl">📦 Archived <span id="arc-count-todaylog" class="arc-count"></span></span>
-    <span id="sci-arc-todaylog" style="font-size:10px;color:var(--t3)">▶</span>
-  </div>
-  <div id="secb-arc-todaylog" class="arc-body" style="display:none">
-    <div id="arc-body-todaylog"></div>
-    <div class="arc-footer">
-      <button onclick="clearArc('todaylog');event.stopPropagation()" class="arc-clr-btn">Clear archive</button>
-    </div>
-  </div>
-</div>
-</div>
-</div>
-<div class="tsec" data-tab="daily">
-  <div class="slbl" onclick="toggleSec('timeline')" style="cursor:pointer">Timeline — 6 AM to 12 AM<span id="sci-timeline" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
-<div id="secb-timeline">
-  <div class="tl-wrap">
-    <div class="tl-track" id="tl-track"></div>
-    <div class="tlticks"><span class="tltick">6am</span><span class="tltick">9am</span><span class="tltick">12pm</span><span class="tltick">3pm</span><span class="tltick">6pm</span><span class="tltick">9pm</span><span class="tltick">12am</span></div>
-  </div>
-
-</div>
-</div>
-<div class="tsec" data-tab="daily">
-  <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
-    <span>Daily schedule</span>
-    <div style="display:flex;gap:6px">
-      <span class="cal-legend" style="background:#22c55e22;color:#4ade80">Done</span>
-      <span class="cal-legend" style="background:#f59e0b22;color:#fbbf24">In progress</span>
-      <span class="cal-legend" style="background:#378add22;color:#60a5fa">Planned</span>
-      <span class="cal-legend" style="background:#8b5cf622;color:#a78bfa">Personal</span>
-    </div>
-  </div>
-  <div class="day-cal-wrap">
-    <div class="day-cal-cols">
-      <div class="day-cal-col">
-        <div class="day-cal-hdr">🌙 12 AM – 11:30 AM</div>
-        <div id="cal-am"></div>
-      </div>
-      <div class="day-cal-col">
-        <div class="day-cal-hdr">☀️ 12 PM – 11:30 PM</div>
-        <div id="cal-pm"></div>
-      </div>
-    </div>
-    <div id="cal-popover" class="cal-popover" style="display:none" onclick="event.stopPropagation()">
-      <div class="cal-pop-time" id="cal-pop-time"></div>
-      <input class="cal-pop-inp" id="cal-pop-inp" placeholder="What are you doing?" onclick="event.stopPropagation()">
-      <div class="cal-pop-colors" id="cal-pop-colors"></div>
-      <div class="cal-pop-btns">
-        <button class="cal-pop-clear" onclick="clearSlot()">Clear</button>
-        <button class="cal-pop-save" id="cal-save-btn" onclick="saveSlot()">Save</button>
-      </div>
-    </div>
-  </div>
 
 </div>
 </div>
