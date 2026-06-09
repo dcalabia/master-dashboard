@@ -985,7 +985,10 @@ create policy "allow all" on dashboard_data
       </div>
     </div>
     <div id="cal-popover" class="cal-popover" style="display:none" onclick="event.stopPropagation()">
-      <div class="cal-pop-time" id="cal-pop-time"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div class="cal-pop-time" id="cal-pop-time" style="margin-bottom:0"></div>
+        <button onclick="closePopover()" style="background:none;border:none;color:var(--t3);font-size:16px;cursor:pointer;line-height:1;padding:0 0 0 8px;transition:color .15s" title="Close">✕</button>
+      </div>
       <input class="cal-pop-inp" id="cal-pop-inp" placeholder="What are you doing?" onclick="event.stopPropagation()">
       <div class="cal-pop-colors" id="cal-pop-colors"></div>
       <div class="cal-pop-btns">
