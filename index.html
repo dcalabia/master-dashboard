@@ -10,18 +10,17 @@
 :root{--bg:#0b1120;--bg2:#111827;--bg3:#1a2236;--bgh:#1e2a3a;--border:rgba(255,255,255,.08);--border2:rgba(255,255,255,.16);--t1:#f0f4f8;--t2:#8fa3b1;--t3:#4d6070;--accent:#3b82f6;--accent-dim:rgba(59,130,246,.15);--r:8px;--rl:14px;--mono:'JetBrains Mono','Fira Code',monospace}
 *{box-sizing:border-box;margin:0;padding:0}
 html{overflow-x:hidden;width:100%}
-html,body{min-height:100%;background:var(--bg);color:var(--t1);font-family:system-ui,-apple-system,sans-serif;font-size:14px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+html,body{min-height:100%;background:var(--bg);color:var(--t1);font-family:system-ui,-apple-system,sans-serif;font-size:14px;-webkit-font-smoothing:antialiased;overflow-x:hidden;zoom:1.1}
 button{cursor:pointer;font-family:inherit}
 input,select{font-family:inherit;color:var(--t1)}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
-.wrap{width:100%;max-width:900px;margin:0 auto;padding:1.5rem 1.5rem;overflow:hidden;box-sizing:border-box}
+.wrap{width:100%;max-width:720px;margin:0 auto;padding:1.5rem 1rem;overflow:hidden;box-sizing:border-box}
+#today-view,#month-view{max-width:720px;margin:0 auto;width:100%}
 .hdr{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:1.25rem}
 .hdr-date{font-size:22px;font-weight:600;letter-spacing:-.3px}
 .hdr-sub{font-size:13px;color:var(--t3);margin-top:2px}
 .hdr-hint{font-size:11px;color:var(--t3)}
-.vt{display:flex;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:3px;gap:2px;margin-bottom:1.5rem;max-width:900px;margin-left:auto;margin-right:auto;box-sizing:border-box}
-#today-view{max-width:900px;margin:0 auto;padding:0 1.5rem;box-sizing:border-box}
-#month-view{max-width:900px;margin:0 auto;padding:0 1.5rem;box-sizing:border-box}
+.vt{display:flex;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:3px;gap:2px;margin-bottom:1.5rem}
 .vt-btn{flex:1;height:30px;background:transparent;border:none;border-radius:6px;font-size:13px;font-weight:500;color:var(--t3);transition:all .15s}
 .vt-btn:hover{color:var(--t1)}
 .vt-btn.active{background:var(--bg3);color:var(--t1);border:1px solid var(--border)}
@@ -30,19 +29,19 @@ input,select{font-family:inherit;color:var(--t1)}
 .grid4s{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:.75rem;width:100%}
 .macro-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:.75rem;width:100%}
 .energy-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:1.5rem;width:100%}
-.card{background:var(--bg2);border:1px solid transparent;border-radius:var(--r);padding:.75rem 1rem;cursor:pointer;transition:border-color .15s;min-width:0;overflow:hidden}
+.card{background:var(--bg2);border:1px solid transparent;border-radius:var(--r);padding:.6rem .75rem;cursor:pointer;transition:border-color .15s;min-width:0;overflow:hidden}
 .card:hover{border-color:var(--border2)}
 .card.editing{border-color:var(--accent)}
 .card.ro{cursor:default}.card.ro:hover{border-color:transparent}
 .clbl{font-size:11px;color:var(--t3);margin-bottom:4px}
-.cval{font-size:22px;font-weight:600;font-family:var(--mono);line-height:1}
+.cval{font-size:18px;font-weight:600;font-family:var(--mono);line-height:1}
 .cval.accent{color:var(--accent)}
 .cunit{font-size:11px;color:var(--t2);margin-top:3px}
 .cedit{width:100%;background:transparent;border:none;border-bottom:1px solid var(--accent);outline:none;font-size:22px;font-weight:600;font-family:var(--mono);color:var(--t1)}
 .card.check-card{cursor:pointer;user-select:none}
 .card.stepper{cursor:default}
 .card.stepper:hover{border-color:transparent}
-.stepper-val{font-size:22px;font-weight:600;font-family:var(--mono);line-height:1;margin:2px 0}
+.stepper-val{font-size:18px;font-weight:600;font-family:var(--mono);line-height:1;margin:2px 0}
 .stepper-row{display:flex;align-items:center;justify-content:space-between;margin-top:6px;gap:4px}
 .step-btn{width:26px;height:26px;border-radius:6px;border:1px solid var(--border2);background:var(--bg3);color:var(--t1);font-size:16px;display:flex;align-items:center;justify-content:center;transition:background .15s;flex-shrink:0;line-height:1}
 .step-btn:hover{background:var(--accent-dim);border-color:var(--accent)}
@@ -169,7 +168,7 @@ input,select{font-family:inherit;color:var(--t1)}
 .journal-header{display:flex;justify-content:space-between;align-items:center;padding:.7rem 1.25rem;border-bottom:1px solid var(--border)}
 .journal-title{font-size:13px;font-weight:500;color:var(--t1)}
 .journal-meta{font-size:11px;color:var(--t3)}
-.journal-textarea{width:100%;min-height:140px;background:transparent;border:none;outline:none;resize:vertical;padding:1rem 1.25rem;font-size:13px;color:var(--t1);font-family:var(--font-sans,system-ui,-apple-system,sans-serif);line-height:1.65;caret-color:var(--accent)}
+.journal-textarea{width:100%;min-height:80px;background:transparent;border:none;outline:none;resize:none;overflow:hidden;padding:1rem 1.25rem;font-size:13px;color:var(--t1);font-family:var(--font-sans,system-ui,-apple-system,sans-serif);line-height:1.65;caret-color:var(--accent);box-sizing:border-box}
 .journal-textarea::placeholder{color:var(--t3)}
 .journal-footer{padding:.5rem 1.25rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.1)}
 .journal-saved{font-size:11px;color:var(--t3);transition:color .3s}
@@ -224,9 +223,9 @@ input,select{font-family:inherit;color:var(--t1)}
 .idea-action-btn.del-btn:hover{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.2);color:#f87171}
 .ideas-empty{padding:1.5rem;text-align:center;font-size:13px;color:var(--t3)}
 .macro-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:.75rem}
-.macro-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;min-width:0;overflow:hidden}
+.macro-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.6rem .75rem;min-width:0;overflow:hidden}
 .macro-lbl{font-size:11px;color:var(--t3);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.macro-val{font-size:20px;font-weight:600;font-family:var(--mono);line-height:1;white-space:nowrap}
+.macro-val{font-size:16px;font-weight:600;font-family:var(--mono);line-height:1;white-space:nowrap}
 .macro-target{font-size:10px;color:var(--t3);margin-top:1px}
 .macro-bar{height:4px;border-radius:2px;background:var(--border2);overflow:hidden;margin-top:5px}
 .macro-bar-fill{height:100%;border-radius:2px;transition:width .3s,background .3s}
@@ -465,14 +464,14 @@ input,select{font-family:inherit;color:var(--t1)}
 .bi-empty{padding:1.25rem;text-align:center;font-size:13px;color:var(--t3);background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl)}
 
 /* ── Tab navigation ─────────────────────────────── */
-.tab-bar{position:sticky;top:0;z-index:200;background:var(--bg);border-bottom:1px solid var(--border);display:flex;gap:2px;padding:6px 8px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;max-width:900px;margin:0 auto}
+.tab-bar{position:sticky;top:0;z-index:200;background:var(--bg);border-bottom:1px solid var(--border);display:flex;gap:2px;padding:6px 8px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;max-width:720px;margin-left:auto;margin-right:auto;width:100%}
 .tab-bar::-webkit-scrollbar{display:none}
 .tab-btn{flex:1;padding:8px 4px;border-radius:8px;border:none;background:transparent;color:var(--t3);font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;transition:all .15s;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:56px}
 .tab-btn:hover{background:var(--bg2);color:var(--t1)}
 .tab-btn.active{background:var(--acc);color:#fff}
 .tab-btn .tbi{font-size:16px;line-height:1}
 .tab-btn .tbl{font-size:10px;letter-spacing:.02em}
-.tsec{display:none}.tsec.active{display:block}
+.tsec{display:none;max-width:720px;margin-left:auto;margin-right:auto;width:100%}.tsec.active{display:block}
 .phil-card:hover .phil-del{opacity:1}
 
 /* ── Meal food picker ───────────────────────────── */
@@ -649,9 +648,9 @@ input,select{font-family:inherit;color:var(--t1)}
 <body>
 <div class="wrap">
 <div class="hdr">
-  <div style="position:relative">
-    <div id="dash-switcher-trigger" style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:3px;cursor:pointer;user-select:none;display:inline-flex;align-items:center;gap:4px" onclick="toggleDashMenu()">DALE'S DASHBOARD <span style="font-size:9px">▾</span></div>
-    <div id="dash-menu" style="display:none;position:absolute;top:28px;left:0;background:#111827;border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:6px;min-width:200px;box-shadow:0 8px 32px rgba(0,0,0,0.5);z-index:999"></div>
+  <div>
+    <div style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:3px;cursor:pointer;display:inline-flex;align-items:center;gap:4px" onclick="toggleDashMenu()">DALE'S DASHBOARD <span style="font-size:9px">▾</span></div>
+    <div id="dash-menu" style="display:none;position:absolute;z-index:500;background:#111827;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:6px;min-width:210px;box-shadow:0 8px 32px rgba(0,0,0,.5);margin-top:4px"></div>
     <div class="hdr-date" id="hdr-date"></div>
     <div class="hdr-sub" id="hdr-sub"></div>
   </div>
@@ -919,6 +918,60 @@ create policy "allow all" on dashboard_data
 </div>
 </div>
 <div class="tsec" data-tab="daily">
+  <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
+    <span>Daily schedule</span>
+    <div style="display:flex;gap:6px">
+      <span class="cal-legend" style="background:#22c55e22;color:#4ade80">Done</span>
+      <span class="cal-legend" style="background:#f59e0b22;color:#fbbf24">In progress</span>
+      <span class="cal-legend" style="background:#378add22;color:#60a5fa">Planned</span>
+      <span class="cal-legend" style="background:#8b5cf622;color:#a78bfa">Personal</span>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;align-items:center">
+    <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--t3)">
+      <span>🌙 AM col:</span>
+      <select id="cal-am-start" onchange="saveCalRange();renderCalendar()" style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);color:var(--t1);font-size:11px;padding:2px 6px;height:26px"></select>
+      <span>to</span>
+      <select id="cal-am-end" onchange="saveCalRange();renderCalendar()" style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);color:var(--t1);font-size:11px;padding:2px 6px;height:26px"></select>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--t3)">
+      <span>☀️ PM col:</span>
+      <select id="cal-pm-start" onchange="saveCalRange();renderCalendar()" style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);color:var(--t1);font-size:11px;padding:2px 6px;height:26px"></select>
+      <span>to</span>
+      <select id="cal-pm-end" onchange="saveCalRange();renderCalendar()" style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);color:var(--t1);font-size:11px;padding:2px 6px;height:26px"></select>
+    </div>
+  </div>
+  <div class="day-cal-wrap">
+    <div class="day-cal-cols">
+      <div class="day-cal-col">
+        <div class="day-cal-hdr" id="cal-am-hdr">🌙 12 AM – 11:30 AM</div>
+        <div id="cal-am"></div>
+      </div>
+      <div class="day-cal-col">
+        <div class="day-cal-hdr" id="cal-pm-hdr">☀️ 12 PM – 11:30 PM</div>
+        <div id="cal-pm"></div>
+      </div>
+    </div>
+    <div id="cal-popover" class="cal-popover" style="display:none" onclick="event.stopPropagation()">
+      <div class="cal-pop-time" id="cal-pop-time"></div>
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">
+        <span style="font-size:11px;color:var(--t3);flex:1">Duration</span>
+        <button class="step-btn" onclick="adjustCalDuration(-1);event.stopPropagation()">−</button>
+        <span id="cal-pop-dur" style="font-size:12px;font-family:var(--mono);color:var(--t1);min-width:70px;text-align:center">1 slot</span>
+        <button class="step-btn" onclick="adjustCalDuration(1);event.stopPropagation()">+</button>
+      </div>
+      <input class="cal-pop-inp" id="cal-pop-inp" placeholder="What are you doing?" onclick="event.stopPropagation()">
+      <div class="cal-pop-colors" id="cal-pop-colors"></div>
+      <div class="cal-pop-btns">
+        <button class="cal-pop-clear" onclick="clearSlot()">Clear</button>
+        <button class="cal-pop-save" id="cal-save-btn" onclick="saveSlot()">Save</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+<div class="tsec" data-tab="daily">
   <div class="slbl" onclick="toggleSec('logactivity')" style="cursor:pointer">Log activity<span id="sci-logactivity" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
 <div id="secb-logactivity">
   <div class="act-card" id="act-add-card">
@@ -966,99 +1019,19 @@ create policy "allow all" on dashboard_data
 </div>
 </div>
 <div class="tsec" data-tab="daily">
-  <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
-    <span>Daily schedule</span>
-    <div style="display:flex;gap:6px">
-      <span class="cal-legend" style="background:#22c55e22;color:#4ade80">Done</span>
-      <span class="cal-legend" style="background:#f59e0b22;color:#fbbf24">In progress</span>
-      <span class="cal-legend" style="background:#378add22;color:#60a5fa">Planned</span>
-      <span class="cal-legend" style="background:#8b5cf622;color:#a78bfa">Personal</span>
-    </div>
-  </div>
-  <div class="day-cal-wrap">
-    <div class="day-cal-cols">
-      <div class="day-cal-col">
-        <div class="day-cal-hdr">🌙 12 AM – 11:30 AM</div>
-        <div id="cal-am"></div>
+  <div class="slbl" onclick="toggleSec('trading')" style="cursor:pointer">Trading session<span id="sci-trading" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+<div id="secb-trading">
+  <div id="trading-section" style="margin-bottom:1.5rem">
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;margin-bottom:8px">
+      <div style="font-size:11px;color:var(--t3);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">
+        <span>Focus blocks — 30 min each</span>
+        <span id="trading-block-count" style="font-size:11px;font-weight:600;color:var(--t3)">0 / 7</span>
       </div>
-      <div class="day-cal-col">
-        <div class="day-cal-hdr">☀️ 12 PM – 11:30 PM</div>
-        <div id="cal-pm"></div>
-      </div>
+      <div id="trading-blocks" style="display:flex;gap:6px;flex-wrap:wrap"></div>
     </div>
-    <div id="cal-popover" class="cal-popover" style="display:none" onclick="event.stopPropagation()">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-        <div class="cal-pop-time" id="cal-pop-time" style="margin-bottom:0"></div>
-        <button onclick="closePopover()" style="background:none;border:none;color:var(--t3);font-size:16px;cursor:pointer;line-height:1;padding:0 0 0 8px;transition:color .15s" title="Close">✕</button>
-      </div>
-      <input class="cal-pop-inp" id="cal-pop-inp" placeholder="What are you doing?" onclick="event.stopPropagation()">
-      <div class="cal-pop-colors" id="cal-pop-colors"></div>
-      <div class="cal-pop-btns">
-        <button class="cal-pop-clear" onclick="clearSlot()">Clear</button>
-        <button class="cal-pop-save" id="cal-save-btn" onclick="saveSlot()">Save</button>
-      </div>
-    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px" id="trading-checks"></div>
   </div>
 
-</div>
-</div>
-<div class="tsec" data-tab="daily">
-  <div class="slbl" onclick="toggleSec('dtodo')" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer">
-    <span>Daily to-do</span>
-    <span id="dtodo-count" style="font-size:11px;color:var(--t3)"></span>
-    <div style="display:flex;gap:4px;align-items:center"><button class="arc-btn" onclick="event.stopPropagation();clearSec('dtodo')" title="Clear all">✕ Clear</button><button class="arc-btn" onclick="event.stopPropagation();archiveSec('dtodo')" title="Archive done">↓ Archive</button><span id="sci-dtodo" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
-  </div>
-<div id="secb-dtodo">
-  <div class="todo-card" id="dtodo-card">
-    <div class="todo-add-row" id="dtodo-add-row">
-      <input class="todo-inp" id="dtodo-inp" placeholder="Add a task for today..." onkeydown="if(event.key==='Enter')addDTodo()">
-      <button class="todo-add-btn" onclick="addDTodo()">+</button>
-    </div>
-    <div id="dtodo-list"></div>
-  </div>
-
-
-<div class="arc-wrap">
-  <div class="arc-hdr" onclick="toggleSec('arc-dtodo');event.stopPropagation()">
-    <span class="arc-hdr-lbl">📦 Archived <span id="arc-count-dtodo" class="arc-count"></span></span>
-    <span id="sci-arc-dtodo" style="font-size:10px;color:var(--t3)">▶</span>
-  </div>
-  <div id="secb-arc-dtodo" class="arc-body" style="display:none">
-    <div id="arc-body-dtodo"></div>
-    <div class="arc-footer">
-      <button onclick="clearArc('dtodo');event.stopPropagation()" class="arc-clr-btn">Clear archive</button>
-    </div>
-  </div>
-</div>
-</div>
-</div>
-<div class="tsec" data-tab="daily">
-  <div class="slbl" onclick="toggleSec('mtodo')" style="display:flex;justify-content:space-between;align-items:center;margin-top:.75rem;cursor:pointer">
-    <span>Master list</span>
-    <div style="display:flex;gap:4px;align-items:center"><span style="font-size:10px;color:var(--t3)">Persists until done</span><button class="arc-btn" onclick="event.stopPropagation();clearSec('mtodo')" title="Clear all">✕ Clear</button><button class="arc-btn" onclick="event.stopPropagation();archiveSec('mtodo')" title="Archive done">↓ Archive</button><span id="sci-mtodo" style="font-size:10px;color:var(--t3);margin-left:2px;flex-shrink:0">▼</span></div>
-  </div>
-<div id="secb-mtodo">
-  <div class="todo-card" id="mtodo-card">
-    <div class="todo-add-row">
-      <input class="todo-inp" id="mtodo-inp" placeholder="Add a lingering task..." onkeydown="if(event.key==='Enter')addMTodo()">
-      <button class="todo-add-btn" onclick="addMTodo()">+</button>
-    </div>
-    <div id="mtodo-list"></div>
-  </div>
-
-
-<div class="arc-wrap">
-  <div class="arc-hdr" onclick="toggleSec('arc-mtodo');event.stopPropagation()">
-    <span class="arc-hdr-lbl">📦 Archived <span id="arc-count-mtodo" class="arc-count"></span></span>
-    <span id="sci-arc-mtodo" style="font-size:10px;color:var(--t3)">▶</span>
-  </div>
-  <div id="secb-arc-mtodo" class="arc-body" style="display:none">
-    <div id="arc-body-mtodo"></div>
-    <div class="arc-footer">
-      <button onclick="clearArc('mtodo');event.stopPropagation()" class="arc-clr-btn">Clear archive</button>
-    </div>
-  </div>
-</div>
 </div>
 </div>
 <div class="tsec" data-tab="fitness">
@@ -1141,6 +1114,65 @@ create policy "allow all" on dashboard_data
     <div class="meal-log-empty" id="meal-log-empty">No meals logged yet.</div>
   </div>
 
+</div>
+</div>
+<div class="tsec" data-tab="daily">
+  <div class="slbl" onclick="toggleSec('dtodo')" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer">
+    <span>Daily to-do</span>
+    <span id="dtodo-count" style="font-size:11px;color:var(--t3)"></span>
+    <div style="display:flex;gap:4px;align-items:center"><button class="arc-btn" onclick="event.stopPropagation();clearSec('dtodo')" title="Clear all">✕ Clear</button><button class="arc-btn" onclick="event.stopPropagation();archiveSec('dtodo')" title="Archive done">↓ Archive</button><span id="sci-dtodo" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+  </div>
+<div id="secb-dtodo">
+  <div class="todo-card" id="dtodo-card">
+    <div class="todo-add-row" id="dtodo-add-row">
+      <input class="todo-inp" id="dtodo-inp" placeholder="Add a task for today..." onkeydown="if(event.key==='Enter')addDTodo()">
+      <button class="todo-add-btn" onclick="addDTodo()">+</button>
+    </div>
+    <div id="dtodo-list"></div>
+  </div>
+
+
+<div class="arc-wrap">
+  <div class="arc-hdr" onclick="toggleSec('arc-dtodo');event.stopPropagation()">
+    <span class="arc-hdr-lbl">📦 Archived <span id="arc-count-dtodo" class="arc-count"></span></span>
+    <span id="sci-arc-dtodo" style="font-size:10px;color:var(--t3)">▶</span>
+  </div>
+  <div id="secb-arc-dtodo" class="arc-body" style="display:none">
+    <div id="arc-body-dtodo"></div>
+    <div class="arc-footer">
+      <button onclick="clearArc('dtodo');event.stopPropagation()" class="arc-clr-btn">Clear archive</button>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div class="tsec" data-tab="daily">
+  <div class="slbl" onclick="toggleSec('mtodo')" style="display:flex;justify-content:space-between;align-items:center;margin-top:.75rem;cursor:pointer">
+    <span>Master list</span>
+    <div style="display:flex;gap:4px;align-items:center"><span style="font-size:10px;color:var(--t3)">Persists until done</span><button class="arc-btn" onclick="event.stopPropagation();clearSec('mtodo')" title="Clear all">✕ Clear</button><button class="arc-btn" onclick="event.stopPropagation();archiveSec('mtodo')" title="Archive done">↓ Archive</button><span id="sci-mtodo" style="font-size:10px;color:var(--t3);margin-left:2px;flex-shrink:0">▼</span></div>
+  </div>
+<div id="secb-mtodo">
+  <div class="todo-card" id="mtodo-card">
+    <div class="todo-add-row">
+      <input class="todo-inp" id="mtodo-inp" placeholder="Add a lingering task..." onkeydown="if(event.key==='Enter')addMTodo()">
+      <button class="todo-add-btn" onclick="addMTodo()">+</button>
+    </div>
+    <div id="mtodo-list"></div>
+  </div>
+
+
+<div class="arc-wrap">
+  <div class="arc-hdr" onclick="toggleSec('arc-mtodo');event.stopPropagation()">
+    <span class="arc-hdr-lbl">📦 Archived <span id="arc-count-mtodo" class="arc-count"></span></span>
+    <span id="sci-arc-mtodo" style="font-size:10px;color:var(--t3)">▶</span>
+  </div>
+  <div id="secb-arc-mtodo" class="arc-body" style="display:none">
+    <div id="arc-body-mtodo"></div>
+    <div class="arc-footer">
+      <button onclick="clearArc('mtodo');event.stopPropagation()" class="arc-clr-btn">Clear archive</button>
+    </div>
+  </div>
+</div>
 </div>
 </div>
 <div class="tsec" data-tab="fitness">
@@ -1233,6 +1265,36 @@ create policy "allow all" on dashboard_data
 </div>
 </div>
 <div class="tsec" data-tab="fitness">
+  <div class="slbl" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="toggleGymCollapse()">
+    <span>🏋 Gym weight goals <span id="sci-gym" style="font-size:10px;color:var(--t3);margin-left:4px">▼</span></span>
+    <button class="nutr-sm-btn" onclick="event.stopPropagation();toggleGymForm()">+ Add exercise</button>
+  </div>
+  <div id="secb-gym">
+  <div id="gym-add-form" style="display:none;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;margin-bottom:8px">
+    <div style="display:grid;grid-template-columns:1fr 80px 80px 60px;gap:6px;align-items:end">
+      <div><label class="gf-lbl">Exercise</label><input class="gf-inp" id="gym-name" placeholder="e.g. Bench Press"></div>
+      <div><label class="gf-lbl">Current</label><input class="gf-inp" id="gym-cur" type="number" placeholder="0" min="0"></div>
+      <div><label class="gf-lbl">Target</label><input class="gf-inp" id="gym-tgt" type="number" placeholder="0" min="0"></div>
+      <div><label class="gf-lbl">Unit</label>
+        <select class="gf-inp" id="gym-unit"><option value="lbs">lbs</option><option value="kg">kg</option></select>
+      </div>
+    </div>
+    <div style="display:flex;gap:6px;margin-top:8px">
+      <button class="idate-cancel" onclick="toggleGymForm()">Cancel</button>
+      <button class="idate-save" onclick="saveGymGoal()">Add</button>
+    </div>
+  </div>
+  <div id="gym-goals-list" style="margin-bottom:1.5rem"></div>
+  </div><!-- end gym-collapsible -->
+
+</div>
+<div class="tsec" data-tab="home">
+  <div class="slbl" onclick="toggleSec('stats')" style="cursor:pointer">Daily stats<span id="sci-stats" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+<div id="secb-stats">
+  <div class="grid4s" id="stats-grid"></div>
+</div>
+</div>
+<div class="tsec" data-tab="fitness">
   <div class="slbl" onclick="toggleSec('supplements')" style="margin-top:1rem;display:flex;justify-content:space-between;align-items:center;cursor:pointer">
     <span>Supplements</span>
     <span style="font-size:10px;color:var(--t3);font-style:italic">Not in daily score</span>
@@ -1240,6 +1302,7 @@ create policy "allow all" on dashboard_data
 <div id="secb-supplements">
   <div class="supp-grid" id="supp-grid"></div>
 
+</div>
 </div>
 </div>
 <div class="tsec" data-tab="journal">
@@ -1257,6 +1320,22 @@ create policy "allow all" on dashboard_data
     </div>
   </div>
 
+</div>
+</div>
+<div class="tsec" data-tab="journal">
+  <div class="slbl" onclick="toggleSec('improve')" style="cursor:pointer">Things to Improve for Tomorrow<span id="sci-improve" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+<div id="secb-improve">
+  <div class="journal-wrap">
+    <div class="journal-header">
+      <span class="journal-title">🔧 What will you do better tomorrow?</span>
+      <span class="journal-meta" id="improve-meta">0 words</span>
+    </div>
+    <textarea class="journal-textarea" id="improve-text" placeholder="What didn't go well today? What will you change tomorrow? Be specific..."></textarea>
+    <div class="journal-footer">
+      <span class="journal-saved" id="improve-saved">Not saved yet</span>
+      <span style="font-size:11px;color:var(--t3)" id="improve-chars">0 / ∞</span>
+    </div>
+  </div>
 </div>
 </div>
 <div class="tsec" data-tab="journal">
@@ -1341,52 +1420,6 @@ create policy "allow all" on dashboard_data
     </div>
   </div>
 </div>
-</div>
-</div>
-<div class="tsec" data-tab="fitness">
-  <div class="slbl" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="toggleGymCollapse()">
-    <span>🏋 Gym weight goals <span id="sci-gym" style="font-size:10px;color:var(--t3);margin-left:4px">▼</span></span>
-    <button class="nutr-sm-btn" onclick="event.stopPropagation();toggleGymForm()">+ Add exercise</button>
-  </div>
-  <div id="secb-gym">
-  <div id="gym-add-form" style="display:none;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;margin-bottom:8px">
-    <div style="display:grid;grid-template-columns:1fr 80px 80px 60px;gap:6px;align-items:end">
-      <div><label class="gf-lbl">Exercise</label><input class="gf-inp" id="gym-name" placeholder="e.g. Bench Press"></div>
-      <div><label class="gf-lbl">Current</label><input class="gf-inp" id="gym-cur" type="number" placeholder="0" min="0"></div>
-      <div><label class="gf-lbl">Target</label><input class="gf-inp" id="gym-tgt" type="number" placeholder="0" min="0"></div>
-      <div><label class="gf-lbl">Unit</label>
-        <select class="gf-inp" id="gym-unit"><option value="lbs">lbs</option><option value="kg">kg</option></select>
-      </div>
-    </div>
-    <div style="display:flex;gap:6px;margin-top:8px">
-      <button class="idate-cancel" onclick="toggleGymForm()">Cancel</button>
-      <button class="idate-save" onclick="saveGymGoal()">Add</button>
-    </div>
-  </div>
-  <div id="gym-goals-list" style="margin-bottom:1.5rem"></div>
-  </div><!-- end gym-collapsible -->
-
-</div>
-<div class="tsec" data-tab="home">
-  <div class="slbl" onclick="toggleSec('trading')" style="cursor:pointer">Trading session<span id="sci-trading" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
-<div id="secb-trading">
-  <div id="trading-section" style="margin-bottom:1.5rem">
-    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;margin-bottom:8px">
-      <div style="font-size:11px;color:var(--t3);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">
-        <span>Focus blocks — 30 min each</span>
-        <span id="trading-block-count" style="font-size:11px;font-weight:600;color:var(--t3)">0 / 7</span>
-      </div>
-      <div id="trading-blocks" style="display:flex;gap:6px;flex-wrap:wrap"></div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px" id="trading-checks"></div>
-  </div>
-
-</div>
-</div>
-<div class="tsec" data-tab="home">
-  <div class="slbl" onclick="toggleSec('stats')" style="cursor:pointer">Daily stats<span id="sci-stats" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
-<div id="secb-stats">
-  <div class="grid4s" id="stats-grid"></div>
 </div>
 </div>
 <div class="tsec" data-tab="journal">
@@ -1516,6 +1549,7 @@ const HEALTH=[
   {id:'zone2',  l:'Zone 2',      u:'min',  d:0,    type:'gym-num',   step:5,   min:0, min_target:30},
   {id:'pt',     l:'Physio PT',   u:'',            type:'pt-check',  items:[{id:'elbow',l:'Elbow'},{id:'knee',l:'Knee'}]},
   {id:'bp',     l:'Blood Pressure',u:'',   d:0,    type:'bp'},
+  {id:'weight', l:'Weight',        u:'lbs',d:0,    type:'num', step:0.5, min:0},
   {id:'bedtime',l:'Bedtime',     u:'',     d:'',   type:'bedtime'},
   {id:'macros', l:'Macros Hit',  u:'',           type:'macro-check'},
   {id:'pee',    l:'💧 Pee',       u:'times',d:0,    type:'num',       step:1,   min:0, min_target:6},
@@ -1537,8 +1571,10 @@ const TRADING_BLOCKS=[
   {id:'b6',l:'9:30',end:'10:00'},
 ];
 const TRADING_CHECKS=[
-  {id:'tjournal', l:'Trading Journal Complete',  icon:'📓'},
-  {id:'tanalysis',l:'Journal Analysis Complete', icon:'🔍'},
+  {id:'tjournal', l:'Trading Journal Complete',     icon:'📓'},
+  {id:'tanalysis',l:'Journal Analysis Complete',    icon:'🔍'},
+  {id:'tstudybed',l:'Trade study session before bed', icon:'🌙'},
+  {id:'tprestudy',l:'Pre-trading session study complete', icon:'📈'},
 ];
 const todayKey=()=>{const d=new Date();return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 const today=todayKey();
@@ -1833,14 +1869,19 @@ function renderHealth(){
         <div class="cunit" style="color:${on?'#22c55e':'var(--t3)'}">${on?'Done':'Tap to log'}</div>
       </div>`;
     }
-    if(m.type==='bp'){      const count=metrics[m.id]||0;
-      return`<div class="card check-card" onclick="cycleBP()">
+    if(m.type==='bp'){
+      const readings=metrics.bpReadings||[];
+      const last=readings[readings.length-1];
+      const count=readings.length;
+      return`<div class="card stepper" onclick="openBPEntry()" style="cursor:pointer">
         <div class="clbl">${m.l}</div>
-        <div class="bp-dots">
-          <div class="bp-dot${count>=1?' on':''}"><i class="ti ti-check"></i></div>
-          <div class="bp-dot${count>=2?' on':''}"><i class="ti ti-check"></i></div>
+        <div class="stepper-val" style="font-size:15px;color:${count>=2?'#4ade80':'var(--t1)'}">${last?last.sys+'/'+last.dia:'--/--'}</div>
+        <div class="cunit">${count}/2 readings today ${count>=2?'✓':''}</div>
+        <div class="stepper-row" style="margin-top:4px">
+          <button class="step-btn" onclick="event.stopPropagation();clearBP()" title="Clear">✕</button>
+          <span class="step-lbl">tap to add</span>
+          <button class="step-btn" onclick="event.stopPropagation();openBPEntry()" title="Add reading">+</button>
         </div>
-        <div class="bp-lbl">${count}/2 readings${count===2?' ✓':''}</div>
       </div>`;
     }
     if(m.type==='bedtime'){
@@ -1892,6 +1933,23 @@ function renderHealth(){
     const metTarget=hasTarget&&val>=m.min_target;
     const targetPct=hasTarget?Math.min(val/m.min_target,1)*100:0;
     const valColor=hasTarget?(metTarget?'#4ade80':val>=m.min_target*0.5?'#fbbf24':'#f87171'):'var(--t1)';
+    if(m.id==='weight'){
+      return`<div class="card stepper">
+        <div class="clbl">${m.l}</div>
+        <input
+          type="number" step="0.1" min="0" max="999"
+          value="${val||''}"
+          placeholder="0"
+          ${!isToday()?'disabled':''}
+          oninput="saveWeightInput(this)"
+          onkeydown="if(event.key==='Enter')this.blur()"
+          style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);color:var(--t1);padding:5px 8px;font-size:18px;font-weight:600;font-family:var(--mono);outline:none;text-align:center;margin:4px 0 2px;transition:border-color .15s"
+          onfocus="this.style.borderColor='var(--accent)'"
+          onblur="this.style.borderColor='var(--border)'"
+        >
+        <div class="cunit">${m.u}</div>
+      </div>`;
+    }
     return`<div class="card stepper">
       <div class="clbl">${m.l}</div>
       <div class="stepper-val" style="color:${valColor}">${disp}</div>
@@ -1907,6 +1965,11 @@ function renderHealth(){
       </div>
     </div>`;
   }).join('');
+}
+function saveWeightInput(inp){
+  if(!isToday())return;
+  const v=parseFloat(inp.value);
+  if(!isNaN(v)&&v>0){metrics.weight=Math.round(v*10)/10;lss('metrics:'+viewDate,metrics);renderProgress();}
 }
 function stepMetric(id,dir){
   if(!isToday())return;
@@ -1938,7 +2001,42 @@ function stepBedtime(dir){
 }
 function toggleMultiCheck(id){if(!isToday())return;metrics[id]=!metrics[id];lss('metrics:'+viewDate,metrics);renderHealth();renderProgress();}
 function toggleCheck(id){if(!isToday())return;metrics[id]=!metrics[id];lss('metrics:'+viewDate,metrics);renderHealth();renderProgress();}
-function cycleBP(){if(!isToday())return;const cur=metrics.bp||0;metrics.bp=cur>=2?0:cur+1;lss('metrics:'+viewDate,metrics);renderHealth();renderProgress();}
+function openBPEntry(){
+  if(!isToday())return;
+  const existing=metrics.bpReadings||[];
+  const modal=document.createElement('div');
+  modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1rem';
+  modal.innerHTML=`<div style="background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl);padding:1.25rem;width:min(300px,92vw)">
+    <div style="font-size:14px;font-weight:600;margin-bottom:1rem">🩺 Add BP Reading</div>
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:.75rem">
+      <div style="flex:1"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Systolic</label>
+        <input id="bp-sys" type="number" placeholder="120" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);color:var(--t1);padding:6px 10px;font-size:16px;outline:none"></div>
+      <div style="font-size:18px;color:var(--t3);margin-top:18px">/</div>
+      <div style="flex:1"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Diastolic</label>
+        <input id="bp-dia" type="number" placeholder="80" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);color:var(--t1);padding:6px 10px;font-size:16px;outline:none"></div>
+    </div>
+    ${existing.length?`<div style="font-size:11px;color:var(--t3);margin-bottom:.75rem">Today: ${existing.map(r=>r.sys+'/'+r.dia).join(', ')}</div>`:''}
+    <div style="display:flex;gap:8px">
+      <button onclick="this.closest('[style*=fixed]').remove()" style="flex:1;height:34px;background:transparent;border:1px solid var(--border);border-radius:var(--r);color:var(--t3);cursor:pointer">Cancel</button>
+      <button onclick="saveBPReading()" style="flex:2;height:34px;background:var(--accent-dim);border:1px solid rgba(59,130,246,.4);border-radius:var(--r);color:#93c5fd;font-weight:500;cursor:pointer">Save Reading</button>
+    </div>
+  </div>`;
+  document.body.appendChild(modal);
+  modal.addEventListener('click',e=>{if(e.target===modal)modal.remove();});
+  setTimeout(()=>document.getElementById('bp-sys')?.focus(),50);
+}
+function saveBPReading(){
+  const sys=parseInt(document.getElementById('bp-sys')?.value);
+  const dia=parseInt(document.getElementById('bp-dia')?.value);
+  if(!sys||!dia||isNaN(sys)||isNaN(dia))return;
+  if(!metrics.bpReadings)metrics.bpReadings=[];
+  metrics.bpReadings.push({sys,dia,t:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})});
+  metrics.bp=metrics.bpReadings.length;
+  lss('metrics:'+viewDate,metrics);
+  document.querySelector('[style*="position:fixed"][style*="9999"]')?.remove();
+  renderHealth();renderProgress();
+}
+function clearBP(){if(!isToday())return;metrics.bpReadings=[];metrics.bp=0;lss('metrics:'+viewDate,metrics);renderHealth();renderProgress();}
 function startEH(id){if(!isToday()||editH===id)return;editH=id;renderHealth();}
 function commitH(id){const i=document.getElementById('he-'+id);if(i){metrics[id]=i.value;lss('metrics:'+viewDate,metrics);}editH=null;renderHealth();}
 
@@ -2119,6 +2217,7 @@ function renderProgress(){
   else{bar.style.background='linear-gradient(90deg,#3b82f6,#22c55e)';}
 }
 let journalTimer=null;
+function autoResizeTA(ta){if(!ta)return;ta.style.height='auto';ta.style.height=ta.scrollHeight+'px';}
 function loadJournal(){
   const ta=document.getElementById('journal-text');
   if(!ta)return;
@@ -2128,6 +2227,7 @@ function loadJournal(){
   ta.style.opacity=isToday()?'1':'.7';
   updateJournalMeta(saved);
   document.getElementById('journal-saved').textContent=saved?'Saved':'Not saved yet';
+  autoResizeTA(ta);
 }
 function updateJournalMeta(text){
   const words=text.trim()?text.trim().split(/\s+/).length:0;
@@ -2140,6 +2240,7 @@ function updateJournalMeta(text){
 function onJournalInput(){
   const ta=document.getElementById('journal-text');
   if(!ta||!isToday())return;
+  autoResizeTA(ta);
   updateJournalMeta(ta.value);
   const saved=document.getElementById('journal-saved');
   if(saved){saved.textContent='Saving...';saved.classList.remove('flash');}
@@ -2156,6 +2257,47 @@ function initJournal(){
   if(!ta)return;
   ta.addEventListener('input',onJournalInput);
   loadJournal();
+  initImprove();
+}
+let improveTimer=null;
+function loadImprove(){
+  const ta=document.getElementById('improve-text');
+  if(!ta)return;
+  const saved=ls('improve:'+viewDate)||'';
+  ta.value=saved;
+  ta.disabled=!isToday();
+  ta.style.opacity=isToday()?'1':'.7';
+  updateImproveMeta(saved);
+  document.getElementById('improve-saved').textContent=saved?'Saved':'Not saved yet';
+  autoResizeTA(ta);
+}
+function updateImproveMeta(text){
+  const words=text.trim()?text.trim().split(/\s+/).length:0;
+  const chars=text.length;
+  const meta=document.getElementById('improve-meta');
+  const charEl=document.getElementById('improve-chars');
+  if(meta)meta.textContent=`${words} word${words===1?'':'s'}`;
+  if(charEl)charEl.textContent=`${chars} chars`;
+}
+function onImproveInput(){
+  const ta=document.getElementById('improve-text');
+  if(!ta||!isToday())return;
+  autoResizeTA(ta);
+  updateImproveMeta(ta.value);
+  const saved=document.getElementById('improve-saved');
+  if(saved){saved.textContent='Saving...';saved.classList.remove('flash');}
+  clearTimeout(improveTimer);
+  improveTimer=setTimeout(()=>{
+    lss('improve:'+viewDate,ta.value);
+    if(saved){saved.textContent='Saved ✓';saved.classList.add('flash');}
+    setTimeout(()=>{if(saved)saved.classList.remove('flash');},1500);
+  },800);
+}
+function initImprove(){
+  const ta=document.getElementById('improve-text');
+  if(!ta)return;
+  ta.addEventListener('input',onImproveInput);
+  loadImprove();
 }
 // ─── Nutrition ───────────────────────────────────────────────
 const MACRO_TARGETS={cal:2150,protein:160,carbs:225,fat:68};
@@ -3044,7 +3186,7 @@ function showBackupMsg(msg){
   el.style.animation='none';
   setTimeout(()=>{el.style.animation='fadeOut 3s forwards';},50);
 }
-function renderAll(){renderAllArchives();renderDateNav();renderHealth();renderEnergy();renderGameLog();renderDTodos();renderMTodos();renderVO2();renderGymGoals();renderTrading();renderStats();renderMacros();renderMealLog();renderSupplements();renderFitnessProtein();renderEntries();renderTimeline();loadCalendar();renderCalendar();loadJournal();renderProgress();renderBodyIssues();renderDates();renderPhilos();renderMistakes();loadWorkout();renderWorkout();renderDisc();}
+function renderAll(){renderAllArchives();renderDateNav();renderHealth();renderEnergy();renderGameLog();renderDTodos();renderMTodos();renderVO2();renderGymGoals();renderTrading();renderStats();renderMacros();renderMealLog();renderSupplements();renderFitnessProtein();renderEntries();renderTimeline();loadCalendar();renderCalendar();loadJournal();loadImprove();renderProgress();renderBodyIssues();renderDates();renderPhilos();renderMistakes();loadWorkout();renderWorkout();renderDisc();}
 // ─── Groceries ────────────────────────────────────────────────
 const GROC_CATS={protein:{lbl:'Protein',col:'#f97316'},produce:{lbl:'Produce',col:'#22c55e'},dairy:{lbl:'Dairy',col:'#60a5fa'},carbs:{lbl:'Carbs',col:'#f59e0b'},fats:{lbl:'Fats',col:'#a78bfa'},snacks:{lbl:'Snacks',col:'#f87171'},other:{lbl:'Other',col:'#6b7280'}};
 let grocItems=[];
@@ -3206,14 +3348,54 @@ function getDragRange(a,b){
 }
 function getSelectedSet(){return getDragRange(drag.startIdx,drag.endIdx);}
 
-function buildSlots(startH,count){
+function buildSlots(startH,endH){
   const s=[];
-  for(let i=0;i<count;i++){const tm=startH*60+i*30,h=Math.floor(tm/60)%24,m=tm%60;s.push({key:slotKey(h,m),h,m,label:slotLabel(h,m),idx:h*2+(m===30?1:0)});}
+  for(let h=startH;h<endH;h++){
+    s.push({key:slotKey(h,0),h,m:0,label:slotLabel(h,0),idx:h*2});
+    if(h*2+1 < endH*2) s.push({key:slotKey(h,30),h,m:30,label:slotLabel(h,30),idx:h*2+1});
+  }
   return s;
 }
 
+function getCalRange(){
+  const def={amStart:0,amEnd:12,pmStart:12,pmEnd:24};
+  try{return Object.assign(def,JSON.parse(localStorage.getItem('cal-range')||'{}'));}catch(e){return def;}
+}
+function saveCalRange(){
+  const r={
+    amStart:+document.getElementById('cal-am-start').value,
+    amEnd:+document.getElementById('cal-am-end').value,
+    pmStart:+document.getElementById('cal-pm-start').value,
+    pmEnd:+document.getElementById('cal-pm-end').value
+  };
+  localStorage.setItem('cal-range',JSON.stringify(r));
+}
+function initCalRangeSelects(){
+  const hours=[];
+  for(let h=0;h<25;h++){
+    const label=h===0?'12 AM':h<12?h+' AM':h===12?'12 PM':h===24?'12 AM (next)':(h-12)+' PM';
+    hours.push({val:h,label});
+  }
+  const r=getCalRange();
+  ['cal-am-start','cal-am-end','cal-pm-start','cal-pm-end'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    el.innerHTML=hours.map(h=>`<option value="${h.val}">${h.label}</option>`).join('');
+  });
+  document.getElementById('cal-am-start').value=r.amStart;
+  document.getElementById('cal-am-end').value=r.amEnd;
+  document.getElementById('cal-pm-start').value=r.pmStart;
+  document.getElementById('cal-pm-end').value=r.pmEnd;
+}
+
 function renderCalendar(){
-  const amSlots=buildSlots(0,24),pmSlots=buildSlots(12,24);
+  const r=getCalRange();
+  const amSlots=buildSlots(r.amStart,r.amEnd),pmSlots=buildSlots(r.pmStart,r.pmEnd);
+  const fmtH=h=>h===0?'12 AM':h<12?h+' AM':h===12?'12 PM':(h-12)+' PM';
+  const amHdr=document.getElementById('cal-am-hdr');
+  const pmHdr=document.getElementById('cal-pm-hdr');
+  if(amHdr)amHdr.textContent=`🌙 ${fmtH(r.amStart)} – ${fmtH(r.amEnd)}`;
+  if(pmHdr)pmHdr.textContent=`☀️ ${fmtH(r.pmStart)} – ${fmtH(r.pmEnd)}`;
   const sel=getSelectedSet();
   const ro=!isToday();
   ['am','pm'].forEach((period,pi)=>{
@@ -3279,15 +3461,31 @@ function calTouchEnd(e){
 
 document.addEventListener('mouseup',()=>{if(drag.active){drag.active=false;}});
 
+function updateCalPopoverHeader(){
+  const sel=[...getSelectedSet()];
+  const startLbl=idxToLabel(drag.startIdx);
+  const endLbl=idxToLabel(drag.endIdx);
+  const rangeLabel=drag.startIdx===drag.endIdx?startLbl:`${startLbl} → ${endLbl}`;
+  const mins=sel.length*30;
+  const durTxt=mins<60?`${mins} min`:`${mins/60}hr${mins>60?'s':''}`;
+  document.getElementById('cal-pop-time').textContent=`${rangeLabel}  ·  ${sel.length} slot${sel.length>1?'s':''}`;
+  const durEl=document.getElementById('cal-pop-dur');
+  if(durEl)durEl.textContent=`${sel.length} slot${sel.length>1?'s':''} (${durTxt})`;
+}
+function adjustCalDuration(delta){
+  const newEnd=drag.endIdx+delta;
+  if(newEnd<drag.startIdx)return; // can't go below 1 slot
+  if(newEnd>47)return; // max end of day
+  drag.endIdx=newEnd;
+  updateCalPopoverHeader();
+  renderCalendar();
+}
 function openCalPopover(){
   const sel=[...getSelectedSet()];
   if(!sel.length)return;
   const pop=document.getElementById('cal-popover');
   const inp=document.getElementById('cal-pop-inp');
-  const startLbl=idxToLabel(drag.startIdx);
-  const endLbl=idxToLabel(drag.endIdx);
-  const rangeLabel=drag.startIdx===drag.endIdx?startLbl:`${startLbl} → ${endLbl}`;
-  document.getElementById('cal-pop-time').textContent=`${rangeLabel}  ·  ${sel.length} slot${sel.length>1?'s':''}`;
+  updateCalPopoverHeader();
   const existing=sel.length===1?(calData[idxToKey(sel[0])]||{}):{};
   inp.value=existing.text||'';
   activeSlotColor=existing.color||'';
@@ -3385,7 +3583,17 @@ function openAddDate(){
   modal.innerHTML=`<div class="idate-modal-box">
     <div class="idate-modal-title">📅 Add important date</div>
     <div class="idate-field"><label>Name</label><input id="id-name" placeholder="e.g. Mom's Birthday" type="text"></div>
-    <div class="idate-field"><label>Date</label><input id="id-date" type="date"></div>
+    <div class="idate-field"><label>Start Date</label><input id="id-date" type="date"></div>
+    <div class="idate-field" id="id-enddate-row" style="display:none">
+      <label>End Date <span style="color:var(--t3);font-size:10px">(closing date)</span></label>
+      <input id="id-enddate" type="date">
+    </div>
+    <div style="margin-bottom:.75rem">
+      <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;color:var(--t3)">
+        <input type="checkbox" id="id-multiday" style="width:auto;height:auto" onchange="document.getElementById('id-enddate-row').style.display=this.checked?'block':'none'">
+        Multi-day event
+      </label>
+    </div>
     <div class="idate-field">
       <label>Type</label>
       <select id="id-cat">${IDATE_CATS.map(c=>`<option value="${c.id}">${c.l}</option>`).join('')}</select>
@@ -3419,10 +3627,23 @@ function openEditDate(id){
     // stored as MM-DD, add current year
     dateInputVal = new Date().getFullYear() + '-' + item.date;
   }
+  const hasEnd=!!item.endDate;
+  let endInputVal=item.endDate||'';
+  if(item.recurring&&endInputVal&&endInputVal.length===5) endInputVal=new Date().getFullYear()+'-'+endInputVal;
   modal.innerHTML=`<div class="idate-modal-box">
     <div class="idate-modal-title">✏️ Edit date</div>
     <div class="idate-field"><label>Name</label><input id="id-name" placeholder="e.g. Mom's Birthday" type="text" value="${item.name}"></div>
-    <div class="idate-field"><label>Date</label><input id="id-date" type="date" value="${dateInputVal}"></div>
+    <div class="idate-field"><label>Start Date</label><input id="id-date" type="date" value="${dateInputVal}"></div>
+    <div class="idate-field" id="id-enddate-row" style="display:${hasEnd?'block':'none'}">
+      <label>End Date <span style="color:var(--t3);font-size:10px">(closing date)</span></label>
+      <input id="id-enddate" type="date" value="${endInputVal}">
+    </div>
+    <div style="margin-bottom:.75rem">
+      <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;color:var(--t3)">
+        <input type="checkbox" id="id-multiday" style="width:auto;height:auto"${hasEnd?' checked':''} onchange="document.getElementById('id-enddate-row').style.display=this.checked?'block':'none'">
+        Multi-day event
+      </label>
+    </div>
     <div class="idate-field">
       <label>Type</label>
       <select id="id-cat">${IDATE_CATS.map(c=>`<option value="${c.id}"${c.id===item.cat?' selected':''}>${c.l}</option>`).join('')}</select>
@@ -3446,13 +3667,16 @@ function openEditDate(id){
 function saveEditDate(id){
   const name=document.getElementById('id-name').value.trim();
   const dateVal=document.getElementById('id-date').value;
+  const endVal=document.getElementById('id-multiday')?.checked?document.getElementById('id-enddate')?.value:'';
   const cat=document.getElementById('id-cat').value;
   const recurring=document.getElementById('id-recurring').checked;
   if(!name||!dateVal)return;
   let stored=dateVal;
   if(recurring){const p=dateVal.split('-');stored=p[1]+'-'+p[2];}
+  let storedEnd=endVal||'';
+  if(storedEnd&&recurring){const p=storedEnd.split('-');storedEnd=p[1]+'-'+p[2];}
   const idx=importantDates.findIndex(d=>d.id===id);
-  if(idx>-1) importantDates[idx]={id,name,date:stored,cat,recurring};
+  if(idx>-1) importantDates[idx]={id,name,date:stored,endDate:storedEnd||undefined,cat,recurring};
   importantDates.sort((a,b)=>getDaysUntil(a.date)-getDaysUntil(b.date));
   saveDates();
   document.getElementById('idate-modal').remove();
@@ -3461,12 +3685,15 @@ function saveEditDate(id){
 function saveDate(){
   const name=document.getElementById('id-name').value.trim();
   const dateVal=document.getElementById('id-date').value;
+  const endVal=document.getElementById('id-multiday')?.checked?document.getElementById('id-enddate')?.value:'';
   const cat=document.getElementById('id-cat').value;
   const recurring=document.getElementById('id-recurring').checked;
   if(!name||!dateVal)return;
   let stored=dateVal;
   if(recurring){const p=dateVal.split('-');stored=p[1]+'-'+p[2];}
-  importantDates.push({id:Date.now(),name,date:stored,cat,recurring});
+  let storedEnd=endVal||'';
+  if(storedEnd&&recurring){const p=storedEnd.split('-');storedEnd=p[1]+'-'+p[2];}
+  importantDates.push({id:Date.now(),name,date:stored,endDate:storedEnd||undefined,cat,recurring});
   importantDates.sort((a,b)=>getDaysUntil(a.date)-getDaysUntil(b.date));
   saveDates();
   document.getElementById('idate-modal').remove();
@@ -3492,7 +3719,7 @@ function renderDates(){
       <div class="idate-countdown" style="color:${col}">${dayLbl}</div>
       <div class="idate-info">
         <div class="idate-name">${d.name}</div>
-        <div class="idate-date">${formatDateDisplay(d.date)}${d.recurring?' · yearly':''}</div>
+        <div class="idate-date">${formatDateDisplay(d.date)}${d.endDate?` → ${formatDateDisplay(d.endDate)}`:''}${d.recurring?' · yearly':''}</div>
       </div>
       <span class="idate-tag" style="background:${cat.color}22;color:${cat.color}">${cat.l}</span>
     </div>`;
@@ -3573,7 +3800,7 @@ function init(){
   try{renderMacros();renderMealLog();renderSupplements();renderFitnessProtein();}catch(e){console.error('Render4:',e);}
   try{setDefaultTime();renderEntries();renderTimeline();}catch(e){console.error('Render5:',e);}
   try{renderRM();renderProgress();}catch(e){console.error('Render6:',e);}
-  try{initJournal();renderCalendar();renderBodyIssues();renderDates();renderPhilos();}catch(e){console.error('Render7:',e);}
+  try{initJournal();initCalRangeSelects();renderCalendar();renderBodyIssues();renderDates();renderPhilos();}catch(e){console.error('Render7:',e);}
   try{renderMistakes();renderWorkout();}catch(e){console.error('Render8:',e);}
   initTabs();
 }
@@ -4191,42 +4418,33 @@ function restoreSecCollapsed(){
 
 restoreSecCollapsed();renderAllArchives();
 
-// ── Dashboard Switcher ────────────────────────────────────────
-const DASHBOARDS = [
-  { label: "Health Dashboard", icon: "💪", url: "#",                                          active: true  },
-  { label: "Game Log",         icon: "🎯", url: "https://dcalabia.github.io/game-dashboard/", active: false },
-  { label: "Habit Tracker",    icon: "✅", url: "https://dcalabia.github.io/habit-tracker/",  active: false },
-  { label: "Trading Dashboard",icon: "📈", url: "https://dcalabia.github.io/trading-dashboard/", active: false },
-  { label: "Finance Dashboard",icon: "💰", url: "https://dcalabia.github.io/finance-dashboard/", active: false },
+// ─── Dashboard Switcher ───────────────────────────────────────
+const DASHBOARDS=[
+  {label:'Health Dashboard', icon:'💪', url:'#', active:true},
+  {label:'Game Log',         icon:'🎯', url:'https://dcalabia.github.io/game-dashboard/'},
+  {label:'Habit Tracker',    icon:'✅', url:'https://dcalabia.github.io/habit-tracker/'},
+  {label:'Trading Dashboard',icon:'📈', url:'https://dcalabia.github.io/trading-dashboard/'},
+  {label:'Finance Dashboard',icon:'💰', url:'https://dcalabia.github.io/finance-dashboard/'},
 ];
-
-(function buildDashMenu() {
-  const menu = document.getElementById('dash-menu');
-  if (!menu) return;
-  DASHBOARDS.forEach(function(d) {
-    const item = document.createElement('div');
-    item.style.cssText = 'display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:7px;cursor:' + (d.active ? 'default' : 'pointer') + ';color:' + (d.active ? 'var(--accent)' : 'var(--t1)') + ';font-size:13px;font-weight:' + (d.active ? '600' : '400') + ';transition:background .12s';
-    item.innerHTML = '<span style="font-size:16px">' + d.icon + '</span><span>' + d.label + '</span>' + (d.active ? '<span style="font-size:10px;color:var(--accent);margin-left:auto">●</span>' : '');
-    if (!d.active) {
-      item.onmouseenter = function() { item.style.background = 'rgba(255,255,255,0.06)'; };
-      item.onmouseleave = function() { item.style.background = ''; };
-      item.onclick = function() { window.location.href = d.url; };
-    }
-    menu.appendChild(item);
-  });
-})();
-
-let dashMenuOpen = false;
-function toggleDashMenu() {
-  dashMenuOpen = !dashMenuOpen;
-  const menu = document.getElementById('dash-menu');
-  if (menu) menu.style.display = dashMenuOpen ? 'block' : 'none';
+let dashMenuOpen=false;
+function toggleDashMenu(){
+  dashMenuOpen=!dashMenuOpen;
+  const menu=document.getElementById('dash-menu');
+  if(!menu)return;
+  if(dashMenuOpen){
+    menu.innerHTML=DASHBOARDS.map(d=>
+      `<div onclick="${d.active?'':'window.location.href=\''+d.url+'\''}" style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:7px;font-size:13px;cursor:${d.active?'default':'pointer'};color:${d.active?'#3b82f6':'#f0f4f8'};font-weight:${d.active?'600':'400'};transition:background .12s" onmouseover="if(!${d.active})this.style.background='rgba(255,255,255,.06)'" onmouseout="this.style.background='transparent'">
+        <span style="font-size:16px">${d.icon}</span><span>${d.label}</span>${d.active?'<span style="margin-left:auto;width:7px;height:7px;border-radius:50%;background:#3b82f6;flex-shrink:0"></span>':''}
+      </div>`
+    ).join('');
+  }
+  menu.style.display=dashMenuOpen?'block':'none';
 }
-document.addEventListener('click', function(e) {
-  if (dashMenuOpen && !e.target.closest('#dash-switcher-trigger') && !e.target.closest('#dash-menu')) {
-    dashMenuOpen = false;
-    const menu = document.getElementById('dash-menu');
-    if (menu) menu.style.display = 'none';
+document.addEventListener('click',function(e){
+  if(dashMenuOpen&&!e.target.closest('#dash-menu')&&!e.target.closest('[onclick*="toggleDashMenu"]')){
+    dashMenuOpen=false;
+    const menu=document.getElementById('dash-menu');
+    if(menu)menu.style.display='none';
   }
 });
 </script>
