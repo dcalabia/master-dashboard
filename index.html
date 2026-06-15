@@ -4235,6 +4235,9 @@ function renderWorkout(){
   if(lb) lb.style.opacity=isToday()?'1':'.4';
 }
 syncFromCloud();
+setInterval(()=>{syncFromCloud();pushAllToCloud();}, 5*60*1000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){syncFromCloud();}});
+window.addEventListener('beforeunload',()=>{pushAllToCloud();});
 restoreSecCollapsed();
 
 let ideas=[];
