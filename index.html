@@ -173,6 +173,13 @@ input,select{font-family:inherit;color:var(--t1)}
 .journal-footer{padding:.5rem 1.25rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.1)}
 .journal-saved{font-size:11px;color:var(--t3);transition:color .3s}
 .journal-saved.flash{color:#4ade80}
+.improve-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border)}
+.improve-item:last-child{border-bottom:none}
+.improve-cb{width:16px;height:16px;border-radius:3px;border:1.5px solid var(--border);flex-shrink:0;cursor:pointer;accent-color:var(--accent,#4ade80)}
+.improve-inp{flex:1;background:transparent;border:none;outline:none;font-size:13px;color:var(--t1);font-family:inherit;line-height:1.5;padding:0}
+.improve-inp.done{text-decoration:line-through;color:var(--t3)}
+.improve-del{background:transparent;border:none;color:var(--t3);font-size:14px;cursor:pointer;padding:0 2px;line-height:1;opacity:0;transition:opacity .15s}
+.improve-item:hover .improve-del{opacity:1}
 .idate-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-bottom:1.5rem}
 .idate-empty{padding:1.25rem;text-align:center;font-size:13px;color:var(--t3)}
 .idate-entry{display:flex;align-items:center;gap:10px;padding:.65rem 1.25rem;border-bottom:0.5px solid var(--border);transition:background .1s}
@@ -1328,12 +1335,12 @@ create policy "allow all" on dashboard_data
   <div class="journal-wrap">
     <div class="journal-header">
       <span class="journal-title">🔧 What will you do better tomorrow?</span>
-      <span class="journal-meta" id="improve-meta">0 words</span>
+      <span class="journal-meta" id="improve-meta">0 items</span>
     </div>
-    <textarea class="journal-textarea" id="improve-text" placeholder="What didn't go well today? What will you change tomorrow? Be specific..."></textarea>
+    <div id="improve-list" style="padding:.5rem 1.25rem"></div>
     <div class="journal-footer">
       <span class="journal-saved" id="improve-saved">Not saved yet</span>
-      <span style="font-size:11px;color:var(--t3)" id="improve-chars">0 / ∞</span>
+      <button onclick="addImproveItem()" style="background:var(--accent,#4ade80);color:#0b1120;border:none;border-radius:5px;padding:4px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">+ Add item</button>
     </div>
   </div>
 </div>
@@ -2259,44 +2266,58 @@ function initJournal(){
   loadJournal();
   initImprove();
 }
-let improveTimer=null;
-function loadImprove(){
-  const ta=document.getElementById('improve-text');
-  if(!ta)return;
-  const saved=ls('improve:'+viewDate)||'';
-  ta.value=saved;
-  ta.disabled=!isToday();
-  ta.style.opacity=isToday()?'1':'.7';
-  updateImproveMeta(saved);
-  document.getElementById('improve-saved').textContent=saved?'Saved':'Not saved yet';
-  autoResizeTA(ta);
+function getImproveItems(){
+  try{return JSON.parse(ls('improve:'+viewDate)||'[]');}catch{return[];}
 }
-function updateImproveMeta(text){
-  const words=text.trim()?text.trim().split(/\s+/).length:0;
-  const chars=text.length;
-  const meta=document.getElementById('improve-meta');
-  const charEl=document.getElementById('improve-chars');
-  if(meta)meta.textContent=`${words} word${words===1?'':'s'}`;
-  if(charEl)charEl.textContent=`${chars} chars`;
-}
-function onImproveInput(){
-  const ta=document.getElementById('improve-text');
-  if(!ta||!isToday())return;
-  autoResizeTA(ta);
-  updateImproveMeta(ta.value);
+function saveImproveItems(items){
+  lss('improve:'+viewDate,JSON.stringify(items));
   const saved=document.getElementById('improve-saved');
-  if(saved){saved.textContent='Saving...';saved.classList.remove('flash');}
-  clearTimeout(improveTimer);
-  improveTimer=setTimeout(()=>{
-    lss('improve:'+viewDate,ta.value);
-    if(saved){saved.textContent='Saved ✓';saved.classList.add('flash');}
-    setTimeout(()=>{if(saved)saved.classList.remove('flash');},1500);
-  },800);
+  if(saved){saved.textContent='Saved ✓';saved.classList.add('flash');setTimeout(()=>saved.classList.remove('flash'),1500);}
+  const meta=document.getElementById('improve-meta');
+  if(meta)meta.textContent=`${items.length} item${items.length===1?'':'s'}`;
+}
+function renderImproveList(){
+  const items=getImproveItems();
+  const list=document.getElementById('improve-list');
+  if(!list)return;
+  const meta=document.getElementById('improve-meta');
+  if(meta)meta.textContent=`${items.length} item${items.length===1?'':'s'}`;
+  list.innerHTML='';
+  items.forEach((item,i)=>{
+    const row=document.createElement('div');
+    row.className='improve-item';
+    const cb=document.createElement('input');
+    cb.type='checkbox';cb.className='improve-cb';cb.checked=item.done;
+    const inp=document.createElement('input');
+    inp.type='text';inp.className='improve-inp'+(item.done?' done':'');
+    inp.value=item.text;inp.placeholder='Type improvement...';
+    inp.disabled=!isToday();
+    cb.onchange=()=>{items[i].done=cb.checked;inp.className='improve-inp'+(cb.checked?' done':'');saveImproveItems(items);};
+    inp.oninput=()=>{items[i].text=inp.value;saveImproveItems(items);};
+    inp.onkeydown=(e)=>{if(e.key==='Enter'){e.preventDefault();addImproveItem();}};
+    const del=document.createElement('button');
+    del.className='improve-del';del.textContent='✕';del.title='Remove';
+    del.onclick=()=>{items.splice(i,1);saveImproveItems(items);renderImproveList();};
+    row.append(cb,inp,del);
+    list.appendChild(row);
+  });
+}
+function addImproveItem(){
+  if(!isToday())return;
+  const items=getImproveItems();
+  items.push({text:'',done:false});
+  saveImproveItems(items);
+  renderImproveList();
+  const inputs=document.querySelectorAll('#improve-list .improve-inp');
+  if(inputs.length)inputs[inputs.length-1].focus();
+}
+function loadImprove(){
+  const saved=document.getElementById('improve-saved');
+  const items=getImproveItems();
+  if(saved)saved.textContent=items.length?'Saved ✓':'Not saved yet';
+  renderImproveList();
 }
 function initImprove(){
-  const ta=document.getElementById('improve-text');
-  if(!ta)return;
-  ta.addEventListener('input',onImproveInput);
   loadImprove();
 }
 // ─── Nutrition ───────────────────────────────────────────────
