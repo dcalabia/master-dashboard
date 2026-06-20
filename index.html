@@ -1011,7 +1011,12 @@ create policy "allow all" on dashboard_data
       <select class="icat" id="inp-cat">
         <option value="trading">Trading</option><option value="gym">Gym</option>
         <option value="study">Study</option><option value="work">Work</option>
-        <option value="personal">Personal</option><option value="other">Other</option>
+        <option value="personal">Personal</option><option value="rest">Rest</option>
+        <option value="sleep">Sleep</option><option value="eating">Eating</option>
+        <option value="cooking">Cooking</option><option value="reading">Reading</option>
+        <option value="walking">Walking</option><option value="social">Social</option>
+        <option value="errands">Errands</option><option value="meditation">Meditation</option>
+        <option value="entertainment">Entertainment</option><option value="other">Other</option>
       </select>
       <select class="icat" id="inp-dur" style="width:88px">
         <option value="">dur.</option>
@@ -1573,7 +1578,7 @@ create policy "allow all" on dashboard_data
 </div>
 
 <script>
-const CAT={trading:{l:'Trading',c:'#378add'},gym:{l:'Gym',c:'#22c55e'},study:{l:'Study',c:'#f59e0b'},work:{l:'Work',c:'#f97316'},personal:{l:'Personal',c:'#14b8a6'},other:{l:'Other',c:'#6b7280'}};
+const CAT={trading:{l:'Trading',c:'#378add'},gym:{l:'Gym',c:'#22c55e'},study:{l:'Study',c:'#f59e0b'},work:{l:'Work',c:'#f97316'},personal:{l:'Personal',c:'#14b8a6'},rest:{l:'Rest',c:'#8b5cf6'},sleep:{l:'Sleep',c:'#6366f1'},eating:{l:'Eating',c:'#f43f5e'},cooking:{l:'Cooking',c:'#fb923c'},reading:{l:'Reading',c:'#fbbf24'},walking:{l:'Walking',c:'#34d399'},social:{l:'Social',c:'#e879f9'},errands:{l:'Errands',c:'#94a3b8'},meditation:{l:'Meditation',c:'#2dd4bf'},entertainment:{l:'Entertainment',c:'#f472b6'},other:{l:'Other',c:'#6b7280'}};
 const HEALTH=[
   {id:'sleep',  l:'Sleep',       u:'hrs',  d:0,    type:'num',       step:0.5, min:0, min_target:7},
   {id:'steps',  l:'Steps',       u:'steps',d:0,    type:'num',       step:500, min:0, min_target:8000},
