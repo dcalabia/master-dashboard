@@ -1123,65 +1123,6 @@ create policy "allow all" on dashboard_data
 
 </div>
 </div>
-<div class="tsec" data-tab="daily">
-  <div class="slbl" onclick="toggleSec('dtodo')" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer">
-    <span>Daily to-do</span>
-    <span id="dtodo-count" style="font-size:11px;color:var(--t3)"></span>
-    <div style="display:flex;gap:4px;align-items:center"><button class="arc-btn" onclick="event.stopPropagation();clearSec('dtodo')" title="Clear all">✕ Clear</button><button class="arc-btn" onclick="event.stopPropagation();archiveSec('dtodo')" title="Archive done">↓ Archive</button><span id="sci-dtodo" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
-  </div>
-<div id="secb-dtodo">
-  <div class="todo-card" id="dtodo-card">
-    <div class="todo-add-row" id="dtodo-add-row">
-      <input class="todo-inp" id="dtodo-inp" placeholder="Add a task for today..." onkeydown="if(event.key==='Enter')addDTodo()">
-      <button class="todo-add-btn" onclick="addDTodo()">+</button>
-    </div>
-    <div id="dtodo-list"></div>
-  </div>
-
-
-<div class="arc-wrap">
-  <div class="arc-hdr" onclick="toggleSec('arc-dtodo');event.stopPropagation()">
-    <span class="arc-hdr-lbl">📦 Archived <span id="arc-count-dtodo" class="arc-count"></span></span>
-    <span id="sci-arc-dtodo" style="font-size:10px;color:var(--t3)">▶</span>
-  </div>
-  <div id="secb-arc-dtodo" class="arc-body" style="display:none">
-    <div id="arc-body-dtodo"></div>
-    <div class="arc-footer">
-      <button onclick="clearArc('dtodo');event.stopPropagation()" class="arc-clr-btn">Clear archive</button>
-    </div>
-  </div>
-</div>
-</div>
-</div>
-<div class="tsec" data-tab="daily">
-  <div class="slbl" onclick="toggleSec('mtodo')" style="display:flex;justify-content:space-between;align-items:center;margin-top:.75rem;cursor:pointer">
-    <span>Master list</span>
-    <div style="display:flex;gap:4px;align-items:center"><span style="font-size:10px;color:var(--t3)">Persists until done</span><button class="arc-btn" onclick="event.stopPropagation();clearSec('mtodo')" title="Clear all">✕ Clear</button><button class="arc-btn" onclick="event.stopPropagation();archiveSec('mtodo')" title="Archive done">↓ Archive</button><span id="sci-mtodo" style="font-size:10px;color:var(--t3);margin-left:2px;flex-shrink:0">▼</span></div>
-  </div>
-<div id="secb-mtodo">
-  <div class="todo-card" id="mtodo-card">
-    <div class="todo-add-row">
-      <input class="todo-inp" id="mtodo-inp" placeholder="Add a lingering task..." onkeydown="if(event.key==='Enter')addMTodo()">
-      <button class="todo-add-btn" onclick="addMTodo()">+</button>
-    </div>
-    <div id="mtodo-list"></div>
-  </div>
-
-
-<div class="arc-wrap">
-  <div class="arc-hdr" onclick="toggleSec('arc-mtodo');event.stopPropagation()">
-    <span class="arc-hdr-lbl">📦 Archived <span id="arc-count-mtodo" class="arc-count"></span></span>
-    <span id="sci-arc-mtodo" style="font-size:10px;color:var(--t3)">▶</span>
-  </div>
-  <div id="secb-arc-mtodo" class="arc-body" style="display:none">
-    <div id="arc-body-mtodo"></div>
-    <div class="arc-footer">
-      <button onclick="clearArc('mtodo');event.stopPropagation()" class="arc-clr-btn">Clear archive</button>
-    </div>
-  </div>
-</div>
-</div>
-</div>
 <div class="tsec" data-tab="fitness">
   <!-- Protein progress bar -->
   <div id="fitness-protein-bar" style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.65rem 1rem;margin-bottom:12px;display:flex;align-items:center;gap:12px">
@@ -1299,6 +1240,61 @@ create policy "allow all" on dashboard_data
   <div class="slbl" onclick="toggleSec('stats')" style="cursor:pointer">Daily stats<span id="sci-stats" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
 <div id="secb-stats">
   <div class="grid4s" id="stats-grid"></div>
+</div>
+</div>
+<div class="tsec" data-tab="home">
+  <div class="slbl" onclick="toggleSec('dtodo')" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer">
+    <span>Daily to-do</span>
+    <span id="dtodo-count" style="font-size:11px;color:var(--t3)"></span>
+    <div style="display:flex;gap:4px;align-items:center"><button class="arc-btn" onclick="event.stopPropagation();clearSec('dtodo')" title="Clear all">✕ Clear</button><button class="arc-btn" onclick="event.stopPropagation();archiveSec('dtodo')" title="Archive done">↓ Archive</button><span id="sci-dtodo" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+  </div>
+<div id="secb-dtodo">
+  <div class="todo-card" id="dtodo-card">
+    <div class="todo-add-row" id="dtodo-add-row">
+      <input class="todo-inp" id="dtodo-inp" placeholder="Add a task for today..." onkeydown="if(event.key==='Enter')addDTodo()">
+      <button class="todo-add-btn" onclick="addDTodo()">+</button>
+    </div>
+    <div id="dtodo-list"></div>
+  </div>
+<div class="arc-wrap">
+  <div class="arc-hdr" onclick="toggleSec('arc-dtodo');event.stopPropagation()">
+    <span class="arc-hdr-lbl">📦 Archived <span id="arc-count-dtodo" class="arc-count"></span></span>
+    <span id="sci-arc-dtodo" style="font-size:10px;color:var(--t3)">▶</span>
+  </div>
+  <div id="secb-arc-dtodo" class="arc-body" style="display:none">
+    <div id="arc-body-dtodo"></div>
+    <div class="arc-footer">
+      <button onclick="clearArc('dtodo');event.stopPropagation()" class="arc-clr-btn">Clear archive</button>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div class="tsec" data-tab="home">
+  <div class="slbl" onclick="toggleSec('mtodo')" style="display:flex;justify-content:space-between;align-items:center;margin-top:.75rem;cursor:pointer">
+    <span>Master list</span>
+    <div style="display:flex;gap:4px;align-items:center"><span style="font-size:10px;color:var(--t3)">Persists until done</span><button class="arc-btn" onclick="event.stopPropagation();clearSec('mtodo')" title="Clear all">✕ Clear</button><button class="arc-btn" onclick="event.stopPropagation();archiveSec('mtodo')" title="Archive done">↓ Archive</button><span id="sci-mtodo" style="font-size:10px;color:var(--t3);margin-left:2px;flex-shrink:0">▼</span></div>
+  </div>
+<div id="secb-mtodo">
+  <div class="todo-card" id="mtodo-card">
+    <div class="todo-add-row">
+      <input class="todo-inp" id="mtodo-inp" placeholder="Add a lingering task..." onkeydown="if(event.key==='Enter')addMTodo()">
+      <button class="todo-add-btn" onclick="addMTodo()">+</button>
+    </div>
+    <div id="mtodo-list"></div>
+  </div>
+<div class="arc-wrap">
+  <div class="arc-hdr" onclick="toggleSec('arc-mtodo');event.stopPropagation()">
+    <span class="arc-hdr-lbl">📦 Archived <span id="arc-count-mtodo" class="arc-count"></span></span>
+    <span id="sci-arc-mtodo" style="font-size:10px;color:var(--t3)">▶</span>
+  </div>
+  <div id="secb-arc-mtodo" class="arc-body" style="display:none">
+    <div id="arc-body-mtodo"></div>
+    <div class="arc-footer">
+      <button onclick="clearArc('mtodo');event.stopPropagation()" class="arc-clr-btn">Clear archive</button>
+    </div>
+  </div>
+</div>
 </div>
 </div>
 <div class="tsec" data-tab="fitness">
