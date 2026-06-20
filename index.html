@@ -1013,6 +1013,13 @@ create policy "allow all" on dashboard_data
         <option value="study">Study</option><option value="work">Work</option>
         <option value="personal">Personal</option><option value="other">Other</option>
       </select>
+      <select class="icat" id="inp-dur" style="width:88px">
+        <option value="">dur.</option>
+        <option value="15">15 min</option><option value="30">30 min</option>
+        <option value="45">45 min</option><option value="60">1 hr</option>
+        <option value="90">1.5 hr</option><option value="120">2 hr</option>
+        <option value="180">3 hr</option><option value="240">4 hr</option>
+      </select>
       <input type="text" class="idesc" id="inp-desc" placeholder="What did you work on?">
       <button class="abtn" onclick="addEntry()">+ Add</button>
     </div>
@@ -2136,9 +2143,9 @@ function commitS(id){const i=document.getElementById('se-'+id);if(i){dstats[id]=
 function setDefaultTime(){const n=new Date();document.getElementById('inp-time').value=`${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`;}
 function addEntry(){
   if(!isToday())return;
-  const time=document.getElementById('inp-time').value,cat=document.getElementById('inp-cat').value,desc=document.getElementById('inp-desc').value.trim();
+  const time=document.getElementById('inp-time').value,cat=document.getElementById('inp-cat').value,desc=document.getElementById('inp-desc').value.trim(),dur=document.getElementById('inp-dur').value;
   if(!desc)return;
-  entries.push({id:Date.now(),time,cat,desc});
+  entries.push({id:Date.now(),time,cat,desc,dur});
   entries.sort((a,b)=>a.time.localeCompare(b.time));
   lss('entries:'+viewDate,entries);
   document.getElementById('inp-desc').value='';
@@ -2164,7 +2171,7 @@ function renderEntries(){
   const ro=!isToday();
   document.getElementById('entry-count').textContent=entries.length?`${entries.length} entr${entries.length===1?'y':'ies'}`:'';
   if(!entries.length){list.innerHTML='<div class="empty">No entries yet.</div>';return;}
-  list.innerHTML=entries.map(e=>`<div class="erow"><span class="et">${e.time||'—'}</span><span class="etag" style="background:${CAT[e.cat]?.c}22;color:${CAT[e.cat]?.c}">${CAT[e.cat]?.l||e.cat}</span><span class="edesc">${e.desc}</span>${ro?'':` <button class="xbtn" onclick="delEntry(${e.id})"><i class="ti ti-x"></i></button>`}</div>`).join('');
+  list.innerHTML=entries.map(e=>`<div class="erow"><span class="et">${e.time||'—'}</span><span class="etag" style="background:${CAT[e.cat]?.c}22;color:${CAT[e.cat]?.c}">${CAT[e.cat]?.l||e.cat}</span>${e.dur?`<span class="etag" style="background:rgba(255,255,255,.06);color:var(--t2)">${e.dur>=60?e.dur/60+'hr':e.dur+'m'}</span>`:''}<span class="edesc">${e.desc}</span>${ro?'':` <button class="xbtn" onclick="delEntry(${e.id})"><i class="ti ti-x"></i></button>`}</div>`).join('');
 }
 function toggleBlock(id){
   if(!isToday())return;
