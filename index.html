@@ -3834,8 +3834,7 @@ function switchTab(tab){
   window.scrollTo({top:0, behavior:'instant'});
 }
 function initTabs(){
-  const saved = localStorage.getItem('active-tab') || 'home';
-  switchTab(saved);
+  switchTab('home');
 }
 
 // --- AI Meal Parser -------------------------------------------
