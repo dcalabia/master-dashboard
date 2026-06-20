@@ -2840,7 +2840,16 @@ function renderSupplements(){
 }
 // ─── Daily To-Do ─────────────────────────────────────────────
 let dtodos=[],mtodos=[],philos=[];
-function loadTodos(){dtodos=ls('dtodos:'+viewDate)||[];mtodos=ls('mtodos')||[];}
+function loadTodos(){
+  dtodos=ls('dtodos:'+viewDate)||[];
+  if(viewDate===today&&!dtodos.length){
+    const yd=new Date();yd.setDate(yd.getDate()-1);
+    const yk=`${yd.getFullYear()}-${String(yd.getMonth()+1).padStart(2,'0')}-${String(yd.getDate()).padStart(2,'0')}`;
+    const carried=(ls('dtodos:'+yk)||[]).filter(t=>!t.done).map(t=>({...t,carried:true}));
+    if(carried.length){dtodos=carried;saveDTodos();}
+  }
+  mtodos=ls('mtodos')||[];
+}
 function saveDTodos(){lss('dtodos:'+viewDate,dtodos);}
 function saveMTodos(){lss('mtodos',mtodos);}
 function addDTodo(){if(!isToday())return;const inp=document.getElementById('dtodo-inp');const text=inp.value.trim();if(!text)return;dtodos.push({id:Date.now(),text,done:false});saveDTodos();inp.value='';renderDTodos();}
