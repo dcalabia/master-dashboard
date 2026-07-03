@@ -4530,8 +4530,36 @@ document.addEventListener('click',function(e){
   const LS_KEY = 'hbt-reminders';
   let open = false;
 
+  function cloudCfg(){ try{ const v=localStorage.getItem('cloud-config'); return v?JSON.parse(v):null; }catch(e){ return null; } }
   function load(){ try{ return JSON.parse(localStorage.getItem(LS_KEY)||'[]'); }catch(e){ return []; } }
-  function save(arr){ localStorage.setItem(LS_KEY, JSON.stringify(arr)); }
+  function save(arr){ localStorage.setItem(LS_KEY, JSON.stringify(arr)); pushRem(arr); }
+
+  async function pushRem(arr){
+    const cfg = cloudCfg();
+    if(!cfg||!cfg.url||!cfg.key) return;
+    try{
+      await fetch(`${cfg.url}/rest/v1/dashboard_data`,{
+        method:'POST',
+        headers:{apikey:cfg.key,Authorization:`Bearer ${cfg.key}`,'Content-Type':'application/json',Prefer:'resolution=merge-duplicates'},
+        body:JSON.stringify({key:LS_KEY,value:JSON.stringify(arr),updated_at:new Date().toISOString()})
+      });
+    }catch(e){}
+  }
+
+  async function pullRem(){
+    const cfg = cloudCfg();
+    if(!cfg||!cfg.url||!cfg.key) return;
+    try{
+      const res = await fetch(`${cfg.url}/rest/v1/dashboard_data?key=eq.${LS_KEY}&select=value`,{
+        headers:{apikey:cfg.key,Authorization:`Bearer ${cfg.key}`}
+      });
+      const rows = await res.json();
+      if(rows&&rows[0]&&rows[0].value){
+        localStorage.setItem(LS_KEY, rows[0].value);
+        render();
+      }
+    }catch(e){}
+  }
 
   function render(){
     const arr = load();
@@ -4591,6 +4619,9 @@ document.addEventListener('click',function(e){
     </div>`;
   document.body.appendChild(el);
   render();
+  pullRem().then(()=>pushRem(load()));
+  setInterval(pullRem, 60*1000);
+  document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='visible') pullRem(); });
 })();
 </script>
 </body>
