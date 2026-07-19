@@ -745,7 +745,7 @@ create policy "allow all" on dashboard_data
 <div class="tab-bar" id="main-tab-bar">
   <button class="tab-btn active" onclick="switchTab('home')" id="tab-btn-home"><span class="tbi">🏠</span><span class="tbl">Home</span></button>
   <button class="tab-btn" onclick="switchTab('fitness')" id="tab-btn-fitness"><span class="tbi">💪</span><span class="tbl">Fitness</span></button>
-  <button class="tab-btn" onclick="switchTab('daily')" id="tab-btn-daily"><span class="tbi">📋</span><span class="tbl">Daily</span></button>  <button class="tab-btn" onclick="switchTab('journal')" id="tab-btn-journal"><span class="tbi">📓</span><span class="tbl">Journal</span></button>
+  <button class="tab-btn" onclick="switchTab('daily')" id="tab-btn-daily"><span class="tbi">📋</span><span class="tbl">Daily</span></button>  <button class="tab-btn" onclick="switchTab('journal')" id="tab-btn-journal"><span class="tbi">🔔</span><span class="tbl">Reminders</span></button>
 </div>
 <div class="vt">
   <button class="vt-btn active" onclick="setView('today')" id="vt-today">Today</button>
@@ -1351,7 +1351,7 @@ create policy "allow all" on dashboard_data
 </div>
 </div>
 </div>
-<div class="tsec" data-tab="journal">
+<div class="tsec" data-tab="home">
   <div class="slbl" onclick="toggleSec('journal')" style="cursor:pointer">Daily journal<span id="sci-journal" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
 <div id="secb-journal">
   <div class="journal-wrap">
@@ -1368,7 +1368,7 @@ create policy "allow all" on dashboard_data
 
 </div>
 </div>
-<div class="tsec" data-tab="journal">
+<div class="tsec" data-tab="home">
   <div class="slbl" onclick="toggleSec('improve')" style="cursor:pointer">Things to Improve for Tomorrow<span id="sci-improve" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
 <div id="secb-improve">
   <div class="journal-wrap">
