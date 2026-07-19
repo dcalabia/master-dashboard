@@ -423,6 +423,10 @@ input,select{font-family:inherit;color:var(--t1)}
 .todo-row.done-row .todo-txt{text-decoration:line-through;color:var(--t3)}
 .todo-del{background:transparent;border:none;color:var(--t3);font-size:14px;cursor:pointer;padding:0 3px;opacity:0;transition:opacity .15s}
 .todo-row:hover .todo-del{opacity:1}
+.todo-edit{background:transparent;border:none;color:var(--t3);font-size:12px;cursor:pointer;padding:0 3px;opacity:0;transition:opacity .15s}
+.todo-row:hover .todo-edit{opacity:1}
+.todo-edit:hover{color:var(--t1)}
+.todo-edit-inp{flex:1;height:26px;background:var(--bg3);border:1px solid var(--accent);border-radius:var(--r);color:var(--t1);padding:0 8px;font-size:13px;outline:none;font-family:inherit}
 .todo-empty{padding:1rem;text-align:center;font-size:13px;color:var(--t3)}
 /* ─── VO2 / Weekly Protocols ─── */
 .vo2-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;width:100%}
@@ -3018,9 +3022,10 @@ function renderDTodos(){
   const ro=!isToday();
   if(!dtodos.length){el.innerHTML='<div class="todo-empty">No tasks yet.</div>';return;}
   const sorted=[...dtodos.filter(t=>!t.done),...dtodos.filter(t=>t.done)];
-  el.innerHTML=sorted.map(t=>`<div class="todo-row${t.done?' done-row':''}">
+  el.innerHTML=sorted.map(t=>`<div class="todo-row${t.done?' done-row':''}" data-id="${t.id}">
     <div class="todo-chk${t.done?' on':''}" onclick="${ro?'':'toggleDTodo('+t.id+')'}"><i class="ti ti-check"></i></div>
-    <span class="todo-txt" onclick="${ro?'':'toggleDTodo('+t.id+')'}">${t.text}</span>
+    <span class="todo-txt" onclick="${ro?'':'toggleDTodo('+t.id+')'}" ondblclick="startTodoEdit('d',${t.id})">${t.text}</span>
+    <button class="todo-edit" onclick="startTodoEdit('d',${t.id})" title="Edit"><i class="ti ti-pencil"></i></button>
     <button class="todo-del" onclick="delDTodo(${t.id})"><i class="ti ti-x"></i></button>
   </div>`).join('');
 }
@@ -3031,11 +3036,35 @@ function renderMTodos(){
   const el=document.getElementById('mtodo-list');if(!el)return;
   if(!mtodos.length){el.innerHTML='<div class="todo-empty">No lingering tasks.</div>';return;}
   const sorted=[...mtodos.filter(t=>!t.done),...mtodos.filter(t=>t.done)];
-  el.innerHTML=sorted.map(t=>`<div class="todo-row${t.done?' done-row':''}">
+  el.innerHTML=sorted.map(t=>`<div class="todo-row${t.done?' done-row':''}" data-id="${t.id}">
     <div class="todo-chk${t.done?' on':''}" onclick="toggleMTodo(${t.id})"><i class="ti ti-check"></i></div>
-    <span class="todo-txt" onclick="toggleMTodo(${t.id})">${t.text}</span>
+    <span class="todo-txt" onclick="toggleMTodo(${t.id})" ondblclick="startTodoEdit('m',${t.id})">${t.text}</span>
+    <button class="todo-edit" onclick="startTodoEdit('m',${t.id})" title="Edit"><i class="ti ti-pencil"></i></button>
     <button class="todo-del" onclick="delMTodo(${t.id})"><i class="ti ti-x"></i></button>
   </div>`).join('');
+}
+function startTodoEdit(kind,id){
+  if(kind==='d'&&!isToday())return;
+  const arr=kind==='d'?dtodos:mtodos;
+  const t=arr.find(x=>x.id===id);if(!t)return;
+  const row=document.querySelector(`#${kind==='d'?'dtodo':'mtodo'}-list .todo-row[data-id="${id}"]`);
+  if(!row)return;
+  const span=row.querySelector('.todo-txt');
+  const inp=document.createElement('input');
+  inp.className='todo-edit-inp';
+  inp.value=t.text;
+  span.replaceWith(inp);
+  inp.focus();
+  inp.setSelectionRange(inp.value.length,inp.value.length);
+  const end=save=>{
+    if(save){const v=inp.value.trim();if(v)t.text=v;}
+    if(kind==='d'){saveDTodos();renderDTodos();}else{saveMTodos();renderMTodos();}
+  };
+  inp.onkeydown=e=>{
+    if(e.key==='Enter')inp.blur();
+    if(e.key==='Escape'){inp.onblur=null;end(false);}
+  };
+  inp.onblur=()=>end(true);
 }
 // ─── Weekly Protocols ────────────────────────────────────────
 const VO2_PROTOCOLS=[
