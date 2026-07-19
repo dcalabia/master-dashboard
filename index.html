@@ -180,6 +180,21 @@ input,select{font-family:inherit;color:var(--t1)}
 .improve-inp.done{text-decoration:line-through;color:var(--t3)}
 .improve-del{background:transparent;border:none;color:var(--t3);font-size:14px;cursor:pointer;padding:0 2px;line-height:1;opacity:0;transition:opacity .15s}
 .improve-item:hover .improve-del{opacity:1}
+/* ── Journal ★ highlights ── */
+.jhl-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-bottom:.75rem}
+.jhl-hdr{display:flex;justify-content:space-between;align-items:center;padding:.6rem 1.25rem;cursor:pointer;font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#ffd54a}
+.jhl-count{background:rgba(255,213,74,.15);border-radius:10px;padding:1px 8px;font-size:11px;margin-left:6px}
+.jhl-chev{color:var(--t3);font-size:10px}
+.jhl-body{padding:0 1.25rem .75rem}
+.jhl-item{display:flex;align-items:flex-start;gap:8px;padding:4px 0;font-size:13px}
+.jhl-item .m{color:var(--t3);font-size:11px;white-space:nowrap;cursor:pointer;padding-top:2px}
+.jhl-item .m:hover{color:var(--t1);text-decoration:underline}
+.jhl-item mark{background:rgba(255,213,74,.12);color:var(--t1);border-radius:4px;padding:1px 6px;line-height:1.5}
+.jhl-best{background:transparent;border:none;color:var(--t3);font-size:13px;cursor:pointer;padding:0 2px;line-height:1}
+.jhl-best:hover,.jhl-best.on{color:#ffd54a}
+.jhl-empty{color:var(--t3);font-size:12px;padding:4px 0}
+.jhl-btn{background:transparent;border:1px solid var(--border);border-radius:5px;color:#ffd54a;font-size:11px;padding:3px 10px;cursor:pointer;font-family:inherit}
+.jhl-btn:hover{background:rgba(255,213,74,.08)}
 .idate-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-bottom:1.5rem}
 .idate-empty{padding:1.25rem;text-align:center;font-size:13px;color:var(--t3)}
 .idate-entry{display:flex;align-items:center;gap:10px;padding:.65rem 1.25rem;border-bottom:0.5px solid var(--border);transition:background .1s}
@@ -1286,6 +1301,22 @@ create policy "allow all" on dashboard_data
 </div>
 </div>
 <div class="tsec" data-tab="home">
+  <div class="slbl" onclick="toggleSec('improve')" style="cursor:pointer">Things to Improve for Tomorrow<span id="sci-improve" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+<div id="secb-improve">
+  <div class="journal-wrap">
+    <div class="journal-header">
+      <span class="journal-title">🔧 What will you do better tomorrow?</span>
+      <span class="journal-meta" id="improve-meta">0 items</span>
+    </div>
+    <div id="improve-list" style="padding:.5rem 1.25rem"></div>
+    <div class="journal-footer">
+      <span class="journal-saved" id="improve-saved">Not saved yet</span>
+      <button onclick="addImproveItem()" style="background:var(--accent,#4ade80);color:#0b1120;border:none;border-radius:5px;padding:4px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">+ Add item</button>
+    </div>
+  </div>
+</div>
+</div>
+<div class="tsec" data-tab="home">
   <div class="slbl" onclick="toggleSec('dtodo')" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer">
     <span>Daily to-do</span>
     <span id="dtodo-count" style="font-size:11px;color:var(--t3)"></span>
@@ -1362,27 +1393,30 @@ create policy "allow all" on dashboard_data
     <textarea class="journal-textarea" id="journal-text" placeholder="Write a summary of your day — wins, challenges, what you'd do differently, how you felt..."></textarea>
     <div class="journal-footer">
       <span class="journal-saved" id="journal-saved">Not saved yet</span>
-      <span style="font-size:11px;color:var(--t3)" id="journal-chars">0 / ∞</span>
+      <div style="display:flex;gap:10px;align-items:center">
+        <button class="jhl-btn" onclick="toggleJournalHighlight()" title="Mark/unmark the line your cursor is on (Ctrl+H) — shows up in Highlights below">★ Highlight line</button>
+        <span style="font-size:11px;color:var(--t3)" id="journal-chars">0 / ∞</span>
+      </div>
     </div>
   </div>
 
 </div>
 </div>
 <div class="tsec" data-tab="home">
-  <div class="slbl" onclick="toggleSec('improve')" style="cursor:pointer">Things to Improve for Tomorrow<span id="sci-improve" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
-<div id="secb-improve">
-  <div class="journal-wrap">
-    <div class="journal-header">
-      <span class="journal-title">🔧 What will you do better tomorrow?</span>
-      <span class="journal-meta" id="improve-meta">0 items</span>
+  <div class="jhl-wrap" id="jhl">
+    <div class="jhl-hdr" onclick="toggleJHls()">
+      <span>★ Highlights <span class="jhl-count" id="jhl-count">0</span></span>
+      <span class="jhl-chev" id="jhl-chev">▼</span>
     </div>
-    <div id="improve-list" style="padding:.5rem 1.25rem"></div>
-    <div class="journal-footer">
-      <span class="journal-saved" id="improve-saved">Not saved yet</span>
-      <button onclick="addImproveItem()" style="background:var(--accent,#4ade80);color:#0b1120;border:none;border-radius:5px;padding:4px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">+ Add item</button>
-    </div>
+    <div class="jhl-body" id="jhl-body"></div>
   </div>
-</div>
+  <div class="jhl-wrap" id="jbest" style="border-color:rgba(255,213,74,.45)">
+    <div class="jhl-hdr" onclick="toggleJBest()">
+      <span>🏆 Best of Highlights <span class="jhl-count" id="jbest-count">0</span></span>
+      <span class="jhl-chev" id="jbest-chev">▼</span>
+    </div>
+    <div class="jhl-body" id="jbest-body"></div>
+  </div>
 </div>
 <div class="tsec" data-tab="journal">
   <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
@@ -2300,7 +2334,7 @@ function onJournalInput(){
   journalTimer=setTimeout(()=>{
     lss('journal:'+viewDate,ta.value);
     if(saved){saved.textContent='Saved ✓';saved.classList.add('flash');}
-    renderProgress();
+    renderProgress();renderJournalHighlights();
     setTimeout(()=>{if(saved)saved.classList.remove('flash');},1500);
   },800);
 }
@@ -2308,8 +2342,104 @@ function initJournal(){
   const ta=document.getElementById('journal-text');
   if(!ta)return;
   ta.addEventListener('input',onJournalInput);
+  // Bullet-point style: start each line with "• "
+  ta.addEventListener('focus',()=>{
+    if(isToday()&&!ta.value.trim()){ta.value='• ';updateJournalMeta(ta.value);}
+  });
+  ta.addEventListener('keydown',e=>{
+    if(e.key==='Enter'){
+      e.preventDefault();
+      ta.setRangeText('\n• ',ta.selectionStart,ta.selectionEnd,'end');
+      onJournalInput();
+    }
+    if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='h'){
+      e.preventDefault();toggleJournalHighlight();
+    }
+  });
   loadJournal();
   initImprove();
+}
+// ── Journal ★ highlights (ported from trading dash) ──────────
+function toggleJournalHighlight(){
+  const ta=document.getElementById('journal-text');
+  if(!ta||!isToday())return;
+  const s=ta.selectionStart;
+  const lineStart=ta.value.lastIndexOf('\n',s-1)+1;
+  let lineEnd=ta.value.indexOf('\n',s);
+  if(lineEnd===-1)lineEnd=ta.value.length;
+  let line=ta.value.slice(lineStart,lineEnd);
+  if(/★/.test(line))line=line.replace(/★+\s?/,'');
+  else line=line.replace(/^(\s*•\s*)?/,m=>m+'★ ');
+  ta.setRangeText(line,lineStart,lineEnd,'end');
+  ta.focus();
+  onJournalInput();
+}
+let JHLS_OPEN=localStorage.getItem('jhl-open')!=='0';
+let JBEST_OPEN=localStorage.getItem('jbest-open')!=='0';
+function toggleJHls(){JHLS_OPEN=!JHLS_OPEN;localStorage.setItem('jhl-open',JHLS_OPEN?'1':'0');renderJournalHighlights();}
+function toggleJBest(){JBEST_OPEN=!JBEST_OPEN;localStorage.setItem('jbest-open',JBEST_OPEN?'1':'0');renderJournalHighlights();}
+let JHL_ITEMS=[];
+function renderJournalHighlights(){
+  const esc=s=>String(s).replace(/</g,'&lt;');
+  const items=[];
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(!/^journal:\d{4}-\d{2}-\d{2}$/.test(k))continue;
+    const txt=ls(k);
+    if(!txt||txt.indexOf('★')===-1)continue;
+    const date=k.slice(8);
+    txt.split('\n').forEach(line=>{
+      if(line.indexOf('★')===-1)return;
+      const best=line.indexOf('★★')!==-1;
+      const t=line.replace(/^\s*•\s*/,'').replace(/★+\s?/,'').trim();
+      if(t)items.push({date,txt:t,best,raw:line,key:k});
+    });
+  }
+  items.sort((a,b)=>a.date<b.date?1:(a.date>b.date?-1:0));
+  JHL_ITEMS=items;
+  const row=(h,i)=>`<div class="jhl-item">
+    <button class="jhl-best${h.best?' on':''}" onclick="toggleJBestHl(${i})" title="${h.best?'Remove from':'Promote to'} Best of Highlights">🏆</button>
+    <span class="m" onclick="jumpToJournalDay('${h.date}')" title="Jump to this day">${esc(h.date)}</span>
+    <mark>${esc(h.txt)}</mark></div>`;
+  const cnt=document.getElementById('jhl-count');
+  if(!cnt)return;
+  cnt.textContent=items.length;
+  document.getElementById('jhl-chev').textContent=JHLS_OPEN?'▼':'▶';
+  const body=document.getElementById('jhl-body');
+  body.style.display=JHLS_OPEN?'':'none';
+  body.innerHTML=items.length
+    ? items.map(row).join('')
+    : '<div class="jhl-empty">No highlighted lines yet — put the cursor on a journal line and hit ★ Highlight line (or Ctrl+H)</div>';
+  const best=items.map((h,i)=>[h,i]).filter(([h])=>h.best);
+  document.getElementById('jbest-count').textContent=best.length;
+  document.getElementById('jbest-chev').textContent=JBEST_OPEN?'▼':'▶';
+  const bbody=document.getElementById('jbest-body');
+  bbody.style.display=JBEST_OPEN?'':'none';
+  bbody.innerHTML=best.length
+    ? best.map(([h,i])=>row(h,i)).join('')
+    : '<div class="jhl-empty">Nothing promoted yet — hit the 🏆 on any highlight above</div>';
+}
+function toggleJBestHl(i){
+  const h=JHL_ITEMS[i];
+  if(!h)return;
+  // Promote = ★ -> ★★ on that line in the journal text itself — syncs via lss for free
+  const newLine=h.best?h.raw.replace('★★','★'):h.raw.replace('★','★★');
+  const txt=ls(h.key);
+  if(!txt)return;
+  const newTxt=txt.replace(h.raw,newLine);
+  if(newTxt===txt)return;
+  lss(h.key,newTxt);
+  if(h.key==='journal:'+viewDate){
+    const ta=document.getElementById('journal-text');
+    if(ta)ta.value=newTxt;
+  }
+  renderJournalHighlights();
+}
+function jumpToJournalDay(date){
+  viewDate=date;
+  loadAll();loadNutrition();loadTodos();loadVO2();loadGameLog();loadEnergy();renderAll();
+  const el=document.getElementById('secb-journal');
+  if(el)el.scrollIntoView({behavior:'smooth',block:'center'});
 }
 function getImproveItems(){
   try{return JSON.parse(ls('improve:'+viewDate)||'[]');}catch{return[];}
@@ -3261,7 +3391,7 @@ function showBackupMsg(msg){
   el.style.animation='none';
   setTimeout(()=>{el.style.animation='fadeOut 3s forwards';},50);
 }
-function renderAll(){renderAllArchives();renderDateNav();renderHealth();renderEnergy();renderGameLog();renderDTodos();renderMTodos();renderVO2();renderGymGoals();renderTrading();renderStats();renderMacros();renderMealLog();renderSupplements();renderFitnessProtein();renderEntries();renderTimeline();loadCalendar();renderCalendar();loadJournal();loadImprove();renderProgress();renderBodyIssues();renderDates();renderPhilos();renderMistakes();loadWorkout();renderWorkout();renderDisc();}
+function renderAll(){renderAllArchives();renderDateNav();renderHealth();renderEnergy();renderGameLog();renderDTodos();renderMTodos();renderVO2();renderGymGoals();renderTrading();renderStats();renderMacros();renderMealLog();renderSupplements();renderFitnessProtein();renderEntries();renderTimeline();loadCalendar();renderCalendar();loadJournal();loadImprove();renderJournalHighlights();renderProgress();renderBodyIssues();renderDates();renderPhilos();renderMistakes();loadWorkout();renderWorkout();renderDisc();}
 // ─── Groceries ────────────────────────────────────────────────
 const GROC_CATS={protein:{lbl:'Protein',col:'#f97316'},produce:{lbl:'Produce',col:'#22c55e'},dairy:{lbl:'Dairy',col:'#60a5fa'},carbs:{lbl:'Carbs',col:'#f59e0b'},fats:{lbl:'Fats',col:'#a78bfa'},snacks:{lbl:'Snacks',col:'#f87171'},other:{lbl:'Other',col:'#6b7280'}};
 let grocItems=[];
