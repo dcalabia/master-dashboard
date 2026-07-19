@@ -763,6 +763,7 @@ create policy "allow all" on dashboard_data
 <!-- Tab navigation -->
 <div class="tab-bar" id="main-tab-bar">
   <button class="tab-btn active" onclick="switchTab('home')" id="tab-btn-home"><span class="tbi">🏠</span><span class="tbl">Home</span></button>
+  <button class="tab-btn" onclick="switchTab('jrnl')" id="tab-btn-jrnl"><span class="tbi">✍️</span><span class="tbl">Journal</span></button>
   <button class="tab-btn" onclick="switchTab('fitness')" id="tab-btn-fitness"><span class="tbi">💪</span><span class="tbl">Fitness</span></button>
   <button class="tab-btn" onclick="switchTab('daily')" id="tab-btn-daily"><span class="tbi">📋</span><span class="tbl">Daily</span></button>  <button class="tab-btn" onclick="switchTab('journal')" id="tab-btn-journal"><span class="tbi">🔔</span><span class="tbl">Reminders</span></button>
 </div>
@@ -1304,7 +1305,27 @@ create policy "allow all" on dashboard_data
   <div class="grid4s" id="stats-grid"></div>
 </div>
 </div>
-<div class="tsec" data-tab="home">
+<div class="tsec" data-tab="jrnl">
+  <div class="slbl" onclick="toggleSec('journal')" style="cursor:pointer">Daily journal<span id="sci-journal" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
+<div id="secb-journal">
+  <div class="journal-wrap">
+    <div class="journal-header">
+      <span class="journal-title">✍️ How did your day go?</span>
+      <span class="journal-meta" id="journal-meta">0 words</span>
+    </div>
+    <textarea class="journal-textarea" id="journal-text" placeholder="Write a summary of your day — wins, challenges, what you'd do differently, how you felt..."></textarea>
+    <div class="journal-footer">
+      <span class="journal-saved" id="journal-saved">Not saved yet</span>
+      <div style="display:flex;gap:10px;align-items:center">
+        <button class="jhl-btn" onclick="toggleJournalHighlight()" title="Mark/unmark the line your cursor is on (Ctrl+H) — shows up in Highlights below">★ Highlight line</button>
+        <span style="font-size:11px;color:var(--t3)" id="journal-chars">0 / ∞</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+<div class="tsec" data-tab="jrnl">
   <div class="slbl" onclick="toggleSec('improve')" style="cursor:pointer">Things to Improve for Tomorrow<span id="sci-improve" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
 <div id="secb-improve">
   <div class="journal-wrap">
@@ -1320,7 +1341,7 @@ create policy "allow all" on dashboard_data
   </div>
 </div>
 </div>
-<div class="tsec" data-tab="home">
+<div class="tsec" data-tab="jrnl">
   <div class="slbl" onclick="toggleSec('dtodo')" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer">
     <span>Daily to-do</span>
     <span id="dtodo-count" style="font-size:11px;color:var(--t3)"></span>
@@ -1348,7 +1369,7 @@ create policy "allow all" on dashboard_data
 </div>
 </div>
 </div>
-<div class="tsec" data-tab="home">
+<div class="tsec" data-tab="jrnl">
   <div class="slbl" onclick="toggleSec('mtodo')" style="display:flex;justify-content:space-between;align-items:center;margin-top:.75rem;cursor:pointer">
     <span>Master list</span>
     <div style="display:flex;gap:4px;align-items:center"><span style="font-size:10px;color:var(--t3)">Persists until done</span><button class="arc-btn" onclick="event.stopPropagation();clearSec('mtodo')" title="Clear all">✕ Clear</button><button class="arc-btn" onclick="event.stopPropagation();archiveSec('mtodo')" title="Archive done">↓ Archive</button><span id="sci-mtodo" style="font-size:10px;color:var(--t3);margin-left:2px;flex-shrink:0">▼</span></div>
@@ -1386,27 +1407,7 @@ create policy "allow all" on dashboard_data
 </div>
 </div>
 </div>
-<div class="tsec" data-tab="home">
-  <div class="slbl" onclick="toggleSec('journal')" style="cursor:pointer">Daily journal<span id="sci-journal" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
-<div id="secb-journal">
-  <div class="journal-wrap">
-    <div class="journal-header">
-      <span class="journal-title">✍️ How did your day go?</span>
-      <span class="journal-meta" id="journal-meta">0 words</span>
-    </div>
-    <textarea class="journal-textarea" id="journal-text" placeholder="Write a summary of your day — wins, challenges, what you'd do differently, how you felt..."></textarea>
-    <div class="journal-footer">
-      <span class="journal-saved" id="journal-saved">Not saved yet</span>
-      <div style="display:flex;gap:10px;align-items:center">
-        <button class="jhl-btn" onclick="toggleJournalHighlight()" title="Mark/unmark the line your cursor is on (Ctrl+H) — shows up in Highlights below">★ Highlight line</button>
-        <span style="font-size:11px;color:var(--t3)" id="journal-chars">0 / ∞</span>
-      </div>
-    </div>
-  </div>
-
-</div>
-</div>
-<div class="tsec" data-tab="home">
+<div class="tsec" data-tab="jrnl">
   <div class="jhl-wrap" id="jhl">
     <div class="jhl-hdr" onclick="toggleJHls()">
       <span>★ Highlights <span class="jhl-count" id="jhl-count">0</span></span>
@@ -2440,6 +2441,7 @@ function toggleJBestHl(i){
   renderJournalHighlights();
 }
 function jumpToJournalDay(date){
+  switchTab('jrnl');
   viewDate=date;
   loadAll();loadNutrition();loadTodos();loadVO2();loadGameLog();loadEnergy();renderAll();
   const el=document.getElementById('secb-journal');
