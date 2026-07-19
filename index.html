@@ -1422,6 +1422,13 @@ create policy "allow all" on dashboard_data
     </div>
     <div class="jhl-body" id="jbest-body"></div>
   </div>
+  <div class="jhl-wrap" id="jweek" style="border-color:rgba(96,165,250,.35)">
+    <div class="jhl-hdr" onclick="toggleJWeek()" style="color:#60a5fa">
+      <span>📅 Past 7 Days <span class="jhl-count" id="jweek-count" style="background:rgba(96,165,250,.15)">0</span></span>
+      <span class="jhl-chev" id="jweek-chev">▼</span>
+    </div>
+    <div class="jhl-body" id="jweek-body"></div>
+  </div>
 </div>
 <div class="tsec" data-tab="journal">
   <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
@@ -2440,6 +2447,34 @@ function toggleJBestHl(i){
   }
   renderJournalHighlights();
 }
+let JWEEK_OPEN=localStorage.getItem('jweek-open')!=='0';
+function toggleJWeek(){JWEEK_OPEN=!JWEEK_OPEN;localStorage.setItem('jweek-open',JWEEK_OPEN?'1':'0');renderJournalWeek();}
+function renderJournalWeek(){
+  const cnt=document.getElementById('jweek-count');
+  if(!cnt)return;
+  const esc=s=>String(s).replace(/</g,'&lt;');
+  const dy=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const cards=[];
+  for(let i=1;i<=7;i++){
+    const d=new Date(viewDate+'T12:00:00');
+    d.setDate(d.getDate()-i);
+    const key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const txt=ls('journal:'+key);
+    if(!txt||!txt.trim())continue;
+    const body=txt.split('\n').map(line=>
+      line.indexOf('★')!==-1?`<mark style="background:rgba(255,213,74,.12);color:var(--t1);border-radius:4px;padding:0 4px">${esc(line)}</mark>`:esc(line)
+    ).join('<br>');
+    cards.push(`<div style="padding:6px 0;border-bottom:1px solid var(--border)">
+      <div style="font-size:11px;color:#60a5fa;margin-bottom:2px;cursor:pointer" onclick="jumpToJournalDay('${key}')" title="Open this day">${dy[d.getDay()]} · ${key}</div>
+      <div style="font-size:12.5px;color:var(--t2,var(--t1));line-height:1.6;white-space:pre-wrap">${body}</div>
+    </div>`);
+  }
+  cnt.textContent=cards.length;
+  document.getElementById('jweek-chev').textContent=JWEEK_OPEN?'▼':'▶';
+  const body=document.getElementById('jweek-body');
+  body.style.display=JWEEK_OPEN?'':'none';
+  body.innerHTML=cards.length?cards.join(''):'<div class="jhl-empty">No journal entries in the last 7 days</div>';
+}
 function jumpToJournalDay(date){
   switchTab('jrnl');
   viewDate=date;
@@ -2457,6 +2492,35 @@ function saveImproveItems(items){
   const meta=document.getElementById('improve-meta');
   if(meta)meta.textContent=`${items.length} item${items.length===1?'':'s'}`;
 }
+function prevImproveDate(){
+  let best=null;
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    const mm=k.match(/^improve:(\d{4}-\d{2}-\d{2})$/);
+    if(!mm||mm[1]>=viewDate)continue;
+    let its;try{its=JSON.parse(ls(k)||'[]');}catch{continue;}
+    if(!its.length)continue;
+    if(!best||mm[1]>best)best=mm[1];
+  }
+  return best;
+}
+function carryImproveItem(date,idx){
+  if(!isToday())return;
+  let prev;try{prev=JSON.parse(ls('improve:'+date)||'[]');}catch{return;}
+  const it=prev[idx];if(!it||!it.text.trim())return;
+  const items=getImproveItems();
+  if(items.some(x=>x.text.trim()===it.text.trim()))return renderImproveList();
+  items.push({text:it.text,done:false});
+  saveImproveItems(items);
+  renderImproveList();
+}
+function toggleCarryDone(date,idx,checked){
+  let prev;try{prev=JSON.parse(ls('improve:'+date)||'[]');}catch{return;}
+  if(!prev[idx])return;
+  prev[idx].done=checked;
+  lss('improve:'+date,JSON.stringify(prev));
+  renderImproveList();
+}
 function renderImproveList(){
   const items=getImproveItems();
   const list=document.getElementById('improve-list');
@@ -2464,6 +2528,41 @@ function renderImproveList(){
   const meta=document.getElementById('improve-meta');
   if(meta)meta.textContent=`${items.length} item${items.length===1?'':'s'}`;
   list.innerHTML='';
+  // Carry-over: yesterday's (or most recent) list — did you follow through?
+  const pd=prevImproveDate();
+  if(pd){
+    let prev=[];try{prev=JSON.parse(ls('improve:'+pd)||'[]');}catch{}
+    const todayTexts=items.map(x=>x.text.trim());
+    const wrap=document.createElement('div');
+    wrap.style.cssText='margin:0 0 .6rem;padding:.4rem .6rem;background:rgba(0,0,0,.15);border:1px solid var(--border);border-radius:8px';
+    const hdr=document.createElement('div');
+    hdr.style.cssText='font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px';
+    hdr.textContent=`From ${pd} — did you follow through?`;
+    wrap.appendChild(hdr);
+    prev.forEach((it,i)=>{
+      if(!it.text.trim())return;
+      const row=document.createElement('div');
+      row.className='improve-item';
+      const cb=document.createElement('input');
+      cb.type='checkbox';cb.className='improve-cb';cb.checked=!!it.done;
+      cb.title='Mark as done on '+pd;
+      cb.onchange=()=>toggleCarryDone(pd,i,cb.checked);
+      const txt=document.createElement('span');
+      txt.style.cssText='flex:1;font-size:13px;color:'+(it.done?'var(--t3)':'var(--t1)')+(it.done?';text-decoration:line-through':'');
+      txt.textContent=it.text;
+      row.append(cb,txt);
+      if(!it.done&&isToday()&&!todayTexts.includes(it.text.trim())){
+        const btn=document.createElement('button');
+        btn.textContent='→ today';
+        btn.title='Carry this item into today\'s list';
+        btn.style.cssText='background:transparent;border:1px solid var(--border);border-radius:5px;color:var(--accent,#4ade80);font-size:11px;padding:2px 8px;cursor:pointer;font-family:inherit';
+        btn.onclick=()=>carryImproveItem(pd,i);
+        row.appendChild(btn);
+      }
+      wrap.appendChild(row);
+    });
+    list.appendChild(wrap);
+  }
   items.forEach((item,i)=>{
     const row=document.createElement('div');
     row.className='improve-item';
@@ -3038,12 +3137,18 @@ function renderMTodos(){
   const el=document.getElementById('mtodo-list');if(!el)return;
   if(!mtodos.length){el.innerHTML='<div class="todo-empty">No lingering tasks.</div>';return;}
   const sorted=[...mtodos.filter(t=>!t.done),...mtodos.filter(t=>t.done)];
-  el.innerHTML=sorted.map(t=>`<div class="todo-row${t.done?' done-row':''}" data-id="${t.id}">
+  el.innerHTML=sorted.map(t=>{
+    // id is Date.now() at creation, so it doubles as the item's birthday
+    const age=t.id>1e12?Math.floor((Date.now()-t.id)/86400000):0;
+    const ageCol=age>=30?'#f87171':age>=7?'#f59e0b':'var(--t3)';
+    const ageBadge=age>=1&&!t.done?`<span title="Sitting for ${age} day${age===1?'':'s'}" style="font-size:10px;color:${ageCol};border:1px solid ${age>=7?ageCol:'var(--border)'};border-radius:8px;padding:0 6px;flex-shrink:0">${age}d</span>`:'';
+    return`<div class="todo-row${t.done?' done-row':''}" data-id="${t.id}">
     <div class="todo-chk${t.done?' on':''}" onclick="toggleMTodo(${t.id})"><i class="ti ti-check"></i></div>
     <span class="todo-txt" onclick="toggleMTodo(${t.id})" ondblclick="startTodoEdit('m',${t.id})">${t.text}</span>
+    ${ageBadge}
     <button class="todo-edit" onclick="startTodoEdit('m',${t.id})" title="Edit"><i class="ti ti-pencil"></i></button>
     <button class="todo-del" onclick="delMTodo(${t.id})"><i class="ti ti-x"></i></button>
-  </div>`).join('');
+  </div>`;}).join('');
 }
 function startTodoEdit(kind,id){
   if(kind==='d'&&!isToday())return;
@@ -3422,7 +3527,7 @@ function showBackupMsg(msg){
   el.style.animation='none';
   setTimeout(()=>{el.style.animation='fadeOut 3s forwards';},50);
 }
-function renderAll(){renderAllArchives();renderDateNav();renderHealth();renderEnergy();renderGameLog();renderDTodos();renderMTodos();renderVO2();renderGymGoals();renderTrading();renderStats();renderMacros();renderMealLog();renderSupplements();renderFitnessProtein();renderEntries();renderTimeline();loadCalendar();renderCalendar();loadJournal();loadImprove();renderJournalHighlights();renderProgress();renderBodyIssues();renderDates();renderPhilos();renderMistakes();loadWorkout();renderWorkout();renderDisc();}
+function renderAll(){renderAllArchives();renderDateNav();renderHealth();renderEnergy();renderGameLog();renderDTodos();renderMTodos();renderVO2();renderGymGoals();renderTrading();renderStats();renderMacros();renderMealLog();renderSupplements();renderFitnessProtein();renderEntries();renderTimeline();loadCalendar();renderCalendar();loadJournal();loadImprove();renderJournalHighlights();renderJournalWeek();renderProgress();renderBodyIssues();renderDates();renderPhilos();renderMistakes();loadWorkout();renderWorkout();renderDisc();}
 // ─── Groceries ────────────────────────────────────────────────
 const GROC_CATS={protein:{lbl:'Protein',col:'#f97316'},produce:{lbl:'Produce',col:'#22c55e'},dairy:{lbl:'Dairy',col:'#60a5fa'},carbs:{lbl:'Carbs',col:'#f59e0b'},fats:{lbl:'Fats',col:'#a78bfa'},snacks:{lbl:'Snacks',col:'#f87171'},other:{lbl:'Other',col:'#6b7280'}};
 let grocItems=[];
