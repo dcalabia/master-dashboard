@@ -3126,9 +3126,17 @@ function renderDTodos(){
   el.innerHTML=sorted.map(t=>`<div class="todo-row${t.done?' done-row':''}" data-id="${t.id}">
     <div class="todo-chk${t.done?' on':''}" onclick="${ro?'':'toggleDTodo('+t.id+')'}"><i class="ti ti-check"></i></div>
     <span class="todo-txt" onclick="${ro?'':'toggleDTodo('+t.id+')'}" ondblclick="startTodoEdit('d',${t.id})">${t.text}</span>
+    <button class="todo-edit" onclick="sendDTodoToMaster(${t.id})" title="Send to Master list" style="font-size:13px">↧</button>
     <button class="todo-edit" onclick="startTodoEdit('d',${t.id})" title="Edit"><i class="ti ti-pencil"></i></button>
     <button class="todo-del" onclick="delDTodo(${t.id})"><i class="ti ti-x"></i></button>
   </div>`).join('');
+}
+function sendDTodoToMaster(id){
+  const t=dtodos.find(x=>x.id===id);if(!t)return;
+  if(!mtodos.some(x=>!x.done&&x.text.trim()===t.text.trim()))
+    mtodos.push({id:Date.now(),text:t.text,done:false});
+  dtodos=dtodos.filter(x=>x.id!==id);
+  saveDTodos();saveMTodos();renderDTodos();renderMTodos();
 }
 function addMTodo(){const inp=document.getElementById('mtodo-inp');const text=inp.value.trim();if(!text)return;mtodos.push({id:Date.now(),text,done:false});saveMTodos();inp.value='';renderMTodos();}
 function toggleMTodo(id){mtodos=mtodos.map(t=>t.id===id?{...t,done:!t.done}:t);saveMTodos();renderMTodos();}
