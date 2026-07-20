@@ -2369,9 +2369,11 @@ function initJournal(){
       // (same behavior as the trading dashboard's review notes)
       const s=ta.selectionStart;
       const lineStart=ta.value.lastIndexOf('\n',s-1)+1;
-      const line=ta.value.slice(lineStart,s);
-      if(line.trim()==='•'||line.trim()===''){
-        ta.setRangeText('',lineStart,s,'start');
+      const t_=ta.value.slice(lineStart,s).trim();
+      if(t_==='•'){
+        ta.setRangeText('',lineStart,s,'start');       // empty bullet -> remove it
+      }else if(t_===''){
+        ta.setRangeText('• ',lineStart,s,'end');       // blank line -> start a bullet
       }else{
         ta.setRangeText('\n• ',ta.selectionStart,ta.selectionEnd,'end');
       }
