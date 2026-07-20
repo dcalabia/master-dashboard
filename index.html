@@ -4175,7 +4175,10 @@ function switchTab(tab){
   window.scrollTo({top:0, behavior:'instant'});
 }
 function initTabs(){
-  switchTab('home');
+  // Restore the last-active tab — the visibilitychange sync re-renders
+  // on every return to the browser tab, and forcing 'home' here was
+  // yanking the user off whatever tab they were on
+  switchTab(localStorage.getItem('active-tab')||'home');
 }
 
 // --- AI Meal Parser -------------------------------------------
