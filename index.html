@@ -1713,7 +1713,10 @@ async function syncFromCloud(){
     if(error)throw error;
     if(data&&data.length){
       data.forEach(row=>{
-        if(row.key!=='cloud-config')localStorage.setItem(row.key,row.value);
+        // active-tab is per-device UI state — syncing it stomped the
+        // local tab choice on every visibilitychange pull
+        if(row.key!=='cloud-config'&&row.key!=='active-tab')
+          localStorage.setItem(row.key,row.value);
       });
     }
     setSyncStatus('synced');
@@ -1744,7 +1747,7 @@ async function pushAllToCloud(){
   const rows=[];
   for(let i=0;i<localStorage.length;i++){
     const k=localStorage.key(i);
-    if(k==='cloud-config')continue;
+    if(k==='cloud-config'||k==='active-tab')continue;
     rows.push({key:k,value:localStorage.getItem(k),updated_at:new Date().toISOString()});
   }
   try{
