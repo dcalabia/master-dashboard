@@ -2361,7 +2361,16 @@ function initJournal(){
   ta.addEventListener('keydown',e=>{
     if(e.key==='Enter'){
       e.preventDefault();
-      ta.setRangeText('\n• ',ta.selectionStart,ta.selectionEnd,'end');
+      // Enter on an empty bullet clears it instead of stacking another
+      // (same behavior as the trading dashboard's review notes)
+      const s=ta.selectionStart;
+      const lineStart=ta.value.lastIndexOf('\n',s-1)+1;
+      const line=ta.value.slice(lineStart,s);
+      if(line.trim()==='•'||line.trim()===''){
+        ta.setRangeText('',lineStart,s,'start');
+      }else{
+        ta.setRangeText('\n• ',ta.selectionStart,ta.selectionEnd,'end');
+      }
       onJournalInput();
     }
     if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='h'){
