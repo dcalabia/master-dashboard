@@ -2357,6 +2357,7 @@ function initJournal(){
   // Bullet-point style: start each line with "• "
   ta.addEventListener('focus',()=>{
     if(isToday()&&!ta.value.trim()){ta.value='• ';updateJournalMeta(ta.value);}
+    autoResizeTA(ta);   // belt-and-braces: clicking in always re-measures
   });
   ta.addEventListener('keydown',e=>{
     if(e.key==='Enter'){
@@ -4172,6 +4173,9 @@ function switchTab(tab){
     b.classList.toggle('active', b.id==='tab-btn-'+tab);
   });
   localStorage.setItem('active-tab', tab);
+  // Journal textarea sizes to scrollHeight, which is 0 while its tab
+  // is hidden — re-measure the moment the tab becomes visible
+  if(tab==='jrnl') autoResizeTA(document.getElementById('journal-text'));
   window.scrollTo({top:0, behavior:'instant'});
 }
 function initTabs(){
