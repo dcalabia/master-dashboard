@@ -1724,8 +1724,31 @@ let SB_TOKEN=null, SB_REFRESH_T=null;
 function sbScheduleRefresh(s){
   clearTimeout(SB_REFRESH_T);
   const ms=Math.max(60e3,(s.expires_at*1000-Date.now())-5*60*1000);
-  SB_REFRESH_T=setTimeout(()=>sbRefresh(s.refresh_token),ms);
+  SB_REFRESH_T=setTimeout(sbRefreshFromStore,ms);
 }
+// Multi-tab safe renewal: Supabase ROTATES the refresh token on every
+// use, so a token captured at load time goes stale the moment any other
+// tab/dashboard (same origin, shared session) renews first. Always
+// re-read the CURRENT stored session before refreshing, and adopt
+// rotations made by other tabs live via the storage event. A genuinely
+// failed renewal shows the login overlay instead of going silently
+// stale (stale token = cloud saves quietly failing = edits lost on
+// refresh — the Jul 22 vanishing-checklist bug).
+async function sbRefreshFromStore(){
+  let ok=false;
+  try{
+    const s=JSON.parse(localStorage.getItem(SB_SESS_KEY));
+    if(s.expires_at*1000-Date.now()>5*60*1000){SB_TOKEN=s.access_token;ok=true;sbScheduleRefresh(s);}
+    else ok=await sbRefresh(s.refresh_token);
+  }catch(e){}
+  if(ok){initSupabase();}
+  else{const ov=document.getElementById('sb-login-overlay');if(ov)ov.style.display='flex';}
+  return ok;
+}
+window.addEventListener('storage',e=>{
+  if(e.key!==SB_SESS_KEY||!e.newValue)return;
+  try{const s=JSON.parse(e.newValue);SB_TOKEN=s.access_token;sbScheduleRefresh(s);initSupabase();}catch(_){}
+});
 async function sbRefresh(rt){
   const cfg=loadCloudConfig(); if(!cfg) return false;
   try{
