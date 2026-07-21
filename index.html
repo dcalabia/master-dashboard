@@ -1319,6 +1319,22 @@ create policy "allow all" on dashboard_data
   <div class="grid4s" id="stats-grid"></div>
 </div>
 </div>
+<div class="tsec" data-tab="home">
+  <div class="jhl-wrap" id="home-jhl">
+    <div class="jhl-hdr" onclick="toggleHomeJHls()">
+      <span>★ Highlights <span class="jhl-count" id="home-jhl-count">0</span></span>
+      <span class="jhl-chev" id="home-jhl-chev">▼</span>
+    </div>
+    <div class="jhl-body" id="home-jhl-body"></div>
+  </div>
+  <div class="jhl-wrap" id="home-jbest" style="border-color:rgba(255,213,74,.45)">
+    <div class="jhl-hdr" onclick="toggleHomeJBest()">
+      <span>🏆 Best of Highlights <span class="jhl-count" id="home-jbest-count">0</span></span>
+      <span class="jhl-chev" id="home-jbest-chev">▼</span>
+    </div>
+    <div class="jhl-body" id="home-jbest-body"></div>
+  </div>
+</div>
 <div class="tsec" data-tab="jrnl">
   <div class="slbl" onclick="toggleSec('journal')" style="cursor:pointer">Daily journal<span id="sci-journal" style="font-size:10px;color:var(--t3);margin-left:4px;flex-shrink:0">▼</span></div>
 <div id="secb-journal">
@@ -2544,6 +2560,40 @@ function renderJournalHighlights(){
   bbody.innerHTML=best.length
     ? best.map(([h,i])=>row(h,i)).join('')
     : '<div class="jhl-empty">Nothing promoted yet — hit the 🏆 on any highlight above</div>';
+  renderHomeJournalHighlights();
+}
+// Home-tab mirror of the Journal highlights panel above — same
+// localStorage scan (all-time by construction, no date/period
+// filter to fall out of), read-only display (no 🏆 toggle, edit
+// stays on the Journal tab), called from inside
+// renderJournalHighlights() so it never drifts out of sync.
+let HOME_JHLS_OPEN=localStorage.getItem('home-jhl-open')!=='0';
+let HOME_JBEST_OPEN=localStorage.getItem('home-jbest-open')!=='0';
+function toggleHomeJHls(){HOME_JHLS_OPEN=!HOME_JHLS_OPEN;localStorage.setItem('home-jhl-open',HOME_JHLS_OPEN?'1':'0');renderHomeJournalHighlights();}
+function toggleHomeJBest(){HOME_JBEST_OPEN=!HOME_JBEST_OPEN;localStorage.setItem('home-jbest-open',HOME_JBEST_OPEN?'1':'0');renderHomeJournalHighlights();}
+function renderHomeJournalHighlights(){
+  const esc=s=>String(s).replace(/</g,'&lt;');
+  const cnt=document.getElementById('home-jhl-count');
+  if(!cnt)return;   // Home panel not in the DOM yet on first paint
+  const items=JHL_ITEMS;
+  const row=h=>`<div class="jhl-item">
+    <span class="m" onclick="jumpToJournalDay('${h.date}')" title="Jump to this day">${esc(h.date)}</span>
+    <mark>${esc(h.txt)}</mark></div>`;
+  cnt.textContent=items.length;
+  document.getElementById('home-jhl-chev').textContent=HOME_JHLS_OPEN?'▼':'▶';
+  const body=document.getElementById('home-jhl-body');
+  body.style.display=HOME_JHLS_OPEN?'':'none';
+  body.innerHTML=items.length
+    ? items.map(row).join('')
+    : '<div class="jhl-empty">No highlighted lines yet</div>';
+  const best=items.filter(h=>h.best);
+  document.getElementById('home-jbest-count').textContent=best.length;
+  document.getElementById('home-jbest-chev').textContent=HOME_JBEST_OPEN?'▼':'▶';
+  const bbody=document.getElementById('home-jbest-body');
+  bbody.style.display=HOME_JBEST_OPEN?'':'none';
+  bbody.innerHTML=best.length
+    ? best.map(row).join('')
+    : '<div class="jhl-empty">Nothing promoted yet</div>';
 }
 function toggleJBestHl(i){
   const h=JHL_ITEMS[i];
