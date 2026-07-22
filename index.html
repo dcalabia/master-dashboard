@@ -4313,7 +4313,7 @@ function init(){
   try{renderMacros();renderMealLog();renderSupplements();renderFitnessProtein();}catch(e){console.error('Render4:',e);}
   try{setDefaultTime();renderEntries();renderTimeline();}catch(e){console.error('Render5:',e);}
   try{renderRM();renderProgress();}catch(e){console.error('Render6:',e);}
-  try{initJournal();initCalRangeSelects();renderCalendar();renderBodyIssues();renderDates();renderPhilos();}catch(e){console.error('Render7:',e);}
+  try{initJournal();renderJournalHighlights();initCalRangeSelects();renderCalendar();renderBodyIssues();renderDates();renderPhilos();}catch(e){console.error('Render7:',e);}
   try{renderMistakes();renderWorkout();}catch(e){console.error('Render8:',e);}
   initTabs();
 }
