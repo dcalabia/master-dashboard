@@ -168,7 +168,10 @@ input,select{font-family:inherit;color:var(--t1)}
 .journal-header{display:flex;justify-content:space-between;align-items:center;padding:.7rem 1.25rem;border-bottom:1px solid var(--border)}
 .journal-title{font-size:13px;font-weight:500;color:var(--t1)}
 .journal-meta{font-size:11px;color:var(--t3)}
-.journal-textarea{width:100%;min-height:80px;background:transparent;border:none;outline:none;resize:none;overflow:hidden;padding:1rem 1.25rem;font-size:13px;color:var(--t1);font-family:var(--font-sans,system-ui,-apple-system,sans-serif);line-height:1.65;caret-color:var(--accent);box-sizing:border-box}
+/* [Opus 5] line-height 1.65 -> 2.1 so consecutive bullets read as
+   separate thoughts instead of a wall of text (Enter already inserts
+   the "• " — this is purely the visual separation) */
+.journal-textarea{width:100%;min-height:80px;background:transparent;border:none;outline:none;resize:none;overflow:hidden;padding:1rem 1.25rem;font-size:13px;color:var(--t1);font-family:var(--font-sans,system-ui,-apple-system,sans-serif);line-height:2.1;caret-color:var(--accent);box-sizing:border-box}
 .journal-textarea::placeholder{color:var(--t3)}
 .journal-footer{padding:.5rem 1.25rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.1)}
 .journal-saved{font-size:11px;color:var(--t3);transition:color .3s}
@@ -192,6 +195,10 @@ input,select{font-family:inherit;color:var(--t1)}
 .jhl-item mark{background:rgba(255,213,74,.12);color:var(--t1);border-radius:4px;padding:1px 6px;line-height:1.5}
 .jhl-best{background:transparent;border:none;color:var(--t3);font-size:13px;cursor:pointer;padding:0 2px;line-height:1}
 .jhl-best:hover,.jhl-best.on{color:#ffd54a}
+/* [Opus 5] unhighlight — drops the ★ from the journal line (text stays) */
+.jhl-un{background:transparent;border:none;color:var(--t3);font-size:13px;cursor:pointer;padding:0 2px;line-height:1;opacity:0;transition:opacity .15s}
+.jhl-item:hover .jhl-un{opacity:1}
+.jhl-un:hover{color:#ff6b6b}
 .jhl-empty{color:var(--t3);font-size:12px;padding:4px 0}
 .jhl-btn{background:transparent;border:1px solid var(--border);border-radius:5px;color:#ffd54a;font-size:11px;padding:3px 10px;cursor:pointer;font-family:inherit}
 .jhl-btn:hover{background:rgba(255,213,74,.08)}
@@ -2541,6 +2548,7 @@ function renderJournalHighlights(){
   JHL_ITEMS=items;
   const row=(h,i)=>`<div class="jhl-item">
     <button class="jhl-best${h.best?' on':''}" onclick="toggleJBestHl(${i})" title="${h.best?'Remove from':'Promote to'} Best of Highlights">🏆</button>
+    <button class="jhl-un" onclick="unhighlightJHl(${i})" title="Unhighlight — removes the ★, keeps the journal line">✕</button>
     <span class="m" onclick="jumpToJournalDay('${h.date}')" title="Jump to this day">${esc(h.date)}</span>
     <mark>${esc(h.txt)}</mark></div>`;
   const cnt=document.getElementById('jhl-count');
@@ -2576,7 +2584,10 @@ function renderHomeJournalHighlights(){
   const cnt=document.getElementById('home-jhl-count');
   if(!cnt)return;   // Home panel not in the DOM yet on first paint
   const items=JHL_ITEMS;
-  const row=h=>`<div class="jhl-item">
+  // [Opus 5] Home rows now carry the ✕ unhighlight too (index is into
+  // JHL_ITEMS, which `items` IS) — the 🏆 promote still lives on Journal
+  const row=(h,i)=>`<div class="jhl-item">
+    <button class="jhl-un" onclick="unhighlightJHl(${i})" title="Unhighlight — removes the ★, keeps the journal line">✕</button>
     <span class="m" onclick="jumpToJournalDay('${h.date}')" title="Jump to this day">${esc(h.date)}</span>
     <mark>${esc(h.txt)}</mark></div>`;
   cnt.textContent=items.length;
@@ -2586,14 +2597,35 @@ function renderHomeJournalHighlights(){
   body.innerHTML=items.length
     ? items.map(row).join('')
     : '<div class="jhl-empty">No highlighted lines yet</div>';
-  const best=items.filter(h=>h.best);
+  // [Opus 5] pair with the JHL_ITEMS index BEFORE filtering, so the ✕
+  // on a Best row unhighlights that row and not an unrelated item
+  const best=items.map((h,i)=>[h,i]).filter(([h])=>h.best);
   document.getElementById('home-jbest-count').textContent=best.length;
   document.getElementById('home-jbest-chev').textContent=HOME_JBEST_OPEN?'▼':'▶';
   const bbody=document.getElementById('home-jbest-body');
   bbody.style.display=HOME_JBEST_OPEN?'':'none';
   bbody.innerHTML=best.length
-    ? best.map(row).join('')
+    ? best.map(([h,i])=>row(h,i)).join('')
     : '<div class="jhl-empty">Nothing promoted yet</div>';
+}
+// [Opus 5] Unhighlight — strips the ★/★★ marker off that journal line.
+// The line's TEXT is untouched; it just stops showing up in Highlights
+// (and Best of, if it was promoted). Same write path as toggleJBestHl,
+// so it syncs through lss and updates the open textarea for free.
+function unhighlightJHl(i){
+  const h=JHL_ITEMS[i];
+  if(!h)return;
+  const newLine=h.raw.replace(/★+\s?/,'');
+  const txt=ls(h.key);
+  if(!txt)return;
+  const newTxt=txt.replace(h.raw,newLine);
+  if(newTxt===txt)return;
+  lss(h.key,newTxt);
+  if(h.key==='journal:'+viewDate){
+    const ta=document.getElementById('journal-text');
+    if(ta)ta.value=newTxt;
+  }
+  renderJournalHighlights();
 }
 function toggleJBestHl(i){
   const h=JHL_ITEMS[i];
