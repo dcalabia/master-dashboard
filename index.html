@@ -2488,16 +2488,21 @@ function initJournal(){
     if(e.key==='Enter'){
       e.preventDefault();
       // Enter on an empty bullet clears it instead of stacking another
-      // (same behavior as the trading dashboard's review notes)
-      const s=ta.selectionStart;
+      // (same behavior as the trading dashboard's review notes).
+      // Checked against the WHOLE line, not just text before the cursor —
+      // otherwise placing the cursor right after "• " on a line that still
+      // has real text following it (e.g. via Home, or clicking to edit)
+      // reads as an empty bullet and deletes it instead of splitting.
+      const s=ta.selectionStart, en=ta.selectionEnd;
       const lineStart=ta.value.lastIndexOf('\n',s-1)+1;
-      const t_=ta.value.slice(lineStart,s).trim();
-      if(t_==='•'){
-        ta.setRangeText('',lineStart,s,'start');       // empty bullet -> remove it
-      }else if(t_===''){
-        ta.setRangeText('• ',lineStart,s,'end');       // blank line -> start a bullet
+      let lineEnd=ta.value.indexOf('\n',s); if(lineEnd===-1) lineEnd=ta.value.length;
+      const fullLine=ta.value.slice(lineStart,lineEnd).trim();
+      if(fullLine==='•'){
+        ta.setRangeText('',lineStart,lineEnd,'start');  // whole line is an empty bullet -> remove it
+      }else if(fullLine===''){
+        ta.setRangeText('• ',s,en,'end');               // blank line -> start a bullet
       }else{
-        ta.setRangeText('\n• ',ta.selectionStart,ta.selectionEnd,'end');
+        ta.setRangeText('\n• ',s,en,'end');              // split at cursor, new bullet on the new line
       }
       onJournalInput();
     }
