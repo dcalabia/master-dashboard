@@ -1373,6 +1373,7 @@ create policy "allow all" on dashboard_data
     <div id="improve-list" style="padding:.5rem 1.25rem"></div>
     <div class="journal-footer">
       <span class="journal-saved" id="improve-saved">Not saved yet</span>
+      <button onclick="archiveDoneImprove()" title="Move every crossed-out item into the archive" style="background:transparent;color:var(--t3);border:1px solid var(--border);border-radius:5px;padding:4px 12px;font-size:12px;cursor:pointer;font-family:inherit;margin-right:6px">📦 Archive done</button>
       <button onclick="addImproveItem()" style="background:var(--accent,#4ade80);color:#0b1120;border:none;border-radius:5px;padding:4px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">+ Add item</button>
     </div>
   </div>
@@ -2769,6 +2770,75 @@ function toggleCarryDone(date,idx,checked){
   lss('improve:'+date,JSON.stringify(prev));
   renderImproveList();
 }
+// [Opus 5] Archive for finished improvements. Crossed-out items used to
+// sit in the carry-over box forever with no way to clear them — this
+// sweeps the done ones out of BOTH today's list and the carry-over
+// date's list into one archive, so the panel only shows live work.
+// Kept (not deleted) so the follow-through history survives.
+const IMPROVE_ARCHIVE_KEY='improve-archive';
+function getImproveArchive(){
+  try{return JSON.parse(ls(IMPROVE_ARCHIVE_KEY)||'[]');}catch(e){return[];}
+}
+function saveImproveArchive(a){ lss(IMPROVE_ARCHIVE_KEY,JSON.stringify(a)); }
+
+function archiveDoneImprove(){
+  const arch=getImproveArchive();
+  let moved=0;
+  const stamp=new Date().toISOString().slice(0,10);
+  // today's own list
+  const items=getImproveItems();
+  const keep=[];
+  items.forEach(it=>{
+    if(it.done&&it.text.trim()){ arch.push({text:it.text,from:viewDate,archived:stamp}); moved++; }
+    else keep.push(it);
+  });
+  if(moved) saveImproveItems(keep);
+  // the carry-over box (previous date) — where finished items pile up
+  const pd=prevImproveDate();
+  if(pd){
+    let prev=[];try{prev=JSON.parse(ls('improve:'+pd)||'[]');}catch(e){}
+    const keepPrev=[];
+    let pmoved=0;
+    prev.forEach(it=>{
+      if(it.done&&it.text.trim()){ arch.push({text:it.text,from:pd,archived:stamp}); pmoved++; }
+      else keepPrev.push(it);
+    });
+    if(pmoved){ lss('improve:'+pd,JSON.stringify(keepPrev)); moved+=pmoved; }
+  }
+  if(!moved){
+    const s=document.getElementById('improve-saved');
+    if(s){ s.textContent='Nothing crossed out to archive'; setTimeout(()=>loadImprove(),1800); }
+    return;
+  }
+  saveImproveArchive(arch);
+  renderImproveList();
+}
+
+function restoreImproveArchived(i){
+  const arch=getImproveArchive();
+  const it=arch[i]; if(!it) return;
+  if(!isToday()) return;
+  const items=getImproveItems();
+  if(!items.some(x=>x.text.trim()===it.text.trim())){
+    items.push({text:it.text,done:false});
+    saveImproveItems(items);
+  }
+  arch.splice(i,1); saveImproveArchive(arch);
+  renderImproveList();
+}
+function deleteImproveArchived(i){
+  const arch=getImproveArchive();
+  if(!arch[i]) return;
+  arch.splice(i,1); saveImproveArchive(arch);
+  renderImproveList();
+}
+let IMPROVE_ARCH_OPEN=localStorage.getItem('improve-arch-open')==='1';
+function toggleImproveArchive(){
+  IMPROVE_ARCH_OPEN=!IMPROVE_ARCH_OPEN;
+  localStorage.setItem('improve-arch-open',IMPROVE_ARCH_OPEN?'1':'0');
+  renderImproveList();
+}
+
 function renderImproveList(){
   const items=getImproveItems();
   const list=document.getElementById('improve-list');
@@ -2829,6 +2899,47 @@ function renderImproveList(){
     row.append(cb,inp,del);
     list.appendChild(row);
   });
+
+  // [Opus 5] Archive section — collapsed by default so it never competes
+  // with the live list, but the history stays one click away.
+  const arch=getImproveArchive();
+  if(arch.length){
+    const aw=document.createElement('div');
+    aw.style.cssText='margin:.7rem 0 0;padding:.4rem .6rem;background:rgba(0,0,0,.15);border:1px solid var(--border);border-radius:8px';
+    const ah=document.createElement('div');
+    ah.style.cssText='font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;cursor:pointer;display:flex;justify-content:space-between;align-items:center';
+    ah.innerHTML=`<span>📦 Archived (${arch.length})</span><span>${IMPROVE_ARCH_OPEN?'▼':'▶'}</span>`;
+    ah.onclick=toggleImproveArchive;
+    aw.appendChild(ah);
+    if(IMPROVE_ARCH_OPEN){
+      arch.slice().reverse().forEach((it,ri)=>{
+        const i=arch.length-1-ri;   // real index after reversing for display
+        const r=document.createElement('div');
+        r.className='improve-item';
+        const t=document.createElement('span');
+        t.style.cssText='flex:1;font-size:12.5px;color:var(--t3)';
+        t.textContent=it.text;
+        const d=document.createElement('span');
+        d.style.cssText='font-size:10.5px;color:var(--t3);opacity:.75;white-space:nowrap';
+        d.textContent=it.from||'';
+        r.append(t,d);
+        if(isToday()){
+          const rb=document.createElement('button');
+          rb.textContent='↩ restore';
+          rb.title='Put this back on today\'s list';
+          rb.style.cssText='background:transparent;border:1px solid var(--border);border-radius:5px;color:var(--accent,#4ade80);font-size:11px;padding:2px 8px;cursor:pointer;font-family:inherit';
+          rb.onclick=()=>restoreImproveArchived(i);
+          r.appendChild(rb);
+        }
+        const db=document.createElement('button');
+        db.className='improve-del'; db.textContent='✕'; db.title='Delete permanently';
+        db.onclick=()=>deleteImproveArchived(i);
+        r.appendChild(db);
+        aw.appendChild(r);
+      });
+    }
+    list.appendChild(aw);
+  }
 }
 function addImproveItem(){
   if(!isToday())return;
