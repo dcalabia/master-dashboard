@@ -1746,7 +1746,13 @@ const SB_SESS_KEY='sb-auth-session';
 let SB_TOKEN=null, SB_REFRESH_T=null;
 function sbScheduleRefresh(s){
   clearTimeout(SB_REFRESH_T);
-  const ms=Math.max(60e3,(s.expires_at*1000-Date.now())-5*60*1000);
+  // [Opus 5] Jitter: every dashboard on this origin shares one session
+  // and computed the SAME renewal moment, so they all fired at once and
+  // raced over the rotating refresh token — the loser got a password
+  // prompt. Spreading them over ~90s means one tab renews and the rest
+  // pick it up via the storage event instead of colliding.
+  const jitter=Math.floor(Math.random()*90e3);
+  const ms=Math.max(60e3,(s.expires_at*1000-Date.now())-5*60*1000+jitter);
   SB_REFRESH_T=setTimeout(sbRefreshFromStore,ms);
 }
 // Multi-tab safe renewal: Supabase ROTATES the refresh token on every
@@ -1764,6 +1770,10 @@ async function sbRefreshFromStore(){
     if(s.expires_at*1000-Date.now()>5*60*1000){SB_TOKEN=s.access_token;ok=true;sbScheduleRefresh(s);}
     else ok=await sbRefresh(s.refresh_token);
   }catch(e){}
+  // [Opus 5] Last look before demanding a password: another dashboard
+  // may have renewed while we were failing. Only prompt if storage
+  // genuinely has nothing usable.
+  if(!ok) ok=sbAdoptStored(null);
   if(ok){initSupabase();}
   else{const ov=document.getElementById('sb-login-overlay');if(ov)ov.style.display='flex';}
   return ok;
@@ -1772,19 +1782,56 @@ window.addEventListener('storage',e=>{
   if(e.key!==SB_SESS_KEY||!e.newValue)return;
   try{const s=JSON.parse(e.newValue);SB_TOKEN=s.access_token;sbScheduleRefresh(s);initSupabase();}catch(_){}
 });
+// [Opus 5] Adopt a session another tab just refreshed.
+// Supabase ROTATES the refresh token on every use, and all the
+// dashboards on this origin share one session. When two are open, one
+// wins the rotation and the other's token is already spent — its
+// refresh fails and the old code went straight to the password prompt,
+// even though a perfectly good session was sitting in localStorage.
+// Returns true if storage now holds a usable session that isn't the
+// one we just burned.
+function sbAdoptStored(usedToken){
+  try{
+    const s=JSON.parse(localStorage.getItem(SB_SESS_KEY));
+    if(s && s.access_token && s.refresh_token!==usedToken
+       && s.expires_at*1000-Date.now()>60e3){
+      SB_TOKEN=s.access_token;
+      sbScheduleRefresh(s);
+      initSupabase();
+      return true;
+    }
+  }catch(e){}
+  return false;
+}
+
 async function sbRefresh(rt){
   const cfg=loadCloudConfig(); if(!cfg) return false;
-  try{
-    const r=await fetch(`${cfg.url}/auth/v1/token?grant_type=refresh_token`,
-      {method:'POST',headers:{apikey:cfg.key,'Content-Type':'application/json'},
-       body:JSON.stringify({refresh_token:rt})});
-    if(!r.ok) return false;
-    const s=await r.json();
-    localStorage.setItem(SB_SESS_KEY,JSON.stringify(s));
-    SB_TOKEN=s.access_token; sbScheduleRefresh(s);
-    initSupabase();   // rebuild client with the fresh token
-    return true;
-  }catch(e){ return false; }
+  // Two passes: a rotation race is settled by whatever the winning tab
+  // wrote, so on failure wait briefly for that write and adopt it
+  // rather than prompting. Only a genuine dead end falls through.
+  for(let attempt=0; attempt<2; attempt++){
+    try{
+      const r=await fetch(`${cfg.url}/auth/v1/token?grant_type=refresh_token`,
+        {method:'POST',headers:{apikey:cfg.key,'Content-Type':'application/json'},
+         body:JSON.stringify({refresh_token:rt})});
+      if(r.ok){
+        const s=await r.json();
+        localStorage.setItem(SB_SESS_KEY,JSON.stringify(s));
+        SB_TOKEN=s.access_token; sbScheduleRefresh(s);
+        initSupabase();   // rebuild client with the fresh token
+        return true;
+      }
+    }catch(e){ /* offline / transient — handled the same way */ }
+    if(sbAdoptStored(rt)) return true;
+    if(attempt===0){
+      await new Promise(r=>setTimeout(r,1200));   // let the winner's write land
+      try{
+        const cur=JSON.parse(localStorage.getItem(SB_SESS_KEY));
+        if(cur && cur.refresh_token && cur.refresh_token!==rt) rt=cur.refresh_token;
+      }catch(e){}
+    }
+  }
+  return false;
 }
 async function sbAuthInit(){
   try{
